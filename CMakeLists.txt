@@ -58,12 +58,21 @@ add_subdirectory_with_folder("${STORYTELLER_VENDOR_DIR}/spdlog" "vendor")
 set(STORYTELLER_ENGINE "StorytellerEngine")
 set(STORYTELLER_ENGINE_SOURCE_DIR "Engine/src")
 set(STORYTELLER_ENGINE_SOURCE_FILES
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/storyteller.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/uuid.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/uuid.cpp"
-    "${STORYTELLER_ENGINE_SOURCE_DIR}/storyteller.h"
-    "${STORYTELLER_ENGINE_SOURCE_DIR}/storyteller.cpp"
-    "${STORYTELLER_ENGINE_SOURCE_DIR}/console_printer.h"
-    "${STORYTELLER_ENGINE_SOURCE_DIR}/console_printer.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/entities.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/entities.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/game_document.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/game_document.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/game_document_sort_filter_proxy_view.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/game_document_sort_filter_proxy_view.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/game_controller.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/game_controller.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/localization_manager.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/localization_manager.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/console_manager.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/console_manager.cpp"
 )
 
 add_library(${STORYTELLER_ENGINE}

@@ -1,4 +1,4 @@
-#include "console_printer.h"
+#include "console_manager.h"
 
 #include <iostream>
 #include <conio.h>
@@ -31,15 +31,16 @@ namespace Storyteller
 
     void ConsoleManager::PrintMadeByString() const
     {
-        std::cout << "Made by Storyteller engine" << std::endl;
+        std::cout << "Made with Storyteller engine" << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::PrintSeparator() const
     {
+        int width;
+
 #if defined _WIN32
         CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-        int width;
         GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &consoleInfo);
         width = consoleInfo.srWindow.Right - consoleInfo.srWindow.Left + 1;
 #elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
