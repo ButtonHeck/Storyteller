@@ -8,14 +8,27 @@
 
 namespace Storyteller
 {
-    ConsoleManager::ConsoleManager(char separator)
-        : _separator(separator)
+    ConsoleManager::ConsoleManager(const LocalizationManager::Ptr localizationManager, char separator)
+        : _localizationManager(localizationManager)
+        , _separator(separator)
     {}
     //--------------------------------------------------------------------------
 
     void ConsoleManager::SetSeparator(char separator)
     {
         _separator = separator;
+    }
+    //--------------------------------------------------------------------------
+
+    void ConsoleManager::StartNewFrame(const std::string& gameNameTranslated) const
+    {
+        ClearConsole();
+        PrintSeparator();
+        PrintMadeByString();
+        PrintSeparator();
+        PrintMessage(gameNameTranslated);
+        PrintSeparator();
+        PrintNewLine();
     }
     //--------------------------------------------------------------------------
 
@@ -31,7 +44,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintMadeByString() const
     {
-        std::cout << "Made with Storyteller engine" << std::endl;
+        std::cout << _localizationManager->Translate("Storyteller", "Made with Storyteller engine") << std::endl;
     }
     //--------------------------------------------------------------------------
 
@@ -73,32 +86,51 @@ namespace Storyteller
 
     void ConsoleManager::PrintInputHint() const
     {
-        std::cout << "Enter action: ";
+        std::cout << _localizationManager->Translate("Storyteller", "Enter action: ");
     }
     //--------------------------------------------------------------------------
 
-    void ConsoleManager::PrintErrorHint() const
+    void ConsoleManager::PrintErrorHint(const std::string& details) const
     {
-        std::cout << "Wrong input! Try again" << std::endl;
+        std::cout << _localizationManager->Translate("Storyteller", "Error: ") << details << std::endl;
     }
     //--------------------------------------------------------------------------
 
-    void ConsoleManager::PrintCriticalHint() const
+    void ConsoleManager::PrintCriticalHint(const std::string& details, bool waitForKeyboardHit) const
     {
-        std::cout << "Critical error!" << std::endl;
+        std::cout << _localizationManager->Translate("Storyteller", "Critical error: ") << details << std::endl;
+
+        if (waitForKeyboardHit)
+        {
+            WaitForKeyboardHit();
+        }
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::PrintEndHint() const
     {
-        std::cout << "Game is over!" << std::endl;
+        std::cout << _localizationManager->Translate("Storyteller", "Game is over!") << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::WaitForKeyboardHit() const
     {
-        std::cout << "Press any key..." << std::endl;
+        std::cout << _localizationManager->Translate("Storyteller", "Press any key...") << std::endl;
         while (!_kbhit()) {}
+    }
+    //--------------------------------------------------------------------------
+
+    void ConsoleManager::PrintNewLine() const
+    {
+        std::cout << std::endl;
+    }
+    //--------------------------------------------------------------------------
+
+    std::string ConsoleManager::ReadInput() const
+    {
+        std::string input;
+        std::cin >> input;
+        return input;
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------

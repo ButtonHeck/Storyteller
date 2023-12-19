@@ -61,6 +61,38 @@ namespace Storyteller
 
     bool LocalizationManager::CreateTranslations(const GameDocument::Ptr document, const std::filesystem::path& path) const
     {
+        if (!TranslationsPathIsValid(path))
+        {
+            return false;
+        }
+
+        std::ofstream outputStream(path.string(), std::ios::out | std::ios::trunc);
+        if (!outputStream.is_open() || !outputStream.good())
+        {
+            return false;
+        }
+
+        const auto gameName = document->GetGameName();
+        const auto documentObjects = document->GetObjects();
+
+        std::stringstream ss;
+        ss << "Translate(\"" << gameName << "\", \"" << gameName << "\");\n";
+        for (size_t i = 0; i < documentObjects.size(); i++)
+        {
+            const auto object = documentObjects.at(i);
+            const auto textObject = dynamic_cast<const TextObject*>(object.get());
+            ss << object->GetName() << ", Translate(\"" << gameName << "\", \"" << textObject->GetText() << "\");\n";
+        }
+
+        outputStream << ss.str();
+        outputStream.close();
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool LocalizationManager::TranslationsPathIsValid(const std::filesystem::path& path) const
+    {
         if (path.empty() || !path.has_filename() || !path.has_extension())
         {
             return false;
@@ -73,25 +105,6 @@ namespace Storyteller
                 return false;
             }
         }
-
-        std::ofstream outputStream(path.string(), std::ios::out | std::ios::trunc);
-        if (!outputStream.is_open() || !outputStream.good())
-        {
-            return false;
-        }
-
-        std::stringstream ss;
-        ss << document->GetGameName() << "\n";
-        const auto documentObjects = document->GetObjects();
-        for (size_t i = 0; i < documentObjects.size(); i++)
-        {
-            const auto object = documentObjects.at(i);
-            const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            ss << object->GetName() << ", Translate(\"" << document->GetGameName() << "\", \"" << textObject->GetText() << "\");\n";
-        }
-
-        outputStream << ss.str();
-        outputStream.close();
 
         return true;
     }
