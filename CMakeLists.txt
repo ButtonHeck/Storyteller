@@ -5,7 +5,7 @@ project(Storyteller)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# -----------------------------
+# ---------------------------------------------------------------------------------------
 # Vendor
 set(STORYTELLER_VENDOR_DIR "${PROJECT_SOURCE_DIR}/vendor")
 set(IMGUI_IMPL_DIR "${STORYTELLER_VENDOR_DIR}/imgui/backends")
@@ -21,8 +21,6 @@ set(RAPIDJSON_BUILD_CXX17 ON CACHE BOOL "" FORCE)
 set(RAPIDJSON_BUILD_DOC OFF CACHE BOOL "" FORCE)
 set(RAPIDJSON_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(RAPIDJSON_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-# TODO: use environment variable
-set(BOOST_ROOT "C:/Boost/")
 set(Boost_NO_SYSTEM_PATHS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS ON)
@@ -53,7 +51,7 @@ add_subdirectory_with_folder("${STORYTELLER_VENDOR_DIR}/rapidjson" "vendor")
 add_subdirectory_with_folder("${STORYTELLER_VENDOR_DIR}/spdlog" "vendor")
 
 
-# -------------------------
+# -----------------------------------------------------------------------------------
 # Engine
 set(STORYTELLER_ENGINE "StorytellerEngine")
 set(STORYTELLER_ENGINE_SOURCE_DIR "Engine/src")
@@ -84,10 +82,8 @@ target_include_directories(${STORYTELLER_ENGINE}
     PRIVATE "${STORYTELLER_VENDOR_DIR}/rapidjson/include"
 )
 
-set_target_properties(${STORYTELLER_ENGINE} PROPERTIES FOLDER "Storyteller")
 
-
-# -------------------------
+# -----------------------------------------------------------------------------------
 # Editor
 set(STORYTELLER_EDITOR "StorytellerEditor")
 set(STORYTELLER_EDITOR_SOURCE_DIR "Editor/src")
@@ -109,6 +105,13 @@ add_executable(${STORYTELLER_EDITOR}
     ${STORYTELLER_VENDOR_DIR}/imgui/misc/cpp/imgui_stdlib.cpp
 )
 
+source_group("Imgui Sources" FILES 
+    ${IMGUI_SOURCE_FILES}
+    ${IMGUI_IMPL_DIR}/imgui_impl_opengl3.cpp
+    ${IMGUI_IMPL_DIR}/imgui_impl_glfw.cpp
+    ${STORYTELLER_VENDOR_DIR}/imgui/misc/cpp/imgui_stdlib.cpp
+)
+
 add_compile_definitions(STORYTELLER_EDITOR_FONT_DIR="${PROJECT_SOURCE_DIR}/Editor/fonts")
 
 target_include_directories(${STORYTELLER_EDITOR}
@@ -124,8 +127,11 @@ target_link_libraries(${STORYTELLER_EDITOR}
 )
 
 if (Boost_FOUND)
-    include_directories (SYSTEM ${Boost_INCLUDE_DIR})
-    target_link_libraries (${STORYTELLER_EDITOR} PRIVATE ${Boost_LIBRARIES})
+    include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+    target_link_libraries(${STORYTELLER_EDITOR} PRIVATE ${Boost_LIBRARIES})
 endif ()
 
+
+# -----------------------------------------------------------------------------------
+set_target_properties(${STORYTELLER_ENGINE} PROPERTIES FOLDER "Storyteller")
 set_target_properties(${STORYTELLER_EDITOR} PROPERTIES FOLDER "Storyteller")
