@@ -184,6 +184,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void GameDocumentSortFilterProxyView::UpdateCache()
+    {
+        _cache = _document->GetObjects();
+    }
+    //--------------------------------------------------------------------------
+
     void GameDocumentSortFilterProxyView::DoSort(bool ascending, Sorter::SortValue sortValue)
     {
         _sorter.active = true;
@@ -211,7 +217,7 @@ namespace Storyteller
 
     void GameDocumentSortFilterProxyView::UpdateView()
     {
-        _cache = _document->GetObjects();
+        UpdateCache();
 
         if (_sorter.active)
         {

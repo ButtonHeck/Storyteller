@@ -62,6 +62,7 @@ namespace Storyteller
         bool RemoveSelected();
         BasicObject::Ptr GetSelectedObject() const;
 
+        void UpdateCache();
         void DoSort(bool ascending, Sorter::SortValue sortValue);
         void DoFilter(ObjectType type, bool accept);
 
