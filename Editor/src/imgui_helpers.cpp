@@ -28,6 +28,7 @@ namespace ImGuiHelpers
     void Customize()
     {
         ImGuiStyle& style = ImGui::GetStyle();
+        style.FrameBorderSize = 1.0f;
         //style.Colors[ImGuiCol_FrameBg] = ImVec4(0.45f, 0.14f, 0.4f, 1.0f);
         //style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.595f, 0.375f, 0.632f, 1.0f);
         //style.Colors[ImGuiCol_WindowBg] = ImVec4(0.064f, 0.092f, 0.104f, 1.0f);
@@ -61,20 +62,13 @@ namespace ImGuiHelpers
         ImGui::SetNextWindowPos(viewport->WorkPos);
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
+
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
-        // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-        // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-        // all active windows docked into it will lose their parent and become undocked.
-        // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-        // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
         ImGui::Begin("DockSpace Demo", nullptr, window_flags);
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar(2);
+        ImGui::PopStyleVar(3);
 
-        // Submit the DockSpace
         const ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {

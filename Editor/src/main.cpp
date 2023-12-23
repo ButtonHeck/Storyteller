@@ -85,11 +85,21 @@ int main()
 
         // game document
         {
-            ImGuiWindowFlags mainFlags = gameDocument->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
-            ImGui::Begin(localizationManager->Translate(gameDocument->GetGameName(), gameDocument->GetGameName()).c_str(), nullptr, mainFlags);
+            const auto mainFlags = gameDocument->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
+            ImGui::Begin(localizationManager->Translate(EDITOR_DOMAIN, "Game").c_str(), nullptr, mainFlags);
 
+            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Game name").c_str());
+            auto gameName = gameDocument->GetGameName();
+            ImGui::PushItemWidth(-FLT_MIN);
+            if (ImGui::InputText(localizationManager->Translate(EDITOR_DOMAIN, "Game name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                gameDocument->SetGameName(gameName);
+            }
+            ImGui::PopItemWidth();
+
+
+            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Objects management").c_str());
             static auto selectedTypeIndex = 0;
-
             if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Create").c_str()))
             {
                 if (selectedTypeIndex == 0)
@@ -142,8 +152,8 @@ int main()
                 ImGui::EndDisabled();
             }
 
-            ImGui::Separator();
-            ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Filters").c_str());
+
+            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Filters").c_str());
             static bool questObjectFilter = true;
             static bool actionObjectFilter = true;
             if (ImGui::Checkbox(localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(Storyteller::ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
@@ -167,8 +177,8 @@ int main()
                 gameDocumentProxy->DoFilter(Storyteller::ObjectType::ActionObjectType, actionObjectFilter);
             }
 
-            ImGui::Separator();
-            ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str());
+
+            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str());
             const auto flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable 
                 | ImGuiTableFlags_Hideable | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
 
@@ -228,25 +238,33 @@ int main()
         {
             ImGui::Begin(localizationManager->Translate(EDITOR_DOMAIN, "Texts").c_str());
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str());
+
             const auto selectedObject = gameDocumentProxy->GetSelectedObject();
             const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
+            const auto uuidString = std::to_string(selectedUuid);
+
             auto objectName = selectedObject ? selectedObject->GetName() : std::string();
-            if (ImGui::InputText(std::string("##ObjectName").append(std::to_string(selectedUuid)).c_str(), &objectName) && selectedObject)
+            ImGui::PushItemWidth(-FLT_MIN);
+            if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue) && selectedObject)
             {
                 selectedObject->SetName(objectName);
             }
+            ImGui::PopItemWidth();
 
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Source text").c_str());
             const auto selectedTextObject = dynamic_cast<Storyteller::TextObject*>(selectedObject.get());
             auto sourceText = selectedTextObject ? selectedTextObject->GetText() : std::string();
-            if (ImGui::InputTextMultiline(std::string("##ObjectText").append(std::to_string(selectedUuid)).c_str(), &sourceText, ImVec2(-FLT_MIN, ImGui::GetContentRegionAvail().y / 2.0)) && selectedTextObject)
+            if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, ImGui::GetContentRegionAvail().y / 3.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
             {
                 selectedTextObject->SetText(sourceText);
             }
 
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Translation").c_str());
             auto sourceTextTranslation = selectedTextObject ? localizationManager->Translate(gameDocument->GetGameName(), sourceText, true) : std::string();
-            ImGui::InputTextMultiline(std::string("##Translation").append(std::to_string(selectedUuid)).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, ImGui::GetContentRegionAvail().y), ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, ImGui::GetContentRegionAvail().y / 3.0), ImGuiInputTextFlags_ReadOnly);
+
+            ImGui::Separator();
+            ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Properties").c_str());
 
             ImGui::End();
         }
