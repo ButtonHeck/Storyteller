@@ -9,6 +9,16 @@
 
 namespace Storyteller
 {
+#define JSON_KEY_GAME_NAME "GameName"
+#define JSON_KEY_ENTRY_POINT_UUID "EntryPointUuid"
+#define JSON_KEY_OBJECTS "Objects"
+#define JSON_KEY_UUID "UUID"
+#define JSON_KEY_NAME "Name"
+#define JSON_KEY_OBJECT_TYPE "ObjectType"
+#define JSON_KEY_TEXT "Text"
+#define JSON_KEY_ACTIONS "Actions"
+#define JSON_KEY_TARGET "Target"
+
     GameDocument::GameDocument(const std::string& pathString)
         : GameDocument(std::filesystem::path(pathString))
     {}
@@ -242,31 +252,31 @@ namespace Storyteller
 
         success &= writer.StartObject();
 
-        success &= writer.Key("GameName");
+        success &= writer.Key(JSON_KEY_GAME_NAME);
         success &= writer.String(GetGameName().c_str());
 
-        success &= writer.Key("EntryPointUuid");
+        success &= writer.Key(JSON_KEY_ENTRY_POINT_UUID);
         success &= writer.Uint64(_entryPointUuid);
 
-        success &= writer.Key("Objects");
+        success &= writer.Key(JSON_KEY_OBJECTS);
         success &= writer.StartArray();
         for (size_t i = 0; i < _objects.size(); i++)
         {
             const auto object = _objects.at(i);
             success &= writer.StartObject();
 
-            success &= writer.Key("UUID");
+            success &= writer.Key(JSON_KEY_UUID);
             success &= writer.Uint64(object->GetUuid());
 
-            success &= writer.Key("Name");
+            success &= writer.Key(JSON_KEY_NAME);
             success &= writer.String(object->GetName().c_str());
 
             const auto objectType = object->GetObjectType();
-            success &= writer.Key("ObjectType");
+            success &= writer.Key(JSON_KEY_OBJECT_TYPE);
             success &= writer.String(ObjectTypeToString(objectType).c_str());
 
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            success &= writer.Key("Text");
+            success &= writer.Key(JSON_KEY_TEXT);
             success &= writer.String(textObject->GetText().c_str());
 
             switch (objectType)
@@ -275,7 +285,7 @@ namespace Storyteller
             {
                 const auto questObject = dynamic_cast<const QuestObject*>(textObject);
                 const auto actions = questObject->GetActions();
-                success &= writer.Key("Actions");
+                success &= writer.Key(JSON_KEY_ACTIONS);
                 success &= writer.StartArray();
                 for (size_t action = 0; action < actions.size(); action++)
                 {
@@ -289,7 +299,7 @@ namespace Storyteller
             case ObjectType::ActionObjectType:
             {
                 const auto actionObject = dynamic_cast<const ActionObject*>(textObject);
-                success &= writer.Key("Target");
+                success &= writer.Key(JSON_KEY_TARGET);
                 success &= writer.Uint64(actionObject->GetTargetUuid());
                 break;
             }
@@ -338,57 +348,57 @@ namespace Storyteller
             return false;
         }
 
-        if (!jsonDocument.HasMember("GameName") || !jsonDocument["GameName"].IsString())
+        if (!jsonDocument.HasMember(JSON_KEY_GAME_NAME) || !jsonDocument[JSON_KEY_GAME_NAME].IsString())
         {
             return false;
         }
-        SetGameName(jsonDocument["GameName"].GetString());
+        SetGameName(jsonDocument[JSON_KEY_GAME_NAME].GetString());
 
-        if (!jsonDocument.HasMember("EntryPointUuid") || !jsonDocument["EntryPointUuid"].IsUint64())
+        if (!jsonDocument.HasMember(JSON_KEY_ENTRY_POINT_UUID) || !jsonDocument[JSON_KEY_ENTRY_POINT_UUID].IsUint64())
         {
             return false;
         }
-        SetEntryPoint(jsonDocument["EntryPointUuid"].GetUint64());
+        SetEntryPoint(jsonDocument[JSON_KEY_ENTRY_POINT_UUID].GetUint64());
 
-        if (!jsonDocument.HasMember("Objects") || !jsonDocument["Objects"].IsArray())
+        if (!jsonDocument.HasMember(JSON_KEY_OBJECTS) || !jsonDocument[JSON_KEY_OBJECTS].IsArray())
         {
             return false;
         }
-        const auto& objectsArray = jsonDocument["Objects"].GetArray();
+        const auto& objectsArray = jsonDocument[JSON_KEY_OBJECTS].GetArray();
 
         for (rapidjson::SizeType i = 0; i < objectsArray.Size(); i++)
         {
             const auto jsonObject = objectsArray[i].GetObject();
 
-            if (!jsonObject.HasMember("UUID") || !jsonObject["UUID"].IsUint64())
+            if (!jsonObject.HasMember(JSON_KEY_UUID) || !jsonObject[JSON_KEY_UUID].IsUint64())
             {
                 return false;
             }
-            const auto objectUuid = UUID(jsonObject["UUID"].GetUint64());
+            const auto objectUuid = UUID(jsonObject[JSON_KEY_UUID].GetUint64());
 
-            if (!jsonObject.HasMember("Name") || !jsonObject["Name"].IsString())
+            if (!jsonObject.HasMember(JSON_KEY_NAME) || !jsonObject[JSON_KEY_NAME].IsString())
             {
                 return false;
             }
-            const auto objectName = std::string(jsonObject["Name"].GetString());
+            const auto objectName = std::string(jsonObject[JSON_KEY_NAME].GetString());
 
-            if (!jsonObject.HasMember("ObjectType") || !jsonObject["ObjectType"].IsString())
+            if (!jsonObject.HasMember(JSON_KEY_OBJECT_TYPE) || !jsonObject[JSON_KEY_OBJECT_TYPE].IsString())
             {
                 return false;
             }
-            const auto objectType = StringToObjectType(jsonObject["ObjectType"].GetString());
+            const auto objectType = StringToObjectType(jsonObject[JSON_KEY_OBJECT_TYPE].GetString());
 
-            if (!jsonObject.HasMember("Text") || !jsonObject["Text"].IsString())
+            if (!jsonObject.HasMember(JSON_KEY_TEXT) || !jsonObject[JSON_KEY_TEXT].IsString())
             {
                 return false;
             }
-            const auto objectText = std::string(jsonObject["Text"].GetString());
+            const auto objectText = std::string(jsonObject[JSON_KEY_TEXT].GetString());
 
             switch (objectType)
             {
             case ObjectType::QuestObjectType:
             {
-                if (!jsonObject.HasMember("Actions") || !jsonObject["Actions"].IsArray())
+                if (!jsonObject.HasMember(JSON_KEY_ACTIONS) || !jsonObject[JSON_KEY_ACTIONS].IsArray())
                 {
                     return false;
                 }
@@ -397,7 +407,7 @@ namespace Storyteller
                 questObject->SetText(objectText);
                 questObject->SetName(objectName);
 
-                const auto questObjectActions = jsonObject["Actions"].GetArray();
+                const auto questObjectActions = jsonObject[JSON_KEY_ACTIONS].GetArray();
                 for (rapidjson::SizeType i = 0; i < questObjectActions.Size(); i++)
                 {
                     if (!questObjectActions[i].IsUint64())
@@ -414,13 +424,13 @@ namespace Storyteller
             }
             case ObjectType::ActionObjectType:
             {
-                if (!jsonObject.HasMember("Target") || !jsonObject["Target"].IsUint64())
+                if (!jsonObject.HasMember(JSON_KEY_TARGET) || !jsonObject[JSON_KEY_TARGET].IsUint64())
                 {
                     return false;
                 }
 
                 auto actionObject = std::make_shared<ActionObject>(objectUuid, [this]() { SetDirty(true); });
-                actionObject->SetTargetUuid(UUID(jsonObject["Target"].GetUint64()));
+                actionObject->SetTargetUuid(UUID(jsonObject[JSON_KEY_TARGET].GetUint64()));
                 actionObject->SetText(objectText);
                 actionObject->SetName(objectName);
 
