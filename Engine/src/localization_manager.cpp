@@ -36,7 +36,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message)
+    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message, bool noStore)
     {
         if (_messages.contains(domain))
         {
@@ -48,10 +48,10 @@ namespace Storyteller
         }
 
         const auto translation = boost::locale::translate(message).str(domain);
-        //if (translation == message && !_localeString.empty())
-        //{
-        //    return "No translation";
-        //}
+        if (translation == message && noStore)
+        {
+            return "No translation";
+        }
 
         _messages[domain][message] = translation;
 
