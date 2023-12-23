@@ -6,11 +6,9 @@ struct GLFWwindow;
 
 namespace Storyteller
 {
-	class FileDialogs
+	namespace FileDialogs
 	{
-	public:
-		// These return empty strings if cancelled
-		static std::string OpenFile(const char* filter, GLFWwindow* window);
-		static std::string SaveFile(const char* filter, GLFWwindow* window);
+		std::string OpenFile(const char* filter, GLFWwindow* window);
+		std::string SaveFile(const char* filter, GLFWwindow* window);
 	};
 }

@@ -8,50 +8,63 @@
 
 namespace Storyteller
 {
-    std::string FileDialogs::OpenFile(const char* filter, GLFWwindow* window)
-    {
-		OPENFILENAMEA ofn;
-		CHAR szFile[260] = { 0 };
-		CHAR currentDir[256] = { 0 };
-		ZeroMemory(&ofn, sizeof(OPENFILENAME));
-		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window(window);
-		ofn.lpstrFile = szFile;
-		ofn.nMaxFile = sizeof(szFile);
-		if (GetCurrentDirectoryA(256, currentDir))
-			ofn.lpstrInitialDir = currentDir;
-		ofn.lpstrFilter = filter;
-		ofn.nFilterIndex = 1;
-		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+	namespace FileDialogs
+	{
+		std::string OpenFile(const char* filter, GLFWwindow* window)
+		{
+			OPENFILENAMEA ofn;
+			CHAR szFile[260] = { 0 };
+			CHAR currentDir[256] = { 0 };
+			ZeroMemory(&ofn, sizeof(OPENFILENAME));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.hwndOwner = glfwGetWin32Window(window);
+			ofn.lpstrFile = szFile;
+			ofn.nMaxFile = sizeof(szFile);
+			if (GetCurrentDirectoryA(256, currentDir))
+			{
+				ofn.lpstrInitialDir = currentDir;
+			}
+				
+			ofn.lpstrFilter = filter;
+			ofn.nFilterIndex = 1;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-		if (GetOpenFileNameA(&ofn) == TRUE)
-			return ofn.lpstrFile;
+			if (GetOpenFileNameA(&ofn) == TRUE)
+			{
+				return ofn.lpstrFile;
+			}
 
-		return std::string();
-    }
+			return std::string();
+		}
+		//--------------------------------------------------------------------------
 
-    std::string FileDialogs::SaveFile(const char* filter, GLFWwindow* window)
-    {
-		OPENFILENAMEA ofn;
-		CHAR szFile[260] = { 0 };
-		CHAR currentDir[256] = { 0 };
-		ZeroMemory(&ofn, sizeof(OPENFILENAME));
-		ofn.lStructSize = sizeof(OPENFILENAME);
-		ofn.hwndOwner = glfwGetWin32Window(window);
-		ofn.lpstrFile = szFile;
-		ofn.nMaxFile = sizeof(szFile);
-		if (GetCurrentDirectoryA(256, currentDir))
-			ofn.lpstrInitialDir = currentDir;
-		ofn.lpstrFilter = filter;
-		ofn.nFilterIndex = 1;
-		ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+		std::string SaveFile(const char* filter, GLFWwindow* window)
+		{
+			OPENFILENAMEA ofn;
+			CHAR szFile[260] = { 0 };
+			CHAR currentDir[256] = { 0 };
+			ZeroMemory(&ofn, sizeof(OPENFILENAME));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.hwndOwner = glfwGetWin32Window(window);
+			ofn.lpstrFile = szFile;
+			ofn.nMaxFile = sizeof(szFile);
+			if (GetCurrentDirectoryA(256, currentDir))
+			{
+				ofn.lpstrInitialDir = currentDir;
+			}
+				
+			ofn.lpstrFilter = filter;
+			ofn.nFilterIndex = 1;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+			ofn.lpstrDefExt = strchr(filter, '\0') + 1;
 
-		// Sets the default extension by extracting it from the filter
-		ofn.lpstrDefExt = strchr(filter, '\0') + 1;
+			if (GetSaveFileNameA(&ofn) == TRUE)
+			{
+				return ofn.lpstrFile;
+			}
 
-		if (GetSaveFileNameA(&ofn) == TRUE)
-			return ofn.lpstrFile;
-
-		return std::string();
-    }
+			return std::string();
+		}
+		//--------------------------------------------------------------------------
+	}
 }
