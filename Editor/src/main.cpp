@@ -216,7 +216,7 @@ int main()
 
                         ImGui::TableNextColumn();
                         ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
-                        ImGui::Selectable(Storyteller::ObjectTypeToString(object->GetObjectType()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                        ImGui::Selectable(localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
                         ImGui::PopStyleColor();
                         if (ImGui::IsItemClicked(0))
                         {
@@ -242,7 +242,7 @@ int main()
 
         // game objects properties
         {
-            ImGui::Begin(localizationManager->Translate(EDITOR_DOMAIN, "Texts").c_str());
+            ImGui::Begin(localizationManager->Translate(EDITOR_DOMAIN, "Texts").c_str(), nullptr);
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str());
 
             const auto selectedObject = gameDocumentProxy->GetSelectedObject();
@@ -257,20 +257,126 @@ int main()
             }
             ImGui::PopItemWidth();
 
+            const auto availableHeight = ImGui::GetContentRegionAvail().y;
+
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Source text").c_str());
             const auto selectedTextObject = dynamic_cast<Storyteller::TextObject*>(selectedObject.get());
             auto sourceText = selectedTextObject ? selectedTextObject->GetText() : std::string();
-            if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, ImGui::GetContentRegionAvail().y / 3.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
+            if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, availableHeight / 3.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
             {
                 selectedTextObject->SetText(sourceText);
             }
 
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Translation").c_str());
             auto sourceTextTranslation = selectedTextObject ? localizationManager->Translate(gameDocument->GetGameName(), sourceText, true) : std::string();
-            ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, ImGui::GetContentRegionAvail().y / 3.0), ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 3.0), ImGuiInputTextFlags_ReadOnly);
 
-            ImGui::Separator();
-            ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Properties").c_str());
+
+            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Properties").c_str());
+            const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : Storyteller::ObjectType::ErrorObjectType;
+            if (selectedObjectType == Storyteller::ObjectType::QuestObjectType)
+            {
+                auto selectedQuestObject = dynamic_cast<Storyteller::QuestObject*>(selectedObject.get());
+
+                const auto entryPointObject = gameDocumentProxy->GetEntryPoint();
+                auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
+                if (ImGui::Checkbox(localizationManager->Translate(EDITOR_DOMAIN, "Entry point").c_str(), &isEntryPoint) && selectedObject)
+                {
+                    gameDocumentProxy->SetEntryPoint(selectedUuid);
+                }
+
+                auto allActionObjects = gameDocumentProxy->GetObjects(Storyteller::ObjectType::ActionObjectType);
+                std::erase_if(allActionObjects, [](const Storyteller::BasicObject::Ptr& object) { return object->GetName().empty(); });
+
+                static auto selectedActionIndex = 0;
+                if (selectedActionIndex >= allActionObjects.size())
+                {
+                    selectedActionIndex = 0;
+                }
+
+                if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Add action").c_str()))
+                {
+                    selectedQuestObject->AddAction(allActionObjects.at(selectedActionIndex)->GetUuid());
+                }
+
+                ImGui::SameLine();
+                if (ImGui::BeginCombo(localizationManager->Translate(EDITOR_DOMAIN, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[selectedActionIndex]->GetName().c_str()))
+                {
+                    for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
+                    {
+                        const auto selected = selectedActionIndex == actionIndex;
+                        if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
+                        {
+                            selectedActionIndex = actionIndex;
+                        }
+
+                        if (selected)
+                        {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+
+                    ImGui::EndCombo();
+                }
+
+                ImGui::BeginChild(localizationManager->Translate(EDITOR_DOMAIN, "Object's actions").c_str());
+                const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoHostExtendX;
+                if (ImGui::BeginTable(localizationManager->Translate(EDITOR_DOMAIN, "Objects's actions").c_str(), 3, actionsTableFlags))
+                {
+                    ImGui::TableSetupColumn(localizationManager->Translate(EDITOR_DOMAIN, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
+                    ImGui::TableSetupColumn(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
+                    ImGui::TableSetupColumn(localizationManager->Translate(EDITOR_DOMAIN, "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
+                    ImGui::TableSetupScrollFreeze(0, 1);
+                    ImGui::TableHeadersRow();
+
+                    const auto questObjectActions = selectedQuestObject->GetActions();
+                    static auto selectedChildActionIndex = 0;
+                    if (selectedChildActionIndex >= questObjectActions.size())
+                    {
+                        selectedChildActionIndex = 0;
+                    }
+
+                    for (auto row = 0; row < questObjectActions.size(); row++)
+                    {
+                        const auto object = gameDocumentProxy->GetObject(questObjectActions[row]);
+                        if (!object)
+                        {
+                            continue;
+                        }
+
+                        const auto actionObject = dynamic_cast<Storyteller::ActionObject*>(object.get());
+                        if (!actionObject)
+                        {
+                            continue;
+                        }
+
+                        auto selected = selectedChildActionIndex == row;
+
+                        ImGui::TableNextRow();
+
+                        ImGui::TableNextColumn();
+                        ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                        if (ImGui::IsItemClicked(0))
+                        {
+                            selectedChildActionIndex = row;
+                        }
+
+                        ImGui::TableNextColumn();
+                        ImGui::Text(object->GetName().c_str());
+
+                        ImGui::TableNextColumn();
+                        ImGui::Text(localizationManager->Translate(gameDocument->GetGameName(), actionObject->GetText()).c_str());
+                    }
+
+                    ImGui::EndTable();
+                }
+
+                ImGui::EndChild();
+            }
+            else if (selectedObjectType == Storyteller::ObjectType::ActionObjectType)
+            {
+
+            }
 
             ImGui::End();
         }
