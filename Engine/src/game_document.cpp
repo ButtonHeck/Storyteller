@@ -224,6 +224,14 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    std::vector<BasicObject::Ptr> GameDocument::GetObjects(ObjectType type) const
+    {
+        std::vector<BasicObject::Ptr> result;
+        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type](const BasicObject::Ptr& object) { return object->GetObjectType() == type; });
+        return result;
+    }
+    //--------------------------------------------------------------------------
+
     void GameDocument::SetEntryPoint(const UUID& uuid)
     {
         _entryPointUuid = uuid;

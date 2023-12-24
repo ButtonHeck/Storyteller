@@ -131,6 +131,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    std::vector<BasicObject::Ptr> GameDocumentSortFilterProxyView::GetObjects(ObjectType type) const
+    {
+        return _document->GetObjects(type);
+    }
+    //--------------------------------------------------------------------------
+
     void GameDocumentSortFilterProxyView::SetEntryPoint(const UUID& uuid)
     {
         _document->SetEntryPoint(uuid);
