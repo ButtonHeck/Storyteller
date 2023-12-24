@@ -187,6 +187,10 @@ namespace Storyteller
     void QuestObject::SetFinal(bool isFinal)
     {
         _final = isFinal;
+        if (_changeCallback)
+        {
+            _changeCallback();
+        }
     }
     //--------------------------------------------------------------------------
 
