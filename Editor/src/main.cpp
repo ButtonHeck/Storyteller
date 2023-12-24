@@ -319,6 +319,26 @@ int main()
                     ImGui::EndCombo();
                 }
 
+                const auto questObjectActions = selectedQuestObject->GetActions();
+                static auto selectedChildActionIndex = 0;
+                if (selectedChildActionIndex >= questObjectActions.size())
+                {
+                    selectedChildActionIndex = 0;
+                }
+
+                if (questObjectActions.empty())
+                {
+                    ImGui::BeginDisabled();
+                }
+                if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Remove").c_str()) && !questObjectActions.empty())
+                {
+                    selectedQuestObject->RemoveAction(questObjectActions.at(selectedChildActionIndex));
+                }
+                if (questObjectActions.empty())
+                {
+                    ImGui::EndDisabled();
+                }
+
                 ImGui::BeginChild(localizationManager->Translate(EDITOR_DOMAIN, "Object's actions").c_str());
                 const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoHostExtendX;
                 if (ImGui::BeginTable(localizationManager->Translate(EDITOR_DOMAIN, "Objects's actions").c_str(), 3, actionsTableFlags))
@@ -328,13 +348,6 @@ int main()
                     ImGui::TableSetupColumn(localizationManager->Translate(EDITOR_DOMAIN, "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
                     ImGui::TableSetupScrollFreeze(0, 1);
                     ImGui::TableHeadersRow();
-
-                    const auto questObjectActions = selectedQuestObject->GetActions();
-                    static auto selectedChildActionIndex = 0;
-                    if (selectedChildActionIndex >= questObjectActions.size())
-                    {
-                        selectedChildActionIndex = 0;
-                    }
 
                     for (auto row = 0; row < questObjectActions.size(); row++)
                     {
