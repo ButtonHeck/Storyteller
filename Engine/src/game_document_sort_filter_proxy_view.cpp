@@ -131,9 +131,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::vector<BasicObject::Ptr> GameDocumentSortFilterProxyView::GetObjects(ObjectType type) const
+    std::vector<BasicObject::Ptr> GameDocumentSortFilterProxyView::GetObjects(ObjectType type, bool noEmptyName) const
     {
-        return _document->GetObjects(type);
+        return _document->GetObjects(type, noEmptyName);
     }
     //--------------------------------------------------------------------------
 

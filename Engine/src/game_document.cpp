@@ -224,10 +224,23 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::vector<BasicObject::Ptr> GameDocument::GetObjects(ObjectType type) const
+    std::vector<BasicObject::Ptr> GameDocument::GetObjects(ObjectType type, bool noEmptyName) const
     {
         std::vector<BasicObject::Ptr> result;
-        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type](const BasicObject::Ptr& object) { return object->GetObjectType() == type; });
+        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type, noEmptyName](const BasicObject::Ptr& object) 
+            { 
+                if (object->GetObjectType() != type)
+                {
+                    return false;
+                }
+
+                if (noEmptyName)
+                {
+                    return !object->GetName().empty();
+                }
+                
+                return true;
+            });
         return result;
     }
     //--------------------------------------------------------------------------
