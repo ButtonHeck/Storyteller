@@ -21,12 +21,14 @@ int main()
         return -1;
     }
 
-    Storyteller::LocalizationManager::Ptr localizationManager(new Storyteller::LocalizationManager());
+    using namespace Storyteller;
+
+    LocalizationManager::Ptr localizationManager(new LocalizationManager());
     localizationManager->AddMessagesDomain(EDITOR_DOMAIN);
     localizationManager->Build("ru_RU.UTF-8");
 
-    Storyteller::GlfwHelpers::SetupHints();
-    std::shared_ptr<Storyteller::GlfwHelpers::UserData> userData = std::make_shared<Storyteller::GlfwHelpers::UserData>();
+    GlfwHelpers::SetupHints();
+    std::shared_ptr<GlfwHelpers::UserData> userData = std::make_shared<GlfwHelpers::UserData>();
 
     auto window = glfwCreateWindow(userData->defaultWidth, userData->defaultHeight, 
         localizationManager->Translate(EDITOR_DOMAIN, "Storyteller Editor").c_str(), nullptr, nullptr);
@@ -35,16 +37,16 @@ int main()
     glfwSetWindowUserPointer(window, userData.get());
     glfwMakeContextCurrent(window);
 
-    Storyteller::ImGuiHelpers::Initialize(window);
+    ImGuiHelpers::Initialize(window);
 
-    Storyteller::GameDocument::Ptr gameDocument(new Storyteller::GameDocument(std::string()));
-    Storyteller::GameDocumentSortFilterProxyView::Ptr gameDocumentProxy(new Storyteller::GameDocumentSortFilterProxyView(gameDocument));
+    GameDocument::Ptr gameDocument(new GameDocument(std::string()));
+    GameDocumentSortFilterProxyView::Ptr gameDocumentProxy(new GameDocumentSortFilterProxyView(gameDocument));
 
     while (!glfwWindowShouldClose(window))
     {
-        Storyteller::ImGuiHelpers::NewFrame();
-        Storyteller::ImGuiHelpers::PrepareDockspace();
-        Storyteller::ImGuiHelpers::Customize();
+        ImGuiHelpers::NewFrame();
+        ImGuiHelpers::PrepareDockspace();
+        ImGuiHelpers::Customize();
 
         // Menu bar
         if (ImGui::BeginMenuBar())
@@ -53,12 +55,12 @@ int main()
             {
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str()))
                 {
-                    std::string filepath = Storyteller::FileDialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
+                    std::string filepath = FileDialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
                     if (!filepath.empty())
                     {
                         std::cout << filepath << std::endl;
-                        gameDocument.reset(new Storyteller::GameDocument(filepath));
-                        gameDocumentProxy.reset(new Storyteller::GameDocumentSortFilterProxyView(gameDocument));
+                        gameDocument.reset(new GameDocument(filepath));
+                        gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(gameDocument));
                     }
                 }
 
@@ -69,7 +71,7 @@ int main()
 
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Save as...").c_str()))
                 {
-                    std::string filepath = Storyteller::FileDialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
+                    std::string filepath = FileDialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
                     gameDocument->Save(filepath);
                 }
 
@@ -104,21 +106,22 @@ int main()
             {
                 if (selectedTypeIndex == 0)
                 {
-                    gameDocumentProxy->AddObject(Storyteller::ObjectType::QuestObjectType);
+                    gameDocumentProxy->AddObject(ObjectType::QuestObjectType);
                 }
                 else if (selectedTypeIndex == 1)
                 {
-                    gameDocumentProxy->AddObject(Storyteller::ObjectType::ActionObjectType);
+                    gameDocumentProxy->AddObject(ObjectType::ActionObjectType);
                 }
             }
 
             ImGui::SameLine();
 
             std::string typeItems[] = {
-                localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(Storyteller::ObjectType::QuestObjectType)),
-                localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(Storyteller::ObjectType::ActionObjectType)),
+                localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::QuestObjectType)),
+                localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::ActionObjectType)),
             };
 
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str()).x);
             if (ImGui::BeginCombo(localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str(), typeItems[selectedTypeIndex].c_str()))
             {
                 for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
@@ -137,6 +140,7 @@ int main()
 
                 ImGui::EndCombo();
             }
+            ImGui::PopItemWidth();
 
             const auto hasSelection = gameDocumentProxy->GetSelectedObject();
             if (!hasSelection)
@@ -156,25 +160,25 @@ int main()
             ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Filters").c_str());
             static bool questObjectFilter = true;
             static bool actionObjectFilter = true;
-            if (ImGui::Checkbox(localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(Storyteller::ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
+            if (ImGui::Checkbox(localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
             {
                 if (questObjectFilter)
                 {
                     gameDocumentProxy->UpdateCache();
                 }
 
-                gameDocumentProxy->DoFilter(Storyteller::ObjectType::QuestObjectType, questObjectFilter);
+                gameDocumentProxy->DoFilter(ObjectType::QuestObjectType, questObjectFilter);
             }
 
             ImGui::SameLine();
-            if (ImGui::Checkbox(localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(Storyteller::ObjectType::ActionObjectType)).c_str(), &actionObjectFilter))
+            if (ImGui::Checkbox(localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::ActionObjectType)).c_str(), &actionObjectFilter))
             {
                 if (actionObjectFilter)
                 {
                     gameDocumentProxy->UpdateCache();
                 }
 
-                gameDocumentProxy->DoFilter(Storyteller::ObjectType::ActionObjectType, actionObjectFilter);
+                gameDocumentProxy->DoFilter(ObjectType::ActionObjectType, actionObjectFilter);
             }
 
 
@@ -199,7 +203,7 @@ int main()
                             const auto tableSortSpec = sortSpecs->Specs;
                             const auto direction = tableSortSpec->SortDirection;
                             tableSortSpec->ColumnIndex;
-                            gameDocumentProxy->DoSort(direction == ImGuiSortDirection_Ascending, Storyteller::GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
+                            gameDocumentProxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
                             sortSpecs->SpecsDirty = false;
                         }
                     }
@@ -216,7 +220,7 @@ int main()
 
                         ImGui::TableNextColumn();
                         ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
-                        ImGui::Selectable(localizationManager->Translate(STORYTELLER_DOMAIN, Storyteller::ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                        ImGui::Selectable(localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
                         ImGui::PopStyleColor();
                         if (ImGui::IsItemClicked(0))
                         {
@@ -246,7 +250,7 @@ int main()
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str());
 
             const auto selectedObject = gameDocumentProxy->GetSelectedObject();
-            const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
+            const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : UUID::InvalidUuid;
             const auto uuidString = std::to_string(selectedUuid);
 
             auto objectName = selectedObject ? selectedObject->GetName() : std::string();
@@ -260,7 +264,7 @@ int main()
             const auto availableHeight = ImGui::GetContentRegionAvail().y;
 
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Source text").c_str());
-            const auto selectedTextObject = dynamic_cast<Storyteller::TextObject*>(selectedObject.get());
+            const auto selectedTextObject = dynamic_cast<TextObject*>(selectedObject.get());
             auto sourceText = selectedTextObject ? selectedTextObject->GetText() : std::string();
             if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, availableHeight / 3.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
             {
@@ -273,10 +277,11 @@ int main()
 
 
             ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Properties").c_str());
-            const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : Storyteller::ObjectType::ErrorObjectType;
-            if (selectedObjectType == Storyteller::ObjectType::QuestObjectType)
+            const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : ObjectType::ErrorObjectType;
+            if (selectedObjectType == ObjectType::QuestObjectType)
             {
-                auto selectedQuestObject = dynamic_cast<Storyteller::QuestObject*>(selectedObject.get());
+                auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
+                const auto allActionObjects = gameDocumentProxy->GetObjects(ObjectType::ActionObjectType, true);
 
                 const auto entryPointObject = gameDocumentProxy->GetEntryPoint();
                 auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
@@ -285,13 +290,17 @@ int main()
                     gameDocumentProxy->SetEntryPoint(selectedUuid);
                 }
 
-                auto allActionObjects = gameDocumentProxy->GetObjects(Storyteller::ObjectType::ActionObjectType);
-                std::erase_if(allActionObjects, [](const Storyteller::BasicObject::Ptr& object) { return object->GetName().empty(); });
-
                 static auto selectedActionIndex = 0;
                 if (selectedActionIndex >= allActionObjects.size())
                 {
                     selectedActionIndex = 0;
+                }
+
+                auto isFinal = selectedQuestObject->IsFinal();
+                ImGui::SameLine();
+                if (ImGui::Checkbox(localizationManager->Translate(EDITOR_DOMAIN, "Final").c_str(), &isFinal) && selectedObject)
+                {
+                    selectedQuestObject->SetFinal(isFinal);
                 }
 
                 if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Add action").c_str()))
@@ -300,6 +309,7 @@ int main()
                 }
 
                 ImGui::SameLine();
+                ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(localizationManager->Translate(EDITOR_DOMAIN, "Action name").c_str()).x);
                 if (ImGui::BeginCombo(localizationManager->Translate(EDITOR_DOMAIN, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[selectedActionIndex]->GetName().c_str()))
                 {
                     for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
@@ -318,6 +328,7 @@ int main()
 
                     ImGui::EndCombo();
                 }
+                ImGui::PopItemWidth();
 
                 const auto questObjectActions = selectedQuestObject->GetActions();
                 static auto selectedChildActionIndex = 0;
@@ -357,7 +368,7 @@ int main()
                             continue;
                         }
 
-                        const auto actionObject = dynamic_cast<Storyteller::ActionObject*>(object.get());
+                        const auto actionObject = dynamic_cast<ActionObject*>(object.get());
                         if (!actionObject)
                         {
                             continue;
@@ -386,9 +397,52 @@ int main()
 
                 ImGui::EndChild();
             }
-            else if (selectedObjectType == Storyteller::ObjectType::ActionObjectType)
+            else if (selectedObjectType == ObjectType::ActionObjectType)
             {
+                auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
+                const auto allQuestObjects = gameDocumentProxy->GetObjects(ObjectType::QuestObjectType, true);
 
+                static auto selectedQuestIndex = 0;
+                if (selectedQuestIndex >= allQuestObjects.size())
+                {
+                    selectedQuestIndex = 0;
+                }
+
+                if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Set target").c_str()))
+                {
+                    selectedActionObject->SetTargetUuid(allQuestObjects.at(selectedQuestIndex)->GetUuid());
+                }
+
+                ImGui::SameLine();
+                ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(localizationManager->Translate(EDITOR_DOMAIN, "Quest stage name").c_str()).x);
+                if (ImGui::BeginCombo(localizationManager->Translate(EDITOR_DOMAIN, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[selectedQuestIndex]->GetName().c_str()))
+                {
+                    for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
+                    {
+                        const auto selected = selectedQuestIndex == questIndex;
+                        if (ImGui::Selectable(allQuestObjects.at(questIndex)->GetName().c_str(), selected))
+                        {
+                            selectedQuestIndex = questIndex;
+                        }
+
+                        if (selected)
+                        {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+                ImGui::PopItemWidth();
+
+                if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Clear target").c_str()))
+                {
+                    selectedActionObject->SetTargetUuid(UUID::InvalidUuid);
+                }
+
+                ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Current target name: ").c_str());
+                ImGui::SameLine();
+                const auto targetObject = gameDocumentProxy->GetObject(selectedActionObject->GetTargetUuid());
+                ImGui::Text(targetObject ? targetObject->GetName().c_str() : localizationManager->Translate(EDITOR_DOMAIN, "Not set or does not exist").c_str());
             }
 
             ImGui::End();
@@ -397,15 +451,15 @@ int main()
         ImGui::ShowDemoWindow();
         ImGui::End();
 
-        Storyteller::ImGuiHelpers::Render();
-        Storyteller::ImGuiHelpers::UpdateDocking();
-        Storyteller::ImGuiHelpers::EndFrame();
+        ImGuiHelpers::Render();
+        ImGuiHelpers::UpdateDocking();
+        ImGuiHelpers::EndFrame();
 
-        Storyteller::GlfwHelpers::EndFrame(window, userData->updateContinuously);
+        GlfwHelpers::EndFrame(window, userData->updateContinuously);
     }
 
-    Storyteller::ImGuiHelpers::Shutdown();
-    Storyteller::GlfwHelpers::Shutdown(window);
+    ImGuiHelpers::Shutdown();
+    GlfwHelpers::Shutdown(window);
 
     return 0;
 }
