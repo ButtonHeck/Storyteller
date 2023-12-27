@@ -1,4 +1,5 @@
 #include "localization_manager.h"
+#include "filesystem_utils.h"
 
 #include <iostream>
 #include <fstream>
@@ -61,7 +62,7 @@ namespace Storyteller
 
     bool LocalizationManager::CreateTranslations(const GameDocument::Ptr document, const std::filesystem::path& path) const
     {
-        if (!TranslationsPathIsValid(path))
+        if (!Filesystem::CheckPathAndTryCreate(path))
         {
             return false;
         }
@@ -86,25 +87,6 @@ namespace Storyteller
 
         outputStream << ss.str();
         outputStream.close();
-
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool LocalizationManager::TranslationsPathIsValid(const std::filesystem::path& path) const
-    {
-        if (path.empty() || !path.has_filename() || !path.has_extension())
-        {
-            return false;
-        }
-
-        if (!std::filesystem::exists(path))
-        {
-            if (!std::filesystem::create_directory(path.parent_path()))
-            {
-                return false;
-            }
-        }
 
         return true;
     }

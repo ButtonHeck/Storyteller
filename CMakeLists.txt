@@ -71,6 +71,8 @@ set(STORYTELLER_ENGINE_SOURCE_FILES
     "${STORYTELLER_ENGINE_SOURCE_DIR}/localization_manager.cpp"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/console_manager.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/console_manager.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/filesystem_utils.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/filesystem_utils.cpp"
 )
 
 add_library(${STORYTELLER_ENGINE}
