@@ -55,7 +55,7 @@ int main()
             {
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str()))
                 {
-                    std::string filepath = FileDialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
+                    const auto filepath = FileDialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
                     if (!filepath.empty())
                     {
                         std::cout << filepath << std::endl;
@@ -71,7 +71,7 @@ int main()
 
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Save as...").c_str()))
                 {
-                    std::string filepath = FileDialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
+                    const auto filepath = FileDialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
                     gameDocument->Save(filepath);
                 }
 
@@ -90,14 +90,20 @@ int main()
             const auto mainFlags = gameDocument->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
             ImGui::Begin(localizationManager->Translate(EDITOR_DOMAIN, "Game").c_str(), nullptr, mainFlags);
 
-            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Game name").c_str());
+            ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Game document").c_str());
             auto gameName = gameDocument->GetGameName();
-            ImGui::PushItemWidth(-FLT_MIN);
-            if (ImGui::InputText(localizationManager->Translate(EDITOR_DOMAIN, "Game name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str()).x);
+            if (ImGui::InputText(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
             {
                 gameDocument->SetGameName(gameName);
             }
             ImGui::PopItemWidth();
+
+            if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Create translations file...").c_str()))
+            {
+                const auto filepath = FileDialogs::SaveFile("Text Files (*.txt)\0*.txt\0", window);
+                localizationManager->CreateTranslations(gameDocument, filepath);
+            }
 
 
             ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Objects management").c_str());
