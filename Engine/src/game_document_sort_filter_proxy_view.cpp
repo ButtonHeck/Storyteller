@@ -1,4 +1,5 @@
 #include "game_document_sort_filter_proxy_view.h"
+#include "log.h"
 
 namespace Storyteller
 {
@@ -58,7 +59,9 @@ namespace Storyteller
         , _cache(document->GetObjects())
         , _selectedUuid(UUID::InvalidUuid)
         , _sorter()
-    {}
+    {
+        STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: create");
+    }
     //--------------------------------------------------------------------------
 
     GameDocument::Ptr GameDocumentSortFilterProxyView::GetSourceDocument() const
@@ -113,15 +116,15 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocumentSortFilterProxyView::GetObject(const UUID& uuid) const
+    BasicObject::Ptr GameDocumentSortFilterProxyView::GetBasicObject(const UUID& uuid) const
     {
-        return _document->GetObject(uuid);
+        return _document->GetBasicObject(uuid);
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocumentSortFilterProxyView::GetObject(const std::string& name) const
+    BasicObject::Ptr GameDocumentSortFilterProxyView::GetBasicObject(const std::string& name) const
     {
-        return _document->GetObject(name);
+        return _document->GetBasicObject(name);
     }
     //--------------------------------------------------------------------------
 
@@ -151,6 +154,8 @@ namespace Storyteller
 
     void GameDocumentSortFilterProxyView::Select(const UUID& uuid)
     {
+        STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: select ({})", uuid);
+
         _selectedUuid = uuid;
     }
     //--------------------------------------------------------------------------
@@ -192,12 +197,16 @@ namespace Storyteller
 
     void GameDocumentSortFilterProxyView::UpdateCache()
     {
+        STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: updating cache");
+
         _cache = _document->GetObjects();
     }
     //--------------------------------------------------------------------------
 
     void GameDocumentSortFilterProxyView::DoSort(bool ascending, Sorter::SortValue sortValue)
     {
+        STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: sorting '{}', ascending: '{}'", sortValue, ascending);
+
         _sorter.active = true;
         _sorter.ascending = ascending;
         _sorter.sortValue = sortValue;
@@ -207,6 +216,8 @@ namespace Storyteller
 
     void GameDocumentSortFilterProxyView::DoFilter(ObjectType type, bool accept)
     {
+        STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: filtering '{}', accepted: '{}'", ObjectTypeToString(type), accept);
+
         _filter.active = true;
         if (accept)
         {
@@ -223,6 +234,8 @@ namespace Storyteller
 
     void GameDocumentSortFilterProxyView::UpdateView()
     {
+        STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: updating view");
+
         UpdateCache();
 
         if (_sorter.active)

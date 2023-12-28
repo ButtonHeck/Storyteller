@@ -1,5 +1,6 @@
 #include "localization_manager.h"
 #include "filesystem_utils.h"
+#include "log.h"
 
 #include <iostream>
 #include <fstream>
@@ -10,6 +11,8 @@ namespace Storyteller
         : _localeGenetator()
         , _localeString("")
     {
+        STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
+
         if (!defaultPath.empty())
         {
             _localeGenetator.add_messages_path(defaultPath);
@@ -19,6 +22,8 @@ namespace Storyteller
 
     void LocalizationManager::Build(const std::string& localeString)
     {
+        STRTLR_CORE_LOG_INFO("LocalizationManager: building locale '{}'", localeString);
+
         _localeString = localeString;
         std::locale::global(_localeGenetator(_localeString));
         std::cout.imbue(std::locale());
@@ -27,12 +32,16 @@ namespace Storyteller
 
     void LocalizationManager::AddMessagesPath(const std::string& path)
     {
+        STRTLR_CORE_LOG_INFO("LocalizationManager: add messages path '{}'", path);
+
         _localeGenetator.add_messages_path(path);
     }
     //--------------------------------------------------------------------------
 
     void LocalizationManager::AddMessagesDomain(const std::string& domain)
     {
+        STRTLR_CORE_LOG_INFO("LocalizationManager: add messages domain '{}'", domain);
+
         _localeGenetator.add_messages_domain(domain);
     }
     //--------------------------------------------------------------------------
@@ -62,6 +71,8 @@ namespace Storyteller
 
     bool LocalizationManager::CreateTranslations(const GameDocument::Ptr document, const std::filesystem::path& path) const
     {
+        STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), path.generic_string());
+
         if (!Filesystem::CheckPathAndTryCreate(path))
         {
             return false;
@@ -70,6 +81,8 @@ namespace Storyteller
         std::ofstream outputStream(path.string(), std::ios::out | std::ios::trunc);
         if (!outputStream.is_open() || !outputStream.good())
         {
+            STRTLR_CORE_LOG_ERROR("LocalizationManager: error opening file stream");
+
             return false;
         }
 

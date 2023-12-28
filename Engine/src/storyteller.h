@@ -8,3 +8,4 @@
 #include "game_controller.h"
 #include "localization_manager.h"
 #include "filesystem_utils.h"
+#include "log.h"

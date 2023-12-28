@@ -1,4 +1,5 @@
 #include "console_manager.h"
+#include "log.h"
 
 #include <iostream>
 #include <conio.h>
@@ -11,7 +12,9 @@ namespace Storyteller
     ConsoleManager::ConsoleManager(const LocalizationManager::Ptr localizationManager, char separator)
         : _localizationManager(localizationManager)
         , _separator(separator)
-    {}
+    {
+        STRTLR_CORE_LOG_DEBUG("ConsoleManager: created, separator is '{}'", separator);
+    }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::SetSeparator(char separator)
@@ -22,6 +25,8 @@ namespace Storyteller
 
     void ConsoleManager::StartNewFrame(const std::string& gameNameTranslated) const
     {
+        STRTLR_CORE_LOG_INFO("ConsoleManager: new frame");
+
         ClearConsole();
         PrintSeparator();
         PrintMadeByString();
@@ -71,6 +76,8 @@ namespace Storyteller
 
     void ConsoleManager::PrintMessage(const std::string& message) const
     {
+        STRTLR_CORE_LOG_INFO("ConsoleManager: message '{}'", message);
+
         std::cout << message << std::endl;
     }
     //--------------------------------------------------------------------------
@@ -92,12 +99,16 @@ namespace Storyteller
 
     void ConsoleManager::PrintErrorHint(const std::string& details) const
     {
+        STRTLR_CORE_LOG_ERROR("ConsoleManager: error '{}'", details);
+
         std::cout << _localizationManager->Translate("Storyteller", "Error: ") << details << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::PrintCriticalHint(const std::string& details, bool waitForKeyboardHit) const
     {
+        STRTLR_CORE_LOG_CRITICAL("ConsoleManager: critical error '{}'", details);
+
         std::cout << _localizationManager->Translate("Storyteller", "Critical error: ") << details << std::endl;
 
         if (waitForKeyboardHit)

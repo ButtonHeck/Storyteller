@@ -1,5 +1,6 @@
 #include "game_document.h"
 #include "filesystem_utils.h"
+#include "log.h"
 
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
@@ -31,21 +32,26 @@ namespace Storyteller
         , _dirty(false)
         , _entryPointUuid(UUID::InvalidUuid)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: create '{}'", _path.generic_string());
         Load(path);
     }
     //--------------------------------------------------------------------------
 
     bool GameDocument::Load(const std::filesystem::path& path)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: load from '{}'", path.generic_string());
+
         if (path.empty() || !std::filesystem::exists(path)
             || !path.has_filename() || !path.has_extension())
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: insufficient path");
             return false;
         }
 
         const auto success = Deserialize(path);
         if (!success)
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: deserialization failed");
             return false;
         }
 
@@ -63,14 +69,18 @@ namespace Storyteller
 
     bool GameDocument::Save(const std::filesystem::path& path)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: saving to '{}'", path.generic_string());
+
         if (!Filesystem::CheckPathAndTryCreate(path))
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: insufficient path");
             return false;
         }
 
         const auto success = Serialize(path);
         if (!success)
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: serialization failed");
             return false;
         }
 
@@ -88,6 +98,8 @@ namespace Storyteller
 
     void GameDocument::SetGameName(const std::string& gameName)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: set name '{}'", gameName);
+
         _gameName = gameName;
         SetDirty(true);
     }
@@ -107,12 +119,16 @@ namespace Storyteller
 
     void GameDocument::SetPath(const std::filesystem::path& path)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", path.generic_string());
+
         _path = path;
     }
     //--------------------------------------------------------------------------
 
     void GameDocument::SetPathString(const std::string& path)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", path);
+
         _path = std::filesystem::path(path);
     }
     //--------------------------------------------------------------------------
@@ -131,8 +147,11 @@ namespace Storyteller
 
     bool GameDocument::AddObject(ObjectType type, const UUID& uuid)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: add object ({}) of type '{}'", uuid, ObjectTypeToString(type));
+
         if (type == ObjectType::ErrorObjectType || std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == uuid; }) != _objects.cend())
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: type is invalid or ({}) is already exist", uuid);
             return false;
         }
 
@@ -158,8 +177,11 @@ namespace Storyteller
 
     bool GameDocument::AddObject(const BasicObject::Ptr& object)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: add object ({}) of type '{}'", object->GetUuid(), ObjectTypeToString(object->GetObjectType()));
+
         if (std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == object->GetUuid(); }) != _objects.cend())
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: type is invalid or ({}) is already exist", object->GetUuid());
             return false;
         }
 
@@ -172,9 +194,12 @@ namespace Storyteller
 
     bool GameDocument::RemoveObject(const UUID& uuid)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: removing object ({})", uuid);
+
         const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == uuid; });
         if (it == _objects.cend())
         {
+            STRTLR_CORE_LOG_WARN("GameDocument: object ({}) is not found to remove", uuid);
             return false;
         }
 
@@ -184,7 +209,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocument::GetObject(const UUID& uuid) const
+    BasicObject::Ptr GameDocument::GetBasicObject(const UUID& uuid) const
     {
         const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == uuid; });
         if (it != _objects.cend())
@@ -196,7 +221,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocument::GetObject(const std::string& name) const
+    BasicObject::Ptr GameDocument::GetBasicObject(const std::string& name) const
     {
         const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetName() == name; });
         if (it != _objects.cend())
@@ -237,6 +262,8 @@ namespace Storyteller
 
     void GameDocument::SetEntryPoint(const UUID& uuid)
     {
+        STRTLR_CORE_LOG_INFO("GameDocument: set entry point ({})", uuid);
+
         _entryPointUuid = uuid;
         SetDirty(true);
     }
@@ -244,14 +271,14 @@ namespace Storyteller
 
     BasicObject::Ptr GameDocument::GetEntryPoint() const
     {
-        return GetObject(_entryPointUuid);
+        return GetBasicObject(_entryPointUuid);
     }
     //--------------------------------------------------------------------------
 
     bool GameDocument::CheckConsistency() const
     {
         return std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr ptr) { return !ptr->IsConsistent(); }) != _objects.cend()
-            && GetObject(_entryPointUuid) != nullptr;
+            && GetBasicObject(_entryPointUuid) != nullptr;
     }
     //--------------------------------------------------------------------------
 
@@ -271,7 +298,7 @@ namespace Storyteller
 
         success &= writer.Key(JSON_KEY_OBJECTS);
         success &= writer.StartArray();
-        for (size_t i = 0; i < _objects.size(); i++)
+        for (auto i = 0; i < _objects.size(); i++)
         {
             const auto object = _objects.at(i);
             success &= writer.StartObject();
@@ -298,7 +325,7 @@ namespace Storyteller
                 const auto actions = questObject->GetActions();
                 success &= writer.Key(JSON_KEY_ACTIONS);
                 success &= writer.StartArray();
-                for (size_t action = 0; action < actions.size(); action++)
+                for (auto action = 0; action < actions.size(); action++)
                 {
                     success &= writer.Uint64(actions.at(action));
                 }
@@ -356,23 +383,27 @@ namespace Storyteller
         jsonDocument.ParseStream(jsonStream);
         if (jsonDocument.HasParseError())
         {
+            STRTLR_CORE_LOG_ERROR("GameDocument: JSON parsing error '{}'", jsonDocument.GetParseError());
             return false;
         }
 
         if (!jsonDocument.HasMember(JSON_KEY_GAME_NAME) || !jsonDocument[JSON_KEY_GAME_NAME].IsString())
         {
+            STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading string '{}'", JSON_KEY_GAME_NAME);
             return false;
         }
         SetGameName(jsonDocument[JSON_KEY_GAME_NAME].GetString());
 
         if (!jsonDocument.HasMember(JSON_KEY_ENTRY_POINT_UUID) || !jsonDocument[JSON_KEY_ENTRY_POINT_UUID].IsUint64())
         {
+            STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading UUID '{}'", JSON_KEY_ENTRY_POINT_UUID);
             return false;
         }
         SetEntryPoint(jsonDocument[JSON_KEY_ENTRY_POINT_UUID].GetUint64());
 
         if (!jsonDocument.HasMember(JSON_KEY_OBJECTS) || !jsonDocument[JSON_KEY_OBJECTS].IsArray())
         {
+            STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading array '{}'", JSON_KEY_OBJECTS);
             return false;
         }
         const auto& objectsArray = jsonDocument[JSON_KEY_OBJECTS].GetArray();
@@ -383,24 +414,28 @@ namespace Storyteller
 
             if (!jsonObject.HasMember(JSON_KEY_UUID) || !jsonObject[JSON_KEY_UUID].IsUint64())
             {
+                STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading UUID '{}'", JSON_KEY_UUID);
                 return false;
             }
             const auto objectUuid = UUID(jsonObject[JSON_KEY_UUID].GetUint64());
 
             if (!jsonObject.HasMember(JSON_KEY_NAME) || !jsonObject[JSON_KEY_NAME].IsString())
             {
+                STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading string '{}'", JSON_KEY_NAME);
                 return false;
             }
             const auto objectName = std::string(jsonObject[JSON_KEY_NAME].GetString());
 
             if (!jsonObject.HasMember(JSON_KEY_OBJECT_TYPE) || !jsonObject[JSON_KEY_OBJECT_TYPE].IsString())
             {
+                STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading string '{}'", JSON_KEY_OBJECT_TYPE);
                 return false;
             }
             const auto objectType = StringToObjectType(jsonObject[JSON_KEY_OBJECT_TYPE].GetString());
 
             if (!jsonObject.HasMember(JSON_KEY_TEXT) || !jsonObject[JSON_KEY_TEXT].IsString())
             {
+                STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading string '{}'", JSON_KEY_TEXT);
                 return false;
             }
             const auto objectText = std::string(jsonObject[JSON_KEY_TEXT].GetString());
@@ -411,6 +446,7 @@ namespace Storyteller
             {
                 if (!jsonObject.HasMember(JSON_KEY_ACTIONS) || !jsonObject[JSON_KEY_ACTIONS].IsArray())
                 {
+                    STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading array '{}'", JSON_KEY_ACTIONS);
                     return false;
                 }
 
@@ -423,6 +459,7 @@ namespace Storyteller
                 {
                     if (!questObjectActions[i].IsUint64())
                     {
+                        STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading UUID '{}'", JSON_KEY_ACTIONS);
                         return false;
                     }
 
@@ -437,6 +474,7 @@ namespace Storyteller
             {
                 if (!jsonObject.HasMember(JSON_KEY_TARGET) || !jsonObject[JSON_KEY_TARGET].IsUint64())
                 {
+                    STRTLR_CORE_LOG_ERROR("GameDocument: JSON error reading UUID '{}'", JSON_KEY_TARGET);
                     return false;
                 }
 

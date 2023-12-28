@@ -51,8 +51,8 @@ namespace Storyteller
         bool AddObject(ObjectType type, const UUID& uuid = UUID());
         bool AddObject(const BasicObject::Ptr& object);
         bool RemoveObject(const UUID& uuid);
-        BasicObject::Ptr GetObject(const UUID& uuid) const;
-        BasicObject::Ptr GetObject(const std::string& name) const;
+        BasicObject::Ptr GetBasicObject(const UUID& uuid) const;
+        BasicObject::Ptr GetBasicObject(const std::string& name) const;
         const std::vector<BasicObject::Ptr>& GetObjects() const;
         std::vector<BasicObject::Ptr> GetObjects(ObjectType type, bool noEmptyName) const;
         void SetEntryPoint(const UUID& uuid);

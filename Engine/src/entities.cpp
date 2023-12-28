@@ -1,4 +1,5 @@
 #include "entities.h"
+#include "log.h"
 
 namespace Storyteller
 {
@@ -58,6 +59,8 @@ namespace Storyteller
 
     void BasicObject::SetName(const std::string& name)
     {
+        STRTLR_CORE_LOG_DEBUG("BasicObject: ({}) set name '{}'", _uuid, name);
+
         _name = name;
         if (_changeCallback)
         {
@@ -77,7 +80,9 @@ namespace Storyteller
     TextObject::TextObject(const UUID& uuid, const std::function<void()>& changeCallback)
         : BasicObject(uuid, changeCallback)
         , _text("")
-    {}
+    {
+        STRTLR_CORE_LOG_DEBUG("TextObject: create ({})", uuid);
+    }
     //--------------------------------------------------------------------------
 
     std::string TextObject::GetText() const
@@ -88,6 +93,8 @@ namespace Storyteller
 
     void TextObject::SetText(const std::string& text)
     {
+        STRTLR_CORE_LOG_DEBUG("TextObject: ({}) set text '{}'", _uuid, text);
+
         _text = text;
         if (_changeCallback)
         {
@@ -107,7 +114,9 @@ namespace Storyteller
     QuestObject::QuestObject(const UUID& uuid, const std::function<void()>& changeCallback)
         : TextObject(uuid, changeCallback)
         , _final(false)
-    {}
+    {
+        STRTLR_CORE_LOG_DEBUG("QuestObject: create ({})", uuid);
+    }
     //--------------------------------------------------------------------------
 
     ObjectType QuestObject::GetStaticObjectType()
@@ -145,8 +154,11 @@ namespace Storyteller
 
     bool QuestObject::AddAction(const UUID& actionUuid)
     {
+        STRTLR_CORE_LOG_DEBUG("QuestObject: ({}) add action '{}'", _uuid, actionUuid);
+
         if (ContainsAction(actionUuid))
         {
+            STRTLR_CORE_LOG_WARN("QuestObject: ({}) already contains action '{}'", _uuid, actionUuid);
             return false;
         }
 
@@ -162,9 +174,12 @@ namespace Storyteller
 
     bool QuestObject::RemoveAction(const UUID& actionUuid)
     {
+        STRTLR_CORE_LOG_DEBUG("QuestObject: ({}) remove action '{}'", _uuid, actionUuid);
+
         const auto it = std::find(_actions.cbegin(), _actions.cend(), actionUuid);
         if (it == _actions.cend())
         {
+            STRTLR_CORE_LOG_WARN("QuestObject: ({}) does not contain action '{}'", _uuid, actionUuid);
             return false;
         }
 
@@ -186,6 +201,8 @@ namespace Storyteller
 
     void QuestObject::SetFinal(bool isFinal)
     {
+        STRTLR_CORE_LOG_DEBUG("QuestObject: ({}) set final '{}'", _uuid, isFinal);
+
         _final = isFinal;
         if (_changeCallback)
         {
@@ -205,7 +222,9 @@ namespace Storyteller
     ActionObject::ActionObject(const UUID& uuid, const std::function<void()>& changeCallback)
         : TextObject(uuid, changeCallback)
         , _targetUuid(UUID::InvalidUuid)
-    {}
+    {
+        STRTLR_CORE_LOG_DEBUG("ActionObject: create ({})", uuid);
+    }
     //--------------------------------------------------------------------------
 
     ObjectType ActionObject::GetStaticObjectType()
@@ -236,6 +255,8 @@ namespace Storyteller
 
     void ActionObject::SetTargetUuid(const UUID& targetUuid)
     {
+        STRTLR_CORE_LOG_DEBUG("ActionObject: ({}) set target '{}'", _uuid, targetUuid);
+
         _targetUuid = targetUuid;
         if (_changeCallback)
         {

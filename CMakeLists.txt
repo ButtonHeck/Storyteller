@@ -73,6 +73,8 @@ set(STORYTELLER_ENGINE_SOURCE_FILES
     "${STORYTELLER_ENGINE_SOURCE_DIR}/console_manager.cpp"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/filesystem_utils.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/filesystem_utils.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/log.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/log.cpp"
 )
 
 add_library(${STORYTELLER_ENGINE}
@@ -82,6 +84,7 @@ add_library(${STORYTELLER_ENGINE}
 target_include_directories(${STORYTELLER_ENGINE}
     PRIVATE ${STORYTELLER_ENGINE_SOURCE_DIR}
     PRIVATE "${STORYTELLER_VENDOR_DIR}/rapidjson/include"
+    PUBLIC "${STORYTELLER_VENDOR_DIR}/spdlog/include"
 )
 
 

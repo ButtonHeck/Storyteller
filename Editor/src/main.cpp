@@ -16,12 +16,14 @@
 
 int main()
 {
+    using namespace Storyteller;
+
     if (!glfwInit())
     {
         return -1;
     }
 
-    using namespace Storyteller;
+    Log::Initialize();
 
     LocalizationManager::Ptr localizationManager(new LocalizationManager());
     localizationManager->AddMessagesDomain(EDITOR_DOMAIN);
@@ -47,6 +49,8 @@ int main()
         ImGuiHelpers::NewFrame();
         ImGuiHelpers::PrepareDockspace();
         ImGuiHelpers::Customize();
+
+        static auto demoWindow = false;
 
         // Menu bar
         if (ImGui::BeginMenuBar())
@@ -78,6 +82,11 @@ int main()
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str()))
                 {
                     glfwSetWindowShouldClose(window, true);
+                }
+
+                if (ImGui::MenuItem("Demo window"))
+                {
+                    demoWindow = !demoWindow;
                 }
 
                 ImGui::EndMenu();
@@ -256,7 +265,7 @@ int main()
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str());
 
             const auto selectedObject = gameDocumentProxy->GetSelectedObject();
-            const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : UUID::InvalidUuid;
+            const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
             const auto uuidString = std::to_string(selectedUuid);
 
             auto objectName = selectedObject ? selectedObject->GetName() : std::string();
@@ -272,14 +281,14 @@ int main()
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Source text").c_str());
             const auto selectedTextObject = dynamic_cast<TextObject*>(selectedObject.get());
             auto sourceText = selectedTextObject ? selectedTextObject->GetText() : std::string();
-            if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, availableHeight / 3.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
+            if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
             {
                 selectedTextObject->SetText(sourceText);
             }
 
             ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Translation").c_str());
             auto sourceTextTranslation = selectedTextObject ? localizationManager->Translate(gameDocument->GetGameName(), sourceText, true) : std::string();
-            ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 3.0), ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_ReadOnly);
 
 
             ImGui::SeparatorText(localizationManager->Translate(EDITOR_DOMAIN, "Properties").c_str());
@@ -368,7 +377,7 @@ int main()
 
                     for (auto row = 0; row < questObjectActions.size(); row++)
                     {
-                        const auto object = gameDocumentProxy->GetObject(questObjectActions[row]);
+                        const auto object = gameDocumentProxy->GetBasicObject(questObjectActions[row]);
                         if (!object)
                         {
                             continue;
@@ -442,19 +451,32 @@ int main()
 
                 if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Clear target").c_str()))
                 {
-                    selectedActionObject->SetTargetUuid(UUID::InvalidUuid);
+                    selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
                 }
 
                 ImGui::Text(localizationManager->Translate(EDITOR_DOMAIN, "Current target name: ").c_str());
                 ImGui::SameLine();
-                const auto targetObject = gameDocumentProxy->GetObject(selectedActionObject->GetTargetUuid());
+                const auto targetObject = gameDocumentProxy->GetBasicObject(selectedActionObject->GetTargetUuid());
                 ImGui::Text(targetObject ? targetObject->GetName().c_str() : localizationManager->Translate(EDITOR_DOMAIN, "Not set or does not exist").c_str());
             }
 
             ImGui::End();
         }
 
-        ImGui::ShowDemoWindow();
+
+        // Log
+        {
+            ImGui::Begin(localizationManager->Translate(EDITOR_DOMAIN, "Log").c_str());
+            auto logDataStr = std::string(Log::StringLogOutput());
+            ImGui::InputTextMultiline("Log", &logDataStr, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
+            ImGui::End();
+        }
+
+        if (demoWindow)
+        {
+            ImGui::ShowDemoWindow();
+        }
+
         ImGui::End();
 
         ImGuiHelpers::Render();
