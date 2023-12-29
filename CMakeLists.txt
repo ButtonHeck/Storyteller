@@ -98,8 +98,8 @@ set(STORYTELLER_EDITOR_SOURCE_FILES
     "${STORYTELLER_EDITOR_SOURCE_DIR}/glfw_helpers.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/imgui_helpers.h"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/imgui_helpers.cpp"
-    "${STORYTELLER_EDITOR_SOURCE_DIR}/file_dialogs.h"
-    "${STORYTELLER_EDITOR_SOURCE_DIR}/file_dialogs.cpp"
+    "${STORYTELLER_EDITOR_SOURCE_DIR}/dialogs.h"
+    "${STORYTELLER_EDITOR_SOURCE_DIR}/dialogs.cpp"
 )
 
 add_executable(${STORYTELLER_EDITOR}

@@ -1,4 +1,4 @@
-#include "file_dialogs.h"
+#include "dialogs.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -8,7 +8,7 @@
 
 namespace Storyteller
 {
-	namespace FileDialogs
+	namespace Dialogs
 	{
 		std::string OpenFile(const char* filter, GLFWwindow* window)
 		{
@@ -64,6 +64,13 @@ namespace Storyteller
 			}
 
 			return std::string();
+		}
+		//--------------------------------------------------------------------------
+
+		bool Message(const char* text, const char* caption, GLFWwindow* window)
+		{
+			const auto result = MessageBox(glfwGetWin32Window(window), text, caption, MB_YESNO);
+			return result == IDYES;
 		}
 		//--------------------------------------------------------------------------
 	}

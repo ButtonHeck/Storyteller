@@ -1,7 +1,7 @@
 #include "storyteller.h"
 #include "glfw_helpers.h"
 #include "imgui_helpers.h"
-#include "file_dialogs.h"
+#include "dialogs.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
@@ -32,7 +32,7 @@ int main()
     GlfwHelpers::SetupHints();
     std::shared_ptr<GlfwHelpers::UserData> userData = std::make_shared<GlfwHelpers::UserData>();
 
-    auto window = glfwCreateWindow(userData->defaultWidth, userData->defaultHeight, 
+    GLFWwindow* window = glfwCreateWindow(userData->defaultWidth, userData->defaultHeight, 
         localizationManager->Translate(EDITOR_DOMAIN, "Storyteller Editor").c_str(), nullptr, nullptr);
 
     glfwSwapInterval(1);
@@ -57,14 +57,51 @@ int main()
         {
             if (ImGui::BeginMenu(localizationManager->Translate(EDITOR_DOMAIN, "File").c_str()))
             {
+                if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "New").c_str()))
+                {
+                    if (gameDocument->IsDirty())
+                    {
+                        const auto sureNew = Dialogs::Message(localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to create new document?").c_str(),
+                            localizationManager->Translate(EDITOR_DOMAIN, "New").c_str(), window);
+
+                        if (sureNew)
+                        {
+                            gameDocument.reset(new GameDocument(std::string()));
+                            gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(gameDocument));
+                        }
+                    }
+                    else
+                    {
+                        gameDocument.reset(new GameDocument(std::string()));
+                        gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(gameDocument));
+                    }
+                }
+
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str()))
                 {
-                    const auto filepath = FileDialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
-                    if (!filepath.empty())
+                    if (gameDocument->IsDirty())
                     {
-                        std::cout << filepath << std::endl;
-                        gameDocument.reset(new GameDocument(filepath));
-                        gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(gameDocument));
+                        const auto sureOpen = Dialogs::Message(localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to open other document?").c_str(),
+                            localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str(), window);
+
+                        if (sureOpen)
+                        {
+                            const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
+                            if (!filepath.empty())
+                            {
+                                gameDocument.reset(new GameDocument(filepath));
+                                gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(gameDocument));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
+                        if (!filepath.empty())
+                        {
+                            gameDocument.reset(new GameDocument(filepath));
+                            gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(gameDocument));
+                        }
                     }
                 }
 
@@ -75,13 +112,28 @@ int main()
 
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Save as...").c_str()))
                 {
-                    const auto filepath = FileDialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
+                    const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
                     gameDocument->Save(filepath);
                 }
 
+                ImGui::Separator();
+
                 if (ImGui::MenuItem(localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str()))
                 {
-                    glfwSetWindowShouldClose(window, true);
+                    if (gameDocument->IsDirty())
+                    {
+                        const auto sureQuit = Dialogs::Message(localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to exit?").c_str(),
+                            localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str(), window);
+
+                        if (sureQuit)
+                        {
+                            glfwSetWindowShouldClose(window, true);
+                        }
+                    }
+                    else
+                    {
+                        glfwSetWindowShouldClose(window, true);
+                    }
                 }
 
                 if (ImGui::MenuItem("Demo window"))
@@ -110,7 +162,7 @@ int main()
 
             if (ImGui::Button(localizationManager->Translate(EDITOR_DOMAIN, "Create translations file...").c_str()))
             {
-                const auto filepath = FileDialogs::SaveFile("Text Files (*.txt)\0*.txt\0", window);
+                const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", window);
                 localizationManager->CreateTranslations(gameDocument, filepath);
             }
 
