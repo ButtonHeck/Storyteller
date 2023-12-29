@@ -3,6 +3,11 @@
 
 namespace Storyteller
 {
+    Application::Application()
+        : _localizationManager(nullptr)
+    {}
+    //--------------------------------------------------------------------------
+
     bool Application::Initialize()
     {
         Log::Initialize();

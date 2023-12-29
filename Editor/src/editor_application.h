@@ -1,13 +1,14 @@
 #pragma once
 
 #include "application.h"
+#include "window.h"
 
 namespace Storyteller
 {
     class EditorApplication : public Application
     {
     public:
-        EditorApplication() = default;
+        EditorApplication();
 
         virtual ~EditorApplication() = default;
 
@@ -15,5 +16,7 @@ namespace Storyteller
         void Run() override;
 
     private:
+        Window::Ptr _window;
     };
+    //--------------------------------------------------------------------------
 }

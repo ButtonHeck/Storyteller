@@ -2,7 +2,6 @@
 #include "entry_point.h"
 
 #include "storyteller.h"
-#include "glfw_helpers.h"
 #include "imgui_helpers.h"
 #include "dialogs.h"
 
@@ -23,6 +22,12 @@ namespace Storyteller
     {
         return new EditorApplication();
     }
+    //--------------------------------------------------------------------------
+
+    EditorApplication::EditorApplication()
+        : _window(nullptr)
+    {}
+    //--------------------------------------------------------------------------
 
     bool EditorApplication::Initialize()
     {
@@ -31,35 +36,27 @@ namespace Storyteller
             return false;
         }
 
-        if (!glfwInit())
+        _localizationManager->AddMessagesDomain(EDITOR_DOMAIN);
+        _localizationManager->Build("ru_RU.UTF-8");
+
+        _window.reset(new Window(_localizationManager));
+        if (!_window || !_window->Initialize())
         {
             return false;
         }
 
-        _localizationManager->AddMessagesDomain(EDITOR_DOMAIN);
-        _localizationManager->Build("ru_RU.UTF-8");
-
         return true;
     }
+    //--------------------------------------------------------------------------
 
     void EditorApplication::Run()
     {
-        GlfwHelpers::SetupHints();
-        std::shared_ptr<GlfwHelpers::UserData> userData = std::make_shared<GlfwHelpers::UserData>();
-
-        GLFWwindow* window = glfwCreateWindow(userData->defaultWidth, userData->defaultHeight,
-            _localizationManager->Translate(EDITOR_DOMAIN, "Storyteller Editor").c_str(), nullptr, nullptr);
-
-        glfwSwapInterval(1);
-        glfwSetWindowUserPointer(window, userData.get());
-        glfwMakeContextCurrent(window);
-
-        ImGuiHelpers::Initialize(window);
+        ImGuiHelpers::Initialize(_window->GetGLFWWindow());
 
         GameDocument::Ptr gameDocument(new GameDocument(std::string()));
         GameDocumentSortFilterProxyView::Ptr gameDocumentProxy(new GameDocumentSortFilterProxyView(gameDocument));
 
-        while (!glfwWindowShouldClose(window))
+        while (!_window->ShouldClose())
         {
             ImGuiHelpers::NewFrame();
             ImGuiHelpers::PrepareDockspace();
@@ -77,7 +74,7 @@ namespace Storyteller
                         if (gameDocument->IsDirty())
                         {
                             const auto sureNew = Dialogs::Message(_localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to create new document?").c_str(),
-                                _localizationManager->Translate(EDITOR_DOMAIN, "New").c_str(), window);
+                                _localizationManager->Translate(EDITOR_DOMAIN, "New").c_str(), _window->GetGLFWWindow());
 
                             if (sureNew)
                             {
@@ -97,11 +94,11 @@ namespace Storyteller
                         if (gameDocument->IsDirty())
                         {
                             const auto sureOpen = Dialogs::Message(_localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to open other document?").c_str(),
-                                _localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str(), window);
+                                _localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str(), _window->GetGLFWWindow());
 
                             if (sureOpen)
                             {
-                                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
+                                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
                                 if (!filepath.empty())
                                 {
                                     gameDocument.reset(new GameDocument(filepath));
@@ -111,7 +108,7 @@ namespace Storyteller
                         }
                         else
                         {
-                            const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", window);
+                            const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
                             if (!filepath.empty())
                             {
                                 gameDocument.reset(new GameDocument(filepath));
@@ -127,7 +124,7 @@ namespace Storyteller
 
                     if (ImGui::MenuItem(_localizationManager->Translate(EDITOR_DOMAIN, "Save as...").c_str()))
                     {
-                        const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", window);
+                        const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
                         gameDocument->Save(filepath);
                     }
 
@@ -138,16 +135,16 @@ namespace Storyteller
                         if (gameDocument->IsDirty())
                         {
                             const auto sureQuit = Dialogs::Message(_localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to exit?").c_str(),
-                                _localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str(), window);
+                                _localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str(), _window->GetGLFWWindow());
 
                             if (sureQuit)
                             {
-                                glfwSetWindowShouldClose(window, true);
+                                _window->SetShouldClose(true);
                             }
                         }
                         else
                         {
-                            glfwSetWindowShouldClose(window, true);
+                            _window->SetShouldClose(true);
                         }
                     }
 
@@ -177,7 +174,7 @@ namespace Storyteller
 
                 if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Create translations file...").c_str()))
                 {
-                    const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", window);
+                    const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window->GetGLFWWindow());
                     _localizationManager->CreateTranslations(gameDocument, filepath);
                 }
 
@@ -550,10 +547,11 @@ namespace Storyteller
             ImGuiHelpers::UpdateDocking();
             ImGuiHelpers::EndFrame();
 
-            GlfwHelpers::EndFrame(window, userData->updateContinuously);
+            _window->EndFrame();
         }
 
         ImGuiHelpers::Shutdown();
-        GlfwHelpers::Shutdown(window);
+        _window->Shutdown();
     }
+    //--------------------------------------------------------------------------
 }

@@ -7,7 +7,7 @@ namespace Storyteller
     class Application
     {
     public:
-        Application() = default;
+        Application();
 
         virtual ~Application() = default;
 
