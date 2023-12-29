@@ -56,6 +56,7 @@ add_subdirectory_with_folder("${STORYTELLER_VENDOR_DIR}/spdlog" "vendor")
 set(STORYTELLER_ENGINE "StorytellerEngine")
 set(STORYTELLER_ENGINE_SOURCE_DIR "Engine/src")
 set(STORYTELLER_ENGINE_SOURCE_FILES
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/entry_point.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/storyteller.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/uuid.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/uuid.cpp"
@@ -75,6 +76,8 @@ set(STORYTELLER_ENGINE_SOURCE_FILES
     "${STORYTELLER_ENGINE_SOURCE_DIR}/filesystem_utils.cpp"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/log.h"
     "${STORYTELLER_ENGINE_SOURCE_DIR}/log.cpp"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/application.h"
+    "${STORYTELLER_ENGINE_SOURCE_DIR}/application.cpp"
 )
 
 add_library(${STORYTELLER_ENGINE}
@@ -93,13 +96,14 @@ target_include_directories(${STORYTELLER_ENGINE}
 set(STORYTELLER_EDITOR "StorytellerEditor")
 set(STORYTELLER_EDITOR_SOURCE_DIR "Editor/src")
 set(STORYTELLER_EDITOR_SOURCE_FILES
-	"${STORYTELLER_EDITOR_SOURCE_DIR}/main.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/glfw_helpers.h"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/glfw_helpers.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/imgui_helpers.h"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/imgui_helpers.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/dialogs.h"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/dialogs.cpp"
+    "${STORYTELLER_EDITOR_SOURCE_DIR}/editor_application.h"
+    "${STORYTELLER_EDITOR_SOURCE_DIR}/editor_application.cpp"
 )
 
 add_executable(${STORYTELLER_EDITOR}

@@ -9,3 +9,4 @@
 #include "localization_manager.h"
 #include "filesystem_utils.h"
 #include "log.h"
+#include "application.h"
