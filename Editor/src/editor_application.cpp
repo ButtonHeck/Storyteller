@@ -5,7 +5,6 @@
 #include <boost/locale.hpp>
 #include <memory>
 #include <iostream>
-#include <thread>
 
 #define STORYTELLER_DOMAIN "Storyteller"
 #define EDITOR_DOMAIN "StorytellerEditor"
@@ -45,6 +44,8 @@ namespace Storyteller
         {
             return false;
         }
+
+        _window->InjectUi(_ui.get());
 
         return true;
     }

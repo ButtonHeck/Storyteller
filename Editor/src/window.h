@@ -8,6 +8,8 @@ struct GLFWwindow;
 
 namespace Storyteller
 {
+    class EditorUi;
+
     class Window
     {
     public:
@@ -23,6 +25,7 @@ namespace Storyteller
         void SwapBuffers() const;
         void Shutdown();
         void MakeContextCurrent();
+        void InjectUi(EditorUi* ui);
         GLFWwindow* GetGLFWWindow() const;
 
     private:

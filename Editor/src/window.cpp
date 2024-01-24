@@ -1,5 +1,6 @@
 #include "window.h"
 #include "log.h"
+#include "editor_ui.h"
 
 #include <GLFW/glfw3.h>
 
@@ -15,6 +16,7 @@ namespace Storyteller
         bool fullscreen = false;
         int width = 1920;
         int height = 1080;
+        EditorUi* ui = nullptr;
     };
     //--------------------------------------------------------------------------
 
@@ -53,6 +55,19 @@ namespace Storyteller
             {
                 userData->width = width;
                 userData->height = height;
+            }
+        });
+
+        glfwSetWindowRefreshCallback(_window, [](GLFWwindow* window) {
+            auto userData = reinterpret_cast<WindowUserData*>(glfwGetWindowUserPointer(window));
+            if (userData)
+            {
+                if (userData->ui)
+                {
+                    userData->ui->Prepare();
+                    userData->ui->Compose();
+                    userData->ui->Render();
+                }
             }
 
             glfwSwapBuffers(window);
@@ -130,6 +145,16 @@ namespace Storyteller
     void Window::MakeContextCurrent()
     {
         glfwMakeContextCurrent(_window);
+    }
+    //--------------------------------------------------------------------------
+
+    void Window::InjectUi(EditorUi* ui)
+    {
+        auto userData = reinterpret_cast<WindowUserData*>(glfwGetWindowUserPointer(_window));
+        if (userData)
+        {
+            userData->ui = ui;
+        }
     }
     //--------------------------------------------------------------------------
 
