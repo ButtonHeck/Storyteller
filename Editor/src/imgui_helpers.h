@@ -6,7 +6,7 @@ namespace Storyteller
 {
 namespace ImGuiHelpers
 {
-    void Initialize(GLFWwindow* window);
+    bool Initialize(GLFWwindow* window);
     void Customize();
 
     void NewFrame();

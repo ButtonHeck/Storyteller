@@ -98,11 +98,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void Window::EndFrame()
+    void Window::ProcessEvents()
     {
         const auto userData = reinterpret_cast<WindowUserData*>(glfwGetWindowUserPointer(_window));
-
-        glfwSwapBuffers(_window);
         if (userData->updateContinuously)
         {
             glfwPollEvents();
@@ -111,6 +109,12 @@ namespace Storyteller
         {
             glfwWaitEvents();
         }
+    }
+    //--------------------------------------------------------------------------
+
+    void Window::SwapBuffers() const
+    {
+        glfwSwapBuffers(_window);
     }
     //--------------------------------------------------------------------------
 

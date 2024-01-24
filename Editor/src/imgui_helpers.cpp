@@ -11,7 +11,7 @@ namespace Storyteller
 {
 namespace ImGuiHelpers
 {
-    void Initialize(GLFWwindow* window)
+    bool Initialize(GLFWwindow* window)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -23,6 +23,8 @@ namespace ImGuiHelpers
         const auto fontSize = 18;
         const auto fontDirectory = std::string(STORYTELLER_EDITOR_FONT_DIR) + "/OpenSans-Regular.ttf";
         io.Fonts->AddFontFromFileTTF(fontDirectory.c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+
+        return true;
     }
 
     void Customize()

@@ -19,7 +19,8 @@ namespace Storyteller
         bool ShouldClose() const;
         void SetShouldClose(bool close);
         void ToggleFullscreen();
-        void EndFrame();
+        void ProcessEvents();
+        void SwapBuffers() const;
         void Shutdown();
         GLFWwindow* GetGLFWWindow() const;
 

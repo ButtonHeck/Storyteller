@@ -26,6 +26,7 @@ namespace Storyteller
 
     EditorApplication::EditorApplication()
         : _window(nullptr)
+        , _ui(nullptr)
     {}
     //--------------------------------------------------------------------------
 
@@ -45,22 +46,26 @@ namespace Storyteller
             return false;
         }
 
+        _ui.reset(new EditorUi(_window));
+        if (!_ui || !_ui->Initialize())
+        {
+            return false;
+        }
+
         return true;
     }
     //--------------------------------------------------------------------------
 
     void EditorApplication::Run()
     {
-        ImGuiHelpers::Initialize(_window->GetGLFWWindow());
-
         GameDocument::Ptr gameDocument(new GameDocument(std::string()));
         GameDocumentSortFilterProxyView::Ptr gameDocumentProxy(new GameDocumentSortFilterProxyView(gameDocument));
 
         while (!_window->ShouldClose())
         {
-            ImGuiHelpers::NewFrame();
-            ImGuiHelpers::PrepareDockspace();
-            ImGuiHelpers::Customize();
+            _window->ProcessEvents();
+
+            _ui->Prepare();
 
             static auto demoWindow = false;
 
@@ -543,11 +548,8 @@ namespace Storyteller
 
             ImGui::End();
 
-            ImGuiHelpers::Render();
-            ImGuiHelpers::UpdateDocking();
-            ImGuiHelpers::EndFrame();
-
-            _window->EndFrame();
+            _ui->Render();
+            _window->SwapBuffers();
         }
 
         ImGuiHelpers::Shutdown();

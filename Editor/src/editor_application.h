@@ -2,6 +2,7 @@
 
 #include "application.h"
 #include "window.h"
+#include "editor_ui.h"
 
 namespace Storyteller
 {
@@ -10,13 +11,12 @@ namespace Storyteller
     public:
         EditorApplication();
 
-        virtual ~EditorApplication() = default;
-
         bool Initialize() override;
         void Run() override;
 
     private:
         Window::Ptr _window;
+        EditorUi::Ptr _ui;
     };
     //--------------------------------------------------------------------------
 }

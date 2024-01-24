@@ -104,6 +104,8 @@ set(STORYTELLER_EDITOR_SOURCE_FILES
     "${STORYTELLER_EDITOR_SOURCE_DIR}/editor_application.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/window.h"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/window.cpp"
+    "${STORYTELLER_EDITOR_SOURCE_DIR}/editor_ui.h"
+    "${STORYTELLER_EDITOR_SOURCE_DIR}/editor_ui.cpp"
 )
 
 add_executable(${STORYTELLER_EDITOR}
