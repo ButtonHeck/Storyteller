@@ -22,6 +22,7 @@ namespace Storyteller
         void ProcessEvents();
         void SwapBuffers() const;
         void Shutdown();
+        void MakeContextCurrent();
         GLFWwindow* GetGLFWWindow() const;
 
     private:

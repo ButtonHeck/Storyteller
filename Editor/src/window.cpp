@@ -45,7 +45,7 @@ namespace Storyteller
 
         glfwSwapInterval(1);
         glfwSetWindowUserPointer(_window, userData.get());
-        glfwMakeContextCurrent(_window);
+        MakeContextCurrent();
 
         glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
             auto userData = reinterpret_cast<WindowUserData*>(glfwGetWindowUserPointer(window));
@@ -54,6 +54,8 @@ namespace Storyteller
                 userData->width = width;
                 userData->height = height;
             }
+
+            glfwSwapBuffers(window);
         });
 
         return true;
@@ -122,6 +124,12 @@ namespace Storyteller
     {
         glfwDestroyWindow(_window);
         glfwTerminate();
+    }
+    //--------------------------------------------------------------------------
+
+    void Window::MakeContextCurrent()
+    {
+        glfwMakeContextCurrent(_window);
     }
     //--------------------------------------------------------------------------
 
