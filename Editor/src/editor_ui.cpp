@@ -71,6 +71,7 @@ namespace Storyteller
 
         ImGuiStyle& style = ImGui::GetStyle();
         style.FrameBorderSize = 1.0f;
+        style.WindowMenuButtonPosition = ImGuiDir_None;
         //style.Colors[ImGuiCol_FrameBg] = ImVec4(0.45f, 0.14f, 0.4f, 1.0f);
         //style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.595f, 0.375f, 0.632f, 1.0f);
         //style.Colors[ImGuiCol_WindowBg] = ImVec4(0.064f, 0.092f, 0.104f, 1.0f);
@@ -449,9 +450,17 @@ namespace Storyteller
                 selectedQuestObject->SetFinal(isFinal);
             }
 
+            if (allActionObjects.empty())
+            {
+                ImGui::BeginDisabled();
+            }
             if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Add action").c_str()))
             {
                 selectedQuestObject->AddAction(allActionObjects.at(selectedActionIndex)->GetUuid());
+            }
+            if (allActionObjects.empty())
+            {
+                ImGui::EndDisabled();
             }
 
             ImGui::SameLine();
