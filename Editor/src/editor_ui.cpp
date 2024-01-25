@@ -330,61 +330,56 @@ namespace Storyteller
 
 
         ImGui::SeparatorText(_localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str());
+        const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
+            | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
+
+        if (ImGui::BeginTable(_localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str(), 3, objectsTableFlags))
         {
-            ImGui::BeginChild(_localizationManager->Translate(EDITOR_DOMAIN, "Objects table").c_str());
-            const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
-                | ImGuiTableFlags_Hideable | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
+            ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupScrollFreeze(0, 1);
+            ImGui::TableHeadersRow();
 
-            if (ImGui::BeginTable(_localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str(), 3, objectsTableFlags))
+            if (auto* sortSpecs = ImGui::TableGetSortSpecs())
             {
-                ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
-                ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
-                ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
-                ImGui::TableSetupScrollFreeze(0, 1);
-                ImGui::TableHeadersRow();
-
-                if (auto* sortSpecs = ImGui::TableGetSortSpecs())
+                if (sortSpecs->SpecsDirty)
                 {
-                    if (sortSpecs->SpecsDirty)
-                    {
-                        const auto tableSortSpec = sortSpecs->Specs;
-                        const auto direction = tableSortSpec->SortDirection;
-                        tableSortSpec->ColumnIndex;
-                        _gameDocumentProxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
-                        sortSpecs->SpecsDirty = false;
-                    }
+                    const auto tableSortSpec = sortSpecs->Specs;
+                    const auto direction = tableSortSpec->SortDirection;
+                    tableSortSpec->ColumnIndex;
+                    _gameDocumentProxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
+                    sortSpecs->SpecsDirty = false;
                 }
-
-                auto objects = _gameDocumentProxy->GetObjects();
-                for (auto row = 0; row < objects.size(); row++)
-                {
-                    ImGui::TableNextRow();
-
-                    const auto object = objects[row];
-                    const auto consistent = object->IsConsistent();
-                    const auto rowColor = consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
-                    auto selected = _gameDocumentProxy->IsSelected(object->GetUuid());
-
-                    ImGui::TableNextColumn();
-                    ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
-                    ImGui::Selectable(_localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
-                    ImGui::PopStyleColor();
-                    if (ImGui::IsItemClicked(0))
-                    {
-                        _gameDocumentProxy->Select(object->GetUuid());
-                    }
-
-                    ImGui::TableNextColumn();
-                    ImGui::TextColored(rowColor, std::to_string(object->GetUuid()).c_str());
-
-                    ImGui::TableNextColumn();
-                    ImGui::TextColored(rowColor, object->GetName().c_str());
-                }
-
-                ImGui::EndTable();
             }
 
-            ImGui::EndChild();
+            auto objects = _gameDocumentProxy->GetObjects();
+            for (auto row = 0; row < objects.size(); row++)
+            {
+                ImGui::TableNextRow();
+
+                const auto object = objects[row];
+                const auto consistent = object->IsConsistent();
+                const auto rowColor = consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
+                auto selected = _gameDocumentProxy->IsSelected(object->GetUuid());
+
+                ImGui::TableNextColumn();
+                ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
+                ImGui::Selectable(_localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                ImGui::PopStyleColor();
+                if (ImGui::IsItemClicked(0))
+                {
+                    _gameDocumentProxy->Select(object->GetUuid());
+                }
+
+                ImGui::TableNextColumn();
+                ImGui::TextColored(rowColor, std::to_string(object->GetUuid()).c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::TextColored(rowColor, object->GetName().c_str());
+            }
+
+            ImGui::EndTable();
         }
 
         ImGui::End();
