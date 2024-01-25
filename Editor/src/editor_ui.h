@@ -23,6 +23,12 @@ namespace Storyteller
         void Shutdown();
 
     private:
+        void ComposeMenu(bool& demoWindow);
+        void ComposeGameDocumentPanel();
+        void ComposePropertiesPanel();
+        void ComposeLogPanel();
+
+    private:
         Window::Ptr _window;
         LocalizationManager::Ptr _localizationManager;
 

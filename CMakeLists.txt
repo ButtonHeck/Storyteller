@@ -96,8 +96,6 @@ target_include_directories(${STORYTELLER_ENGINE}
 set(STORYTELLER_EDITOR "StorytellerEditor")
 set(STORYTELLER_EDITOR_SOURCE_DIR "Editor/src")
 set(STORYTELLER_EDITOR_SOURCE_FILES
-    "${STORYTELLER_EDITOR_SOURCE_DIR}/imgui_helpers.h"
-    "${STORYTELLER_EDITOR_SOURCE_DIR}/imgui_helpers.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/dialogs.h"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/dialogs.cpp"
     "${STORYTELLER_EDITOR_SOURCE_DIR}/editor_application.h"
