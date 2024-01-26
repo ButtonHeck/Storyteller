@@ -28,6 +28,8 @@ namespace Storyteller
         void ComposePropertiesPanel();
         void ComposeLogPanel();
 
+        void AddDefaultFont();
+
     private:
         Window::Ptr _window;
         LocalizationManager::Ptr _localizationManager;

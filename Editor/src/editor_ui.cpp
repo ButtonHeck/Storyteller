@@ -22,14 +22,12 @@ namespace Storyteller
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
+        auto& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
         ImGui_ImplGlfw_InitForOpenGL(_window->GetGLFWWindow(), true);
         ImGui_ImplOpenGL3_Init("#version 450");
 
-        const auto fontSize = 18;
-        const auto fontDirectory = std::string(STRTLR_EDITOR_FONT_DIR) + "/OpenSans-Regular.ttf";
-        io.Fonts->AddFontFromFileTTF(fontDirectory.c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+        AddDefaultFont();
 
         return true;
     }
@@ -41,13 +39,12 @@ namespace Storyteller
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-
-        const ImGuiWindowFlags window_flags =
+        const auto windowFlags =
             ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
             ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
             ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        const auto viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos);
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
@@ -55,18 +52,17 @@ namespace Storyteller
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+        ImGui::Begin("Dockspace", nullptr, windowFlags);
         ImGui::PopStyleVar(3);
 
-        const ImGuiIO& io = ImGui::GetIO();
+        const auto& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
-            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+            const auto dockspaceId = ImGui::GetID("EditorDockspace");
+            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
         }
 
-
-        ImGuiStyle& style = ImGui::GetStyle();
+        auto& style = ImGui::GetStyle();
         style.FrameBorderSize = 1.0f;
         style.WindowMenuButtonPosition = ImGuiDir_None;
         //style.Colors[ImGuiCol_FrameBg] = ImVec4(0.45f, 0.14f, 0.4f, 1.0f);
@@ -103,16 +99,14 @@ namespace Storyteller
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-
-        const ImGuiIO& io = ImGui::GetIO();
+        const auto& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            GLFWwindow* backupContext = glfwGetCurrentContext();
+            const auto backupContext = glfwGetCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backupContext);
         }
-
 
         ImGui::EndFrame();
     }
@@ -302,8 +296,8 @@ namespace Storyteller
 
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Filters").c_str());
-        static bool questObjectFilter = true;
-        static bool actionObjectFilter = true;
+        static auto questObjectFilter = true;
+        static auto actionObjectFilter = true;
         if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
         {
             if (questObjectFilter)
@@ -598,10 +592,27 @@ namespace Storyteller
 
     void EditorUi::ComposeLogPanel()
     {
-        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str());
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
+
+        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str(), nullptr);
         auto logDataStr = std::string(Log::StringLogOutput());
-        ImGui::InputTextMultiline("Log", &logDataStr, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
+        ImGui::InputTextMultiline("##Log", &logDataStr, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
         ImGui::End();
+
+        ImGui::PopStyleVar(2);
+        ImGui::PopStyleColor();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUi::AddDefaultFont()
+    {
+        // TODO: extract to separate font class
+        auto& io = ImGui::GetIO();
+        const auto fontSize = 18;
+        const auto fontDirectory = std::string(STRTLR_EDITOR_FONT_DIR) + "/OpenSans-Regular.ttf";
+        io.Fonts->AddFontFromFileTTF(fontDirectory.c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
     }
     //--------------------------------------------------------------------------
 }
