@@ -8,9 +8,6 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#define STORYTELLER_DOMAIN "Storyteller"
-#define EDITOR_DOMAIN "StorytellerEditor"
-
 namespace Storyteller
 {
     EditorUi::EditorUi(Window::Ptr window, LocalizationManager::Ptr localizationManager)
@@ -31,7 +28,7 @@ namespace Storyteller
         ImGui_ImplOpenGL3_Init("#version 450");
 
         const auto fontSize = 18;
-        const auto fontDirectory = std::string(STORYTELLER_EDITOR_FONT_DIR) + "/OpenSans-Regular.ttf";
+        const auto fontDirectory = std::string(STRTLR_EDITOR_FONT_DIR) + "/OpenSans-Regular.ttf";
         io.Fonts->AddFontFromFileTTF(fontDirectory.c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 
         return true;
@@ -133,14 +130,14 @@ namespace Storyteller
     {
         if (ImGui::BeginMenuBar())
         {
-            if (ImGui::BeginMenu(_localizationManager->Translate(EDITOR_DOMAIN, "File").c_str()))
+            if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File").c_str()))
             {
-                if (ImGui::MenuItem(_localizationManager->Translate(EDITOR_DOMAIN, "New").c_str()))
+                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str()))
                 {
                     if (_gameDocument->IsDirty())
                     {
-                        const auto sureNew = Dialogs::Message(_localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to create new document?").c_str(),
-                            _localizationManager->Translate(EDITOR_DOMAIN, "New").c_str(), _window->GetGLFWWindow());
+                        const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to create new document?").c_str(),
+                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window->GetGLFWWindow());
 
                         if (sureNew)
                         {
@@ -155,12 +152,12 @@ namespace Storyteller
                     }
                 }
 
-                if (ImGui::MenuItem(_localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str()))
+                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str()))
                 {
                     if (_gameDocument->IsDirty())
                     {
-                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to open other document?").c_str(),
-                            _localizationManager->Translate(EDITOR_DOMAIN, "Open").c_str(), _window->GetGLFWWindow());
+                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to open other document?").c_str(),
+                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window->GetGLFWWindow());
 
                         if (sureOpen)
                         {
@@ -183,12 +180,12 @@ namespace Storyteller
                     }
                 }
 
-                if (ImGui::MenuItem(_localizationManager->Translate(EDITOR_DOMAIN, "Save").c_str()))
+                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save").c_str()))
                 {
                     _gameDocument->Save();
                 }
 
-                if (ImGui::MenuItem(_localizationManager->Translate(EDITOR_DOMAIN, "Save as...").c_str()))
+                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as...").c_str()))
                 {
                     const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
                     _gameDocument->Save(filepath);
@@ -196,12 +193,12 @@ namespace Storyteller
 
                 ImGui::Separator();
 
-                if (ImGui::MenuItem(_localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str()))
+                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str()))
                 {
                     if (_gameDocument->IsDirty())
                     {
-                        const auto sureQuit = Dialogs::Message(_localizationManager->Translate(EDITOR_DOMAIN, "Game document is not saved, are you sure to exit?").c_str(),
-                            _localizationManager->Translate(EDITOR_DOMAIN, "Quit").c_str(), _window->GetGLFWWindow());
+                        const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to exit?").c_str(),
+                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window->GetGLFWWindow());
 
                         if (sureQuit)
                         {
@@ -229,27 +226,27 @@ namespace Storyteller
     void EditorUi::ComposeGameDocumentPanel()
     {
         const auto mainFlags = _gameDocument->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
-        ImGui::Begin(_localizationManager->Translate(EDITOR_DOMAIN, "Game").c_str(), nullptr, mainFlags);
+        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game").c_str(), nullptr, mainFlags);
 
-        ImGui::SeparatorText(_localizationManager->Translate(EDITOR_DOMAIN, "Game document").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document").c_str());
         auto gameName = _gameDocument->GetGameName();
-        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str()).x);
-        if (ImGui::InputText(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str()).x);
+        if (ImGui::InputText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
         {
             _gameDocument->SetGameName(gameName);
         }
         ImGui::PopItemWidth();
 
-        if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Create translations file...").c_str()))
+        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file...").c_str()))
         {
             const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window->GetGLFWWindow());
             _localizationManager->CreateTranslations(_gameDocument, filepath);
         }
 
 
-        ImGui::SeparatorText(_localizationManager->Translate(EDITOR_DOMAIN, "Objects management").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management").c_str());
         static auto selectedTypeIndex = 0;
-        if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Create").c_str()))
+        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create").c_str()))
         {
             if (selectedTypeIndex == 0)
             {
@@ -264,12 +261,12 @@ namespace Storyteller
         ImGui::SameLine();
 
         std::string typeItems[] = {
-            _localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::QuestObjectType)),
-            _localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::ActionObjectType)),
+            _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)),
+            _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)),
         };
 
-        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str()).x);
-        if (ImGui::BeginCombo(_localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str(), typeItems[selectedTypeIndex].c_str()))
+        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str()).x);
+        if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), typeItems[selectedTypeIndex].c_str()))
         {
             for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
             {
@@ -294,7 +291,7 @@ namespace Storyteller
         {
             ImGui::BeginDisabled();
         }
-        if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Remove").c_str()))
+        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()))
         {
             _gameDocumentProxy->RemoveSelected();
         }
@@ -304,10 +301,10 @@ namespace Storyteller
         }
 
 
-        ImGui::SeparatorText(_localizationManager->Translate(EDITOR_DOMAIN, "Filters").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Filters").c_str());
         static bool questObjectFilter = true;
         static bool actionObjectFilter = true;
-        if (ImGui::Checkbox(_localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
         {
             if (questObjectFilter)
             {
@@ -318,7 +315,7 @@ namespace Storyteller
         }
 
         ImGui::SameLine();
-        if (ImGui::Checkbox(_localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(ObjectType::ActionObjectType)).c_str(), &actionObjectFilter))
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)).c_str(), &actionObjectFilter))
         {
             if (actionObjectFilter)
             {
@@ -329,15 +326,15 @@ namespace Storyteller
         }
 
 
-        ImGui::SeparatorText(_localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects").c_str());
         const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
             | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
 
-        if (ImGui::BeginTable(_localizationManager->Translate(EDITOR_DOMAIN, "Objects").c_str(), 3, objectsTableFlags))
+        if (ImGui::BeginTable(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects").c_str(), 3, objectsTableFlags))
         {
-            ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
-            ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
-            ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupScrollFreeze(0, 1);
             ImGui::TableHeadersRow();
 
@@ -365,7 +362,7 @@ namespace Storyteller
 
                 ImGui::TableNextColumn();
                 ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
-                ImGui::Selectable(_localizationManager->Translate(STORYTELLER_DOMAIN, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                ImGui::Selectable(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
                 ImGui::PopStyleColor();
                 if (ImGui::IsItemClicked(0))
                 {
@@ -388,8 +385,8 @@ namespace Storyteller
 
     void EditorUi::ComposePropertiesPanel()
     {
-        ImGui::Begin(_localizationManager->Translate(EDITOR_DOMAIN, "Texts").c_str(), nullptr);
-        ImGui::Text(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str());
+        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Texts").c_str(), nullptr);
+        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
 
         const auto selectedObject = _gameDocumentProxy->GetSelectedObject();
         const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
@@ -405,7 +402,7 @@ namespace Storyteller
 
         const auto availableHeight = ImGui::GetContentRegionAvail().y;
 
-        ImGui::Text(_localizationManager->Translate(EDITOR_DOMAIN, "Source text").c_str());
+        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text").c_str());
         const auto selectedTextObject = dynamic_cast<TextObject*>(selectedObject.get());
         auto sourceText = selectedTextObject ? selectedTextObject->GetText() : std::string();
         if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
@@ -413,12 +410,12 @@ namespace Storyteller
             selectedTextObject->SetText(sourceText);
         }
 
-        ImGui::Text(_localizationManager->Translate(EDITOR_DOMAIN, "Translation").c_str());
+        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation").c_str());
         auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocument->GetGameName(), sourceText, true) : std::string();
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_ReadOnly);
 
 
-        ImGui::SeparatorText(_localizationManager->Translate(EDITOR_DOMAIN, "Properties").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties").c_str());
         const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : ObjectType::ErrorObjectType;
         if (selectedObjectType == ObjectType::QuestObjectType)
         {
@@ -427,7 +424,7 @@ namespace Storyteller
 
             const auto entryPointObject = _gameDocumentProxy->GetEntryPoint();
             auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
-            if (ImGui::Checkbox(_localizationManager->Translate(EDITOR_DOMAIN, "Entry point").c_str(), &isEntryPoint) && selectedObject)
+            if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point").c_str(), &isEntryPoint) && selectedObject)
             {
                 _gameDocumentProxy->SetEntryPoint(selectedUuid);
             }
@@ -440,7 +437,7 @@ namespace Storyteller
 
             auto isFinal = selectedQuestObject->IsFinal();
             ImGui::SameLine();
-            if (ImGui::Checkbox(_localizationManager->Translate(EDITOR_DOMAIN, "Final").c_str(), &isFinal) && selectedObject)
+            if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final").c_str(), &isFinal) && selectedObject)
             {
                 selectedQuestObject->SetFinal(isFinal);
             }
@@ -449,7 +446,7 @@ namespace Storyteller
             {
                 ImGui::BeginDisabled();
             }
-            if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Add action").c_str()))
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action").c_str()))
             {
                 selectedQuestObject->AddAction(allActionObjects.at(selectedActionIndex)->GetUuid());
             }
@@ -459,8 +456,8 @@ namespace Storyteller
             }
 
             ImGui::SameLine();
-            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(EDITOR_DOMAIN, "Action name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(EDITOR_DOMAIN, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[selectedActionIndex]->GetName().c_str()))
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[selectedActionIndex]->GetName().c_str()))
             {
                 for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
                 {
@@ -491,7 +488,7 @@ namespace Storyteller
             {
                 ImGui::BeginDisabled();
             }
-            if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Remove").c_str()) && !questObjectActions.empty())
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
             {
                 selectedQuestObject->RemoveAction(questObjectActions.at(selectedChildActionIndex));
             }
@@ -500,13 +497,13 @@ namespace Storyteller
                 ImGui::EndDisabled();
             }
 
-            ImGui::BeginChild(_localizationManager->Translate(EDITOR_DOMAIN, "Object's actions").c_str());
+            ImGui::BeginChild(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object's actions").c_str());
             const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoHostExtendX;
-            if (ImGui::BeginTable(_localizationManager->Translate(EDITOR_DOMAIN, "Objects's actions").c_str(), 3, actionsTableFlags))
+            if (ImGui::BeginTable(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects's actions").c_str(), 3, actionsTableFlags))
             {
-                ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
-                ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
-                ImGui::TableSetupColumn(_localizationManager->Translate(EDITOR_DOMAIN, "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
+                ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
+                ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
+                ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
                 ImGui::TableSetupScrollFreeze(0, 1);
                 ImGui::TableHeadersRow();
 
@@ -558,14 +555,14 @@ namespace Storyteller
                 selectedQuestIndex = 0;
             }
 
-            if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Set target").c_str()))
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target").c_str()))
             {
                 selectedActionObject->SetTargetUuid(allQuestObjects.at(selectedQuestIndex)->GetUuid());
             }
 
             ImGui::SameLine();
-            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(EDITOR_DOMAIN, "Quest stage name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(EDITOR_DOMAIN, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[selectedQuestIndex]->GetName().c_str()))
+            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[selectedQuestIndex]->GetName().c_str()))
             {
                 for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
                 {
@@ -584,15 +581,15 @@ namespace Storyteller
             }
             ImGui::PopItemWidth();
 
-            if (ImGui::Button(_localizationManager->Translate(EDITOR_DOMAIN, "Clear target").c_str()))
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target").c_str()))
             {
                 selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
             }
 
-            ImGui::Text(_localizationManager->Translate(EDITOR_DOMAIN, "Current target name: ").c_str());
+            ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: ").c_str());
             ImGui::SameLine();
             const auto targetObject = _gameDocumentProxy->GetBasicObject(selectedActionObject->GetTargetUuid());
-            ImGui::Text(targetObject ? targetObject->GetName().c_str() : _localizationManager->Translate(EDITOR_DOMAIN, "Not set or does not exist").c_str());
+            ImGui::Text(targetObject ? targetObject->GetName().c_str() : _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist").c_str());
         }
 
         ImGui::End();
@@ -601,7 +598,7 @@ namespace Storyteller
 
     void EditorUi::ComposeLogPanel()
     {
-        ImGui::Begin(_localizationManager->Translate(EDITOR_DOMAIN, "Log").c_str());
+        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str());
         auto logDataStr = std::string(Log::StringLogOutput());
         ImGui::InputTextMultiline("Log", &logDataStr, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
         ImGui::End();

@@ -4,10 +4,6 @@
 
 #include <GLFW/glfw3.h>
 
-// TODO: other file
-#define STORYTELLER_DOMAIN "Storyteller"
-#define EDITOR_DOMAIN "StorytellerEditor"
-
 namespace Storyteller
 {
     struct WindowUserData
@@ -41,7 +37,7 @@ namespace Storyteller
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
 
         _window = glfwCreateWindow(1920, 1080,
-            _localizationManager->Translate(EDITOR_DOMAIN, "Storyteller Editor").c_str(), nullptr, nullptr);
+            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Storyteller Editor").c_str(), nullptr, nullptr);
 
         glfwSwapInterval(1);
         glfwSetWindowUserPointer(_window, new WindowUserData());

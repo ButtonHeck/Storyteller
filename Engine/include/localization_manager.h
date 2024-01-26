@@ -23,7 +23,7 @@ namespace Storyteller
         bool CreateTranslations(const GameDocument::Ptr document, const std::filesystem::path& path) const;
 
     private:
-        boost::locale::generator _localeGenetator;
+        boost::locale::generator _localeGenerator;
         std::string _localeString;
 
         typedef std::string SourceMessage;

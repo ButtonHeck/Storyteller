@@ -8,14 +8,14 @@
 namespace Storyteller
 {
     LocalizationManager::LocalizationManager(const std::string& defaultPath)
-        : _localeGenetator()
+        : _localeGenerator()
         , _localeString("")
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
 
         if (!defaultPath.empty())
         {
-            _localeGenetator.add_messages_path(defaultPath);
+            _localeGenerator.add_messages_path(defaultPath);
         }
     }
     //--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ namespace Storyteller
         STRTLR_CORE_LOG_INFO("LocalizationManager: building locale '{}'", localeString);
 
         _localeString = localeString;
-        std::locale::global(_localeGenetator(_localeString));
+        std::locale::global(_localeGenerator(_localeString));
         std::cout.imbue(std::locale());
     }
     //--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: add messages path '{}'", path);
 
-        _localeGenetator.add_messages_path(path);
+        _localeGenerator.add_messages_path(path);
     }
     //--------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: add messages domain '{}'", domain);
 
-        _localeGenetator.add_messages_domain(domain);
+        _localeGenerator.add_messages_domain(domain);
     }
     //--------------------------------------------------------------------------
 

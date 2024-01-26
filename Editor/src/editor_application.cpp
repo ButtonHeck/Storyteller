@@ -6,9 +6,6 @@
 #include <memory>
 #include <iostream>
 
-#define STORYTELLER_DOMAIN "Storyteller"
-#define EDITOR_DOMAIN "StorytellerEditor"
-
 namespace Storyteller
 {
     Application* CreateApplication()
@@ -30,7 +27,7 @@ namespace Storyteller
             return false;
         }
 
-        _localizationManager->AddMessagesDomain(EDITOR_DOMAIN);
+        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
         _localizationManager->Build("ru_RU.UTF-8");
 
         _window.reset(new Window(_localizationManager));

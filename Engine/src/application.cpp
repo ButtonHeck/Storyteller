@@ -13,6 +13,7 @@ namespace Storyteller
         Log::Initialize();
 
         _localizationManager.reset(new LocalizationManager());
+        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_ENGINE);
 
         return true;
     }
