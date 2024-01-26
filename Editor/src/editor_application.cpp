@@ -54,9 +54,11 @@ namespace Storyteller
         {
             _window->ProcessEvents();
 
+            _ui->NewFrame();
             _ui->Prepare();
             _ui->Compose();
             _ui->Render();
+            _ui->EndFrame();
 
             _window->SwapBuffers();
         }

@@ -17,9 +17,11 @@ namespace Storyteller
         EditorUi(Window::Ptr window, LocalizationManager::Ptr localizationManager);
 
         bool Initialize();
+        void NewFrame();
         void Prepare();
         void Compose();
         void Render();
+        void EndFrame();
         void Shutdown();
 
     private:
@@ -28,6 +30,8 @@ namespace Storyteller
         void ComposePropertiesPanel();
         void ComposeLogPanel();
 
+        void Stylize();
+        void PrepareDockspace();
         void AddDefaultFont();
 
     private:
