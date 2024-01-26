@@ -40,13 +40,11 @@ namespace Storyteller
         glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
 
-        std::shared_ptr<WindowUserData> userData = std::make_shared<WindowUserData>();
-
-        _window = glfwCreateWindow(userData->width, userData->height,
+        _window = glfwCreateWindow(1920, 1080,
             _localizationManager->Translate(EDITOR_DOMAIN, "Storyteller Editor").c_str(), nullptr, nullptr);
 
         glfwSwapInterval(1);
-        glfwSetWindowUserPointer(_window, userData.get());
+        glfwSetWindowUserPointer(_window, new WindowUserData());
         MakeContextCurrent();
 
         glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
