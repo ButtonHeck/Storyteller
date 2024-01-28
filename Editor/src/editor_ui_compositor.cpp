@@ -172,13 +172,15 @@ namespace Storyteller
         ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game").c_str(), nullptr, mainFlags);
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document").c_str());
-        auto gameName = document->GetGameName();
-        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str()).x);
-        if (ImGui::InputText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+
         {
-            document->SetGameName(gameName);
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str()).x);
+            auto gameName = document->GetGameName();
+            if (ImGui::InputText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                document->SetGameName(gameName);
+            }
         }
-        ImGui::PopItemWidth();
 
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file...").c_str()))
         {
@@ -207,26 +209,27 @@ namespace Storyteller
             _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)),
         };
 
-        ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str()).x);
-        if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), typeItems[_state.selectedTypeIndex].c_str()))
         {
-            for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str()).x);
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), typeItems[_state.selectedTypeIndex].c_str()))
             {
-                const auto selected = _state.selectedTypeIndex == typeIndex;
-                if (ImGui::Selectable(typeItems[typeIndex].c_str(), selected))
+                for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
                 {
-                    _state.selectedTypeIndex = typeIndex;
+                    const auto selected = _state.selectedTypeIndex == typeIndex;
+                    if (ImGui::Selectable(typeItems[typeIndex].c_str(), selected))
+                    {
+                        _state.selectedTypeIndex = typeIndex;
+                    }
+
+                    if (selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
                 }
 
-                if (selected)
-                {
-                    ImGui::SetItemDefaultFocus();
-                }
+                ImGui::EndCombo();
             }
-
-            ImGui::EndCombo();
         }
-        ImGui::PopItemWidth();
 
         {
             UiUtils::DisableGuard guard(!proxy->GetSelectedObject().get());
@@ -329,14 +332,15 @@ namespace Storyteller
         const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
         const auto uuidString = std::to_string(selectedUuid);
 
-        auto objectName = selectedObject ? selectedObject->GetName() : std::string();
-        ImGui::PushItemWidth(-FLT_MIN);
-        if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue) && selectedObject)
         {
-            selectedObject->SetName(objectName);
+            UiUtils::ItemWidthGuard guard(-FLT_MIN);
+            auto objectName = selectedObject ? selectedObject->GetName() : std::string();
+            if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue) && selectedObject)
+            {
+                selectedObject->SetName(objectName);
+            }
         }
-        ImGui::PopItemWidth();
-
+        
         const auto availableHeight = ImGui::GetContentRegionAvail().y;
 
         ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text").c_str());
@@ -387,26 +391,28 @@ namespace Storyteller
             }
 
             ImGui::SameLine();
-            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
+
             {
-                for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
+                UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
+                if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
                 {
-                    const auto selected = _state.selectedActionIndex == actionIndex;
-                    if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
+                    for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
                     {
-                        _state.selectedActionIndex = actionIndex;
+                        const auto selected = _state.selectedActionIndex == actionIndex;
+                        if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
+                        {
+                            _state.selectedActionIndex = actionIndex;
+                        }
+
+                        if (selected)
+                        {
+                            ImGui::SetItemDefaultFocus();
+                        }
                     }
 
-                    if (selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
+                    ImGui::EndCombo();
                 }
-
-                ImGui::EndCombo();
             }
-            ImGui::PopItemWidth();
 
             const auto questObjectActions = selectedQuestObject->GetActions();
             if (_state.selectedChildActionIndex >= questObjectActions.size())
@@ -485,25 +491,27 @@ namespace Storyteller
             }
 
             ImGui::SameLine();
-            ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
-            {
-                for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
-                {
-                    const auto selected = _state.selectedQuestIndex == questIndex;
-                    if (ImGui::Selectable(allQuestObjects.at(questIndex)->GetName().c_str(), selected))
-                    {
-                        _state.selectedQuestIndex = questIndex;
-                    }
 
-                    if (selected)
+            {
+                UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
+                if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
+                {
+                    for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
                     {
-                        ImGui::SetItemDefaultFocus();
+                        const auto selected = _state.selectedQuestIndex == questIndex;
+                        if (ImGui::Selectable(allQuestObjects.at(questIndex)->GetName().c_str(), selected))
+                        {
+                            _state.selectedQuestIndex = questIndex;
+                        }
+
+                        if (selected)
+                        {
+                            ImGui::SetItemDefaultFocus();
+                        }
                     }
+                    ImGui::EndCombo();
                 }
-                ImGui::EndCombo();
             }
-            ImGui::PopItemWidth();
 
             if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target").c_str()))
             {

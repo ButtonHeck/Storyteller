@@ -24,5 +24,17 @@ namespace Storyteller
             }
         }
         //--------------------------------------------------------------------------
+
+        ItemWidthGuard::ItemWidthGuard(float width)
+        {
+            ImGui::PushItemWidth(width);
+        }
+        //--------------------------------------------------------------------------
+
+        ItemWidthGuard::~ItemWidthGuard()
+        {
+            ImGui::PopItemWidth();
+        }
+        //--------------------------------------------------------------------------
     }
 }

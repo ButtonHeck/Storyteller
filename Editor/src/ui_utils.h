@@ -7,11 +7,19 @@ namespace Storyteller
         class DisableGuard
         {
         public:
-            DisableGuard(bool condition);
+            explicit DisableGuard(bool condition);
             ~DisableGuard();
 
         private:
             const bool _condition;
+        };
+        //--------------------------------------------------------------------------
+
+        class ItemWidthGuard
+        {
+        public:
+            explicit ItemWidthGuard(float width);
+            ~ItemWidthGuard();
         };
         //--------------------------------------------------------------------------
     }
