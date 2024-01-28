@@ -18,21 +18,19 @@ namespace Storyteller
 
     void EditorUiCompositor::Compose()
     {
-        static auto demoWindow = false;
-
-        ComposeMenu(demoWindow);
+        ComposeMenu();
         ComposeGameDocumentPanel();
         ComposePropertiesPanel();
         ComposeLogPanel();
 
-        if (demoWindow)
+        if (_state.demoWindow)
         {
             ImGui::ShowDemoWindow();
         }
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposeMenu(bool& demoWindow)
+    void EditorUiCompositor::ComposeMenu()
     {
         if (ImGui::BeginMenuBar())
         {
@@ -117,7 +115,7 @@ namespace Storyteller
 
                 if (ImGui::MenuItem("Demo window"))
                 {
-                    demoWindow = !demoWindow;
+                    _state.demoWindow = !_state.demoWindow;
                 }
 
                 ImGui::EndMenu();
@@ -152,14 +150,13 @@ namespace Storyteller
 
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management").c_str());
-        static auto selectedTypeIndex = 0;
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create").c_str()))
         {
-            if (selectedTypeIndex == 0)
+            if (_state.selectedTypeIndex == 0)
             {
                 proxy->AddObject(ObjectType::QuestObjectType);
             }
-            else if (selectedTypeIndex == 1)
+            else if (_state.selectedTypeIndex == 1)
             {
                 proxy->AddObject(ObjectType::ActionObjectType);
             }
@@ -173,14 +170,14 @@ namespace Storyteller
         };
 
         ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str()).x);
-        if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), typeItems[selectedTypeIndex].c_str()))
+        if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), typeItems[_state.selectedTypeIndex].c_str()))
         {
             for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
             {
-                const auto selected = selectedTypeIndex == typeIndex;
+                const auto selected = _state.selectedTypeIndex == typeIndex;
                 if (ImGui::Selectable(typeItems[typeIndex].c_str(), selected))
                 {
-                    selectedTypeIndex = typeIndex;
+                    _state.selectedTypeIndex = typeIndex;
                 }
 
                 if (selected)
@@ -209,27 +206,25 @@ namespace Storyteller
 
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Filters").c_str());
-        static auto questObjectFilter = true;
-        static auto actionObjectFilter = true;
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &questObjectFilter))
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &_state.questObjectFilter))
         {
-            if (questObjectFilter)
+            if (_state.questObjectFilter)
             {
                 proxy->UpdateCache();
             }
 
-            proxy->DoFilter(ObjectType::QuestObjectType, questObjectFilter);
+            proxy->DoFilter(ObjectType::QuestObjectType, _state.questObjectFilter);
         }
 
         ImGui::SameLine();
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)).c_str(), &actionObjectFilter))
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)).c_str(), &_state.actionObjectFilter))
         {
-            if (actionObjectFilter)
+            if (_state.actionObjectFilter)
             {
                 proxy->UpdateCache();
             }
 
-            proxy->DoFilter(ObjectType::ActionObjectType, actionObjectFilter);
+            proxy->DoFilter(ObjectType::ActionObjectType, _state.actionObjectFilter);
         }
 
 
@@ -339,10 +334,9 @@ namespace Storyteller
                 proxy->SetEntryPoint(selectedUuid);
             }
 
-            static auto selectedActionIndex = 0;
-            if (selectedActionIndex >= allActionObjects.size())
+            if (_state.selectedActionIndex >= allActionObjects.size())
             {
-                selectedActionIndex = 0;
+                _state.selectedActionIndex = 0;
             }
 
             auto isFinal = selectedQuestObject->IsFinal();
@@ -358,7 +352,7 @@ namespace Storyteller
             }
             if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action").c_str()))
             {
-                selectedQuestObject->AddAction(allActionObjects.at(selectedActionIndex)->GetUuid());
+                selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
             }
             if (allActionObjects.empty())
             {
@@ -367,14 +361,14 @@ namespace Storyteller
 
             ImGui::SameLine();
             ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[selectedActionIndex]->GetName().c_str()))
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
             {
                 for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
                 {
-                    const auto selected = selectedActionIndex == actionIndex;
+                    const auto selected = _state.selectedActionIndex == actionIndex;
                     if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
                     {
-                        selectedActionIndex = actionIndex;
+                        _state.selectedActionIndex = actionIndex;
                     }
 
                     if (selected)
@@ -388,10 +382,9 @@ namespace Storyteller
             ImGui::PopItemWidth();
 
             const auto questObjectActions = selectedQuestObject->GetActions();
-            static auto selectedChildActionIndex = 0;
-            if (selectedChildActionIndex >= questObjectActions.size())
+            if (_state.selectedChildActionIndex >= questObjectActions.size())
             {
-                selectedChildActionIndex = 0;
+                _state.selectedChildActionIndex = 0;
             }
 
             if (questObjectActions.empty())
@@ -400,7 +393,7 @@ namespace Storyteller
             }
             if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
             {
-                selectedQuestObject->RemoveAction(questObjectActions.at(selectedChildActionIndex));
+                selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
             }
             if (questObjectActions.empty())
             {
@@ -431,7 +424,7 @@ namespace Storyteller
                         continue;
                     }
 
-                    auto selected = selectedChildActionIndex == row;
+                    auto selected = _state.selectedChildActionIndex == row;
 
                     ImGui::TableNextRow();
 
@@ -439,7 +432,7 @@ namespace Storyteller
                     ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
                     if (ImGui::IsItemClicked(0))
                     {
-                        selectedChildActionIndex = row;
+                        _state.selectedChildActionIndex = row;
                     }
 
                     ImGui::TableNextColumn();
@@ -459,27 +452,26 @@ namespace Storyteller
             auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
             const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
 
-            static auto selectedQuestIndex = 0;
-            if (selectedQuestIndex >= allQuestObjects.size())
+            if (_state.selectedQuestIndex >= allQuestObjects.size())
             {
-                selectedQuestIndex = 0;
+                _state.selectedQuestIndex = 0;
             }
 
             if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target").c_str()))
             {
-                selectedActionObject->SetTargetUuid(allQuestObjects.at(selectedQuestIndex)->GetUuid());
+                selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
             }
 
             ImGui::SameLine();
             ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[selectedQuestIndex]->GetName().c_str()))
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
             {
                 for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
                 {
-                    const auto selected = selectedQuestIndex == questIndex;
+                    const auto selected = _state.selectedQuestIndex == questIndex;
                     if (ImGui::Selectable(allQuestObjects.at(questIndex)->GetName().c_str(), selected))
                     {
-                        selectedQuestIndex = questIndex;
+                        _state.selectedQuestIndex = questIndex;
                     }
 
                     if (selected)

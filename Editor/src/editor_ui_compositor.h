@@ -18,7 +18,19 @@ namespace Storyteller
         void Compose();
 
     private:
-        void ComposeMenu(bool& demoWindow);
+        struct UiComponentsState
+        {
+            bool demoWindow = false;
+            int selectedTypeIndex = 0;
+            bool questObjectFilter = true;
+            bool actionObjectFilter = true;
+            int selectedChildActionIndex = 0;
+            int selectedActionIndex = 0;
+            int selectedQuestIndex = 0;
+        };
+
+    private:
+        void ComposeMenu();
         void ComposeGameDocumentPanel();
         void ComposePropertiesPanel();
         void ComposeLogPanel();
@@ -27,6 +39,7 @@ namespace Storyteller
         Window::Ptr _window;
         LocalizationManager::Ptr _localizationManager;
         GameDocumentManager::Ptr _gameDocumentManager;
+        UiComponentsState _state;
     };
     //--------------------------------------------------------------------------
 }
