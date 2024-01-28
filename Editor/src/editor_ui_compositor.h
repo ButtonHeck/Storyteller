@@ -47,6 +47,10 @@ namespace Storyteller
         void ComposeGameDocumentPanelObjectsTable();
 
         void ComposePropertiesPanel();
+        void ComposePropertiesPanelCommon();
+        void ComposePropertiesPanelQuestObject();
+        void ComposePropertiesPanelActionObject();
+
         void ComposeLogPanel();
 
     private:

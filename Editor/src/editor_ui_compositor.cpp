@@ -209,14 +209,7 @@ namespace Storyteller
 
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create").c_str()))
         {
-            if (_state.selectedTypeIndex == 0)
-            {
-                proxy->AddObject(ObjectType::QuestObjectType);
-            }
-            else if (_state.selectedTypeIndex == 1)
-            {
-                proxy->AddObject(ObjectType::ActionObjectType);
-            }
+            proxy->AddObject(ObjectType(_state.selectedTypeIndex));
         }
 
         ImGui::SameLine();
@@ -260,8 +253,6 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelFilters()
     {
-        const auto proxy = _gameDocumentManager->GetProxy();
-
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Filters").c_str());
 
         ComposeGameDocumentPanelFilterCheckbox(ObjectType::QuestObjectType, _state.questObjectFilter);
@@ -351,15 +342,36 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanel()
     {
-        const auto document = _gameDocumentManager->GetDocument();
         const auto proxy = _gameDocumentManager->GetProxy();
+        const auto selectedObject = proxy->GetSelectedObject();
 
-        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Texts").c_str(), nullptr);
-        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
+        if (ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Texts").c_str(), nullptr))
+        {
+            ComposePropertiesPanelCommon();
 
+            ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties").c_str());
+            const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : ObjectType::ErrorObjectType;
+            if (selectedObjectType == ObjectType::QuestObjectType)
+            {
+                ComposePropertiesPanelQuestObject();
+            }
+            else if (selectedObjectType == ObjectType::ActionObjectType)
+            {
+                ComposePropertiesPanelActionObject();
+            }
+
+            ImGui::End();
+        }
+    }
+
+    void EditorUiCompositor::ComposePropertiesPanelCommon()
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedObject = proxy->GetSelectedObject();
         const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
         const auto uuidString = std::to_string(selectedUuid);
+
+        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
 
         {
             UiUtils::ItemWidthGuard guard(-FLT_MIN);
@@ -369,7 +381,7 @@ namespace Storyteller
                 selectedObject->SetName(objectName);
             }
         }
-        
+
         const auto availableHeight = ImGui::GetContentRegionAvail().y;
 
         ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text").c_str());
@@ -381,179 +393,183 @@ namespace Storyteller
         }
 
         ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation").c_str());
-        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(document->GetGameName(), sourceText, true) : std::string();
+        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), sourceText, true) : std::string();
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_ReadOnly);
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUiCompositor::ComposePropertiesPanelQuestObject()
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
+        const auto selectedObject = proxy->GetSelectedObject();
+        const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
 
-        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties").c_str());
-        const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : ObjectType::ErrorObjectType;
-        if (selectedObjectType == ObjectType::QuestObjectType)
+        auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
+        const auto allActionObjects = proxy->GetObjects(ObjectType::ActionObjectType, true);
+
+        const auto entryPointObject = proxy->GetEntryPoint();
+        auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point").c_str(), &isEntryPoint) && selectedObject)
         {
-            auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
-            const auto allActionObjects = proxy->GetObjects(ObjectType::ActionObjectType, true);
-
-            const auto entryPointObject = proxy->GetEntryPoint();
-            auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
-            if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point").c_str(), &isEntryPoint) && selectedObject)
-            {
-                proxy->SetEntryPoint(selectedUuid);
-            }
-
-            if (_state.selectedActionIndex >= allActionObjects.size())
-            {
-                _state.selectedActionIndex = 0;
-            }
-
-            auto isFinal = selectedQuestObject->IsFinal();
-            ImGui::SameLine();
-            if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final").c_str(), &isFinal) && selectedObject)
-            {
-                selectedQuestObject->SetFinal(isFinal);
-            }
-
-            {
-                UiUtils::DisableGuard guard(allActionObjects.empty());
-                if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action").c_str()))
-                {
-                    selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
-                }
-            }
-
-            ImGui::SameLine();
-
-            {
-                UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
-                if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
-                {
-                    for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
-                    {
-                        const auto selected = _state.selectedActionIndex == actionIndex;
-                        if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
-                        {
-                            _state.selectedActionIndex = actionIndex;
-                        }
-
-                        if (selected)
-                        {
-                            ImGui::SetItemDefaultFocus();
-                        }
-                    }
-
-                    ImGui::EndCombo();
-                }
-            }
-
-            const auto questObjectActions = selectedQuestObject->GetActions();
-            if (_state.selectedChildActionIndex >= questObjectActions.size())
-            {
-                _state.selectedChildActionIndex = 0;
-            }
-
-            {
-                UiUtils::DisableGuard guard(questObjectActions.empty());
-                if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
-                {
-                    selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
-                }
-            }
-
-            ImGui::BeginChild(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object's actions").c_str());
-            const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_NoHostExtendX;
-            if (ImGui::BeginTable(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects's actions").c_str(), 3, actionsTableFlags))
-            {
-                ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
-                ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
-                ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
-                ImGui::TableSetupScrollFreeze(0, 1);
-                ImGui::TableHeadersRow();
-
-                for (auto row = 0; row < questObjectActions.size(); row++)
-                {
-                    const auto object = proxy->GetBasicObject(questObjectActions[row]);
-                    if (!object)
-                    {
-                        continue;
-                    }
-
-                    const auto actionObject = dynamic_cast<ActionObject*>(object.get());
-                    if (!actionObject)
-                    {
-                        continue;
-                    }
-
-                    auto selected = _state.selectedChildActionIndex == row;
-
-                    ImGui::TableNextRow();
-
-                    ImGui::TableNextColumn();
-                    ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
-                    if (ImGui::IsItemClicked(0))
-                    {
-                        _state.selectedChildActionIndex = row;
-                    }
-
-                    ImGui::TableNextColumn();
-                    ImGui::Text(object->GetName().c_str());
-
-                    ImGui::TableNextColumn();
-                    ImGui::Text(_localizationManager->Translate(document->GetGameName(), actionObject->GetText()).c_str());
-                }
-
-                ImGui::EndTable();
-            }
-
-            ImGui::EndChild();
-        }
-        else if (selectedObjectType == ObjectType::ActionObjectType)
-        {
-            auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
-            const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
-
-            if (_state.selectedQuestIndex >= allQuestObjects.size())
-            {
-                _state.selectedQuestIndex = 0;
-            }
-
-            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target").c_str()))
-            {
-                selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
-            }
-
-            ImGui::SameLine();
-
-            {
-                UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
-                if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
-                {
-                    for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
-                    {
-                        const auto selected = _state.selectedQuestIndex == questIndex;
-                        if (ImGui::Selectable(allQuestObjects.at(questIndex)->GetName().c_str(), selected))
-                        {
-                            _state.selectedQuestIndex = questIndex;
-                        }
-
-                        if (selected)
-                        {
-                            ImGui::SetItemDefaultFocus();
-                        }
-                    }
-                    ImGui::EndCombo();
-                }
-            }
-
-            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target").c_str()))
-            {
-                selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
-            }
-
-            ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: ").c_str());
-            ImGui::SameLine();
-            const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
-            ImGui::Text(targetObject ? targetObject->GetName().c_str() : _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist").c_str());
+            proxy->SetEntryPoint(selectedUuid);
         }
 
-        ImGui::End();
+        if (_state.selectedActionIndex >= allActionObjects.size())
+        {
+            _state.selectedActionIndex = 0;
+        }
+
+        auto isFinal = selectedQuestObject->IsFinal();
+        ImGui::SameLine();
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final").c_str(), &isFinal) && selectedObject)
+        {
+            selectedQuestObject->SetFinal(isFinal);
+        }
+
+        {
+            UiUtils::DisableGuard guard(allActionObjects.empty());
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action").c_str()))
+            {
+                selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
+            }
+        }
+
+        ImGui::SameLine();
+
+        {
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
+            {
+                for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
+                {
+                    const auto selected = _state.selectedActionIndex == actionIndex;
+                    if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
+                    {
+                        _state.selectedActionIndex = actionIndex;
+                    }
+
+                    if (selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+        }
+
+        const auto questObjectActions = selectedQuestObject->GetActions();
+        if (_state.selectedChildActionIndex >= questObjectActions.size())
+        {
+            _state.selectedChildActionIndex = 0;
+        }
+
+        {
+            UiUtils::DisableGuard guard(questObjectActions.empty());
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
+            {
+                selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
+            }
+        }
+
+        const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable 
+            | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_ScrollY;
+        if (ImGui::BeginTable(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects's actions").c_str(), 3, actionsTableFlags))
+        {
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupScrollFreeze(0, 1);
+            ImGui::TableHeadersRow();
+
+            for (auto row = 0; row < questObjectActions.size(); row++)
+            {
+                const auto object = proxy->GetBasicObject(questObjectActions[row]);
+                if (!object)
+                {
+                    continue;
+                }
+
+                const auto actionObject = dynamic_cast<ActionObject*>(object.get());
+                if (!actionObject)
+                {
+                    continue;
+                }
+
+                auto selected = _state.selectedChildActionIndex == row;
+
+                ImGui::TableNextRow();
+
+                ImGui::TableNextColumn();
+                ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                if (ImGui::IsItemClicked(0))
+                {
+                    _state.selectedChildActionIndex = row;
+                }
+
+                ImGui::TableNextColumn();
+                ImGui::Text(object->GetName().c_str());
+
+                ImGui::TableNextColumn();
+                ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText()).c_str());
+            }
+
+            ImGui::EndTable();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposePropertiesPanelActionObject()
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
+        const auto selectedObject = proxy->GetSelectedObject();
+        const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
+
+        auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
+        const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
+
+        if (_state.selectedQuestIndex >= allQuestObjects.size())
+        {
+            _state.selectedQuestIndex = 0;
+        }
+
+        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target").c_str()))
+        {
+            selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
+        }
+
+        ImGui::SameLine();
+
+        {
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
+            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
+            {
+                for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
+                {
+                    const auto selected = _state.selectedQuestIndex == questIndex;
+                    if (ImGui::Selectable(allQuestObjects.at(questIndex)->GetName().c_str(), selected))
+                    {
+                        _state.selectedQuestIndex = questIndex;
+                    }
+
+                    if (selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+        }
+
+        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target").c_str()))
+        {
+            selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
+        }
+
+        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: ").c_str());
+        ImGui::SameLine();
+        const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
+        ImGui::Text(targetObject ? targetObject->GetName().c_str() : _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist").c_str());
     }
     //--------------------------------------------------------------------------
 
