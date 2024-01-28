@@ -105,7 +105,7 @@ namespace Storyteller
 
     bool TextObject::IsConsistent() const
     {
-        return !_text.empty();
+        return !_text.empty() && !_name.empty();
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
