@@ -1,8 +1,8 @@
 #pragma once
 
-#include "game_document_manager.h"
-#include "localization_manager.h"
 #include "window.h"
+#include "localization_manager.h"
+#include "editor_ui_compositor.h"
 
 #include <memory>
 
@@ -26,17 +26,11 @@ namespace Storyteller
         void Shutdown();
 
     private:
-        void ComposeMenu(bool& demoWindow);
-        void ComposeGameDocumentPanel();
-        void ComposePropertiesPanel();
-        void ComposeLogPanel();
-
         void AddDefaultFont();
 
     private:
         Window::Ptr _window;
-        LocalizationManager::Ptr _localizationManager;
-        GameDocumentManager::Ptr _gameDocumentManager;
+        EditorUiCompositor::Ptr _compositor;
     };
     //--------------------------------------------------------------------------
 }

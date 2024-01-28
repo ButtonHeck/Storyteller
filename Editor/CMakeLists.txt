@@ -15,6 +15,8 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_compositor.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_compositor.cpp"
 )
 
 set(IMGUI_IMPL_DIR "${VENDOR_DIR}/imgui/backends")
