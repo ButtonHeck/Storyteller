@@ -42,7 +42,15 @@ namespace Storyteller
             return false;
         }
 
-        _window->InjectUi(_ui.get());
+        _window->SetRefreshCallback([&]() {
+            _ui->NewFrame();
+            _ui->Stylize();
+            _ui->BeginDockspace();
+            _ui->Compose();
+            _ui->EndDockspace();
+            _ui->Render();
+            _ui->EndFrame();
+        });
 
         return true;
     }

@@ -2,14 +2,13 @@
 
 #include "localization_manager.h"
 
+#include <functional>
 #include <memory>
 
 struct GLFWwindow;
 
 namespace Storyteller
 {
-    class EditorUi;
-
     class Window
     {
     public:
@@ -25,7 +24,7 @@ namespace Storyteller
         void SwapBuffers() const;
         void Shutdown();
         void MakeContextCurrent();
-        void InjectUi(EditorUi* ui);
+        void SetRefreshCallback(std::function<void()> refreshCallback);
         GLFWwindow* GetGLFWWindow() const;
 
     private:
