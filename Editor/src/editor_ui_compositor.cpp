@@ -1,6 +1,7 @@
 #include "editor_ui_compositor.h"
 #include "dialogs.h"
 #include "log.h"
+#include "ui_utils.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
@@ -227,18 +228,12 @@ namespace Storyteller
         }
         ImGui::PopItemWidth();
 
-        const auto hasSelection = proxy->GetSelectedObject();
-        if (!hasSelection)
         {
-            ImGui::BeginDisabled();
-        }
-        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()))
-        {
-            proxy->RemoveSelected();
-        }
-        if (!hasSelection)
-        {
-            ImGui::EndDisabled();
+            UiUtils::DisableGuard guard(!proxy->GetSelectedObject().get());
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()))
+            {
+                proxy->RemoveSelected();
+            }
         }
 
 
@@ -383,17 +378,12 @@ namespace Storyteller
                 selectedQuestObject->SetFinal(isFinal);
             }
 
-            if (allActionObjects.empty())
             {
-                ImGui::BeginDisabled();
-            }
-            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action").c_str()))
-            {
-                selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
-            }
-            if (allActionObjects.empty())
-            {
-                ImGui::EndDisabled();
+                UiUtils::DisableGuard guard(allActionObjects.empty());
+                if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action").c_str()))
+                {
+                    selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
+                }
             }
 
             ImGui::SameLine();
@@ -424,17 +414,12 @@ namespace Storyteller
                 _state.selectedChildActionIndex = 0;
             }
 
-            if (questObjectActions.empty())
             {
-                ImGui::BeginDisabled();
-            }
-            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
-            {
-                selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
-            }
-            if (questObjectActions.empty())
-            {
-                ImGui::EndDisabled();
+                UiUtils::DisableGuard guard(questObjectActions.empty());
+                if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
+                {
+                    selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
+                }
             }
 
             ImGui::BeginChild(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object's actions").c_str());
