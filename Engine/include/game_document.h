@@ -17,10 +17,6 @@ namespace Storyteller
         explicit GameDocument(const std::string& pathString = "");
         explicit GameDocument(const std::filesystem::path& path = "");
 
-        bool Load(const std::filesystem::path& path);
-        bool Save();
-        bool Save(const std::filesystem::path& path);
-
         std::string GetGameName() const;
         void SetGameName(const std::string& gameName);
 
@@ -43,10 +39,6 @@ namespace Storyteller
         BasicObject::Ptr GetEntryPoint() const;
 
         bool CheckConsistency() const;
-
-    private:
-        bool Serialize(const std::filesystem::path& path);
-        bool Deserialize(const std::filesystem::path& path);
 
     private:
         std::string _gameName;

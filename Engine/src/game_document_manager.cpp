@@ -1,4 +1,5 @@
 #include "game_document_manager.h"
+#include "game_document_serializer.h"
 
 namespace Storyteller
 {
@@ -10,15 +11,39 @@ namespace Storyteller
 
     void GameDocumentManager::NewDocument(const std::string& pathString)
     {
-        _document.reset(new GameDocument(pathString));
-        _proxy.reset();
+        NewDocument(std::filesystem::path(pathString));
     }
     //--------------------------------------------------------------------------
 
     void GameDocumentManager::NewDocument(const std::filesystem::path& path)
     {
         _document.reset(new GameDocument(path));
+
+        GameDocumentSerializer serializer(_document);
+        serializer.Load(path);
+
         _proxy.reset();
+    }
+    //--------------------------------------------------------------------------
+
+    bool GameDocumentManager::Load(const std::filesystem::path& path)
+    {
+        GameDocumentSerializer serializer(_document);
+        return serializer.Load(path);
+    }
+    //--------------------------------------------------------------------------
+
+    bool GameDocumentManager::Save()
+    {
+        GameDocumentSerializer serializer(_document);
+        return serializer.Save();
+    }
+    //--------------------------------------------------------------------------
+
+    bool GameDocumentManager::Save(const std::filesystem::path& path)
+    {
+        GameDocumentSerializer serializer(_document);
+        return serializer.Save(path);
     }
     //--------------------------------------------------------------------------
 

@@ -195,13 +195,13 @@ namespace Storyteller
 
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save").c_str()))
                 {
-                    document->Save();
+                    _gameDocumentManager->Save();
                 }
 
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as...").c_str()))
                 {
                     const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
-                    document->Save(filepath);
+                    _gameDocumentManager->Save(filepath);
                 }
 
                 ImGui::Separator();

@@ -17,6 +17,10 @@ namespace Storyteller
         void NewDocument(const std::string& pathString = "");
         void NewDocument(const std::filesystem::path& path = "");
 
+        bool Load(const std::filesystem::path& path);
+        bool Save();
+        bool Save(const std::filesystem::path& path);
+
         GameDocument::Ptr GetDocument() const;
         GameDocumentSortFilterProxyView::Ptr GetProxy();
 
