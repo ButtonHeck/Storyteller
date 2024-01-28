@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 
+#include <variant>
 #include <initializer_list>
 #include <utility>
 
@@ -36,6 +37,17 @@ namespace Storyteller
 
         private:
             std::initializer_list<std::pair<ImGuiCol_, ImVec4>> _colors;
+        };
+        //--------------------------------------------------------------------------
+
+        class StyleVarGuard
+        {
+        public:
+            StyleVarGuard(std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>>&& variables);
+            ~StyleVarGuard();
+
+        private:
+            std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>> _variables;
         };
         //--------------------------------------------------------------------------
     }

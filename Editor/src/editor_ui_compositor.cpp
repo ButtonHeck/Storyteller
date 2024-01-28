@@ -559,16 +559,13 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeLogPanel()
     {
-        UiUtils::StyleColorGuard guard({ {ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0)} });
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
+        UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0)} });
+        UiUtils::StyleVarGuard varGuard({ {ImGuiStyleVar_FrameBorderSize, 0.0f}, {ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f)} });
 
         ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str(), nullptr);
         auto logDataStr = std::string(Log::StringLogOutput());
         ImGui::InputTextMultiline("##Log", &logDataStr, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
         ImGui::End();
-
-        ImGui::PopStyleVar(2);
     }
     //--------------------------------------------------------------------------
 }

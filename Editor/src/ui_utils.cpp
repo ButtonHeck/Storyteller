@@ -1,5 +1,7 @@
 #include "ui_utils.h"
 
+#include <imgui_internal.h>
+
 namespace Storyteller
 {
     namespace UiUtils
@@ -48,6 +50,31 @@ namespace Storyteller
         StyleColorGuard::~StyleColorGuard()
         {
             ImGui::PopStyleColor(_colors.size());
+        }
+        //--------------------------------------------------------------------------
+
+        StyleVarGuard::StyleVarGuard(std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>>&& variables)
+            : _variables(variables)
+        {
+            for (const auto& value : _variables)
+            {
+                const auto variableInfo = ImGui::GetStyleVarInfo(value.first);
+
+                if (variableInfo->Count == 1)
+                {
+                    ImGui::PushStyleVar(value.first, std::get<float>(value.second));
+                }
+                else if (variableInfo->Count == 2)
+                {
+                    ImGui::PushStyleVar(value.first, std::get<ImVec2>(value.second));
+                }
+            }
+        }
+        //--------------------------------------------------------------------------
+
+        StyleVarGuard::~StyleVarGuard()
+        {
+            ImGui::PopStyleVar(_variables.size());
         }
         //--------------------------------------------------------------------------
     }
