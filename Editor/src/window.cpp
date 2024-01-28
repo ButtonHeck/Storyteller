@@ -59,8 +59,10 @@ namespace Storyteller
                 if (userData->ui)
                 {
                     userData->ui->NewFrame();
-                    userData->ui->Prepare();
+                    userData->ui->Stylize();
+                    userData->ui->BeginDockspace();
                     userData->ui->Compose();
+                    userData->ui->EndDockspace();
                     userData->ui->Render();
                     userData->ui->EndFrame();
                 }

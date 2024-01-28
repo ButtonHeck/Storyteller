@@ -13,8 +13,7 @@ namespace Storyteller
     EditorUi::EditorUi(Window::Ptr window, LocalizationManager::Ptr localizationManager)
         : _window(window)
         , _localizationManager(localizationManager)
-        , _gameDocument(new GameDocument(std::string()))
-        , _gameDocumentProxy(new GameDocumentSortFilterProxyView(_gameDocument))
+        , _gameDocumentManager(new GameDocumentManager())
     {}
     //--------------------------------------------------------------------------
 
@@ -44,10 +43,46 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::Prepare()
+    void EditorUi::Stylize()
     {
-        PrepareDockspace();
-        Stylize();
+        auto& style = ImGui::GetStyle();
+        style.FrameBorderSize = 1.0f;
+        style.WindowMenuButtonPosition = ImGuiDir_None;
+        //style.Colors[ImGuiCol_FrameBg] = ImVec4(0.45f, 0.14f, 0.4f, 1.0f);
+        //style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.595f, 0.375f, 0.632f, 1.0f);
+        //style.Colors[ImGuiCol_WindowBg] = ImVec4(0.064f, 0.092f, 0.104f, 1.0f);
+        //style.Colors[ImGuiCol_TitleBg] = ImVec4(0.054f, 0.027f, 0.054f, 1.0f);
+        //style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.285f, 0.598f, 0.749f, 1.0f);
+        //style.Colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+        //style.Colors[ImGuiCol_SliderGrab] = ImVec4(1.0f, 0.597f, 0.963f, 1.0f);
+        //style.Colors[ImGuiCol_DockingPreview] = ImVec4(0.853f, 0.853f, 0.853f, 0.8f);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUi::BeginDockspace()
+    {
+        const auto windowFlags =
+            ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+        const auto viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::Begin("Dockspace", nullptr, windowFlags);
+        ImGui::PopStyleVar(3);
+
+        const auto& io = ImGui::GetIO();
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+        {
+            const auto dockspaceId = ImGui::GetID("EditorDockspace");
+            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+        }
     }
     //--------------------------------------------------------------------------
 
@@ -64,7 +99,11 @@ namespace Storyteller
         {
             ImGui::ShowDemoWindow();
         }
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUi::EndDockspace()
+    {
         ImGui::End();
     }
     //--------------------------------------------------------------------------
@@ -95,6 +134,7 @@ namespace Storyteller
 
     void EditorUi::Shutdown()
     {
+        //TODO: extract to impl class
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -107,29 +147,29 @@ namespace Storyteller
         {
             if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File").c_str()))
             {
+                const auto document = _gameDocumentManager->GetDocument();
+
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str()))
                 {
-                    if (_gameDocument->IsDirty())
+                    if (document->IsDirty())
                     {
                         const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to create new document?").c_str(),
                             _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window->GetGLFWWindow());
 
                         if (sureNew)
                         {
-                            _gameDocument.reset(new GameDocument(std::string()));
-                            _gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(_gameDocument));
+                            _gameDocumentManager->NewDocument(std::string());
                         }
                     }
                     else
                     {
-                        _gameDocument.reset(new GameDocument(std::string()));
-                        _gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(_gameDocument));
+                        _gameDocumentManager->NewDocument(std::string());
                     }
                 }
 
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str()))
                 {
-                    if (_gameDocument->IsDirty())
+                    if (document->IsDirty())
                     {
                         const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to open other document?").c_str(),
                             _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window->GetGLFWWindow());
@@ -139,8 +179,7 @@ namespace Storyteller
                             const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
                             if (!filepath.empty())
                             {
-                                _gameDocument.reset(new GameDocument(filepath));
-                                _gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(_gameDocument));
+                                _gameDocumentManager->NewDocument(filepath);
                             }
                         }
                     }
@@ -149,28 +188,27 @@ namespace Storyteller
                         const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
                         if (!filepath.empty())
                         {
-                            _gameDocument.reset(new GameDocument(filepath));
-                            _gameDocumentProxy.reset(new GameDocumentSortFilterProxyView(_gameDocument));
+                            _gameDocumentManager->NewDocument(filepath);
                         }
                     }
                 }
 
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save").c_str()))
                 {
-                    _gameDocument->Save();
+                    document->Save();
                 }
 
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as...").c_str()))
                 {
                     const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
-                    _gameDocument->Save(filepath);
+                    document->Save(filepath);
                 }
 
                 ImGui::Separator();
 
                 if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str()))
                 {
-                    if (_gameDocument->IsDirty())
+                    if (document->IsDirty())
                     {
                         const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to exit?").c_str(),
                             _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window->GetGLFWWindow());
@@ -200,22 +238,25 @@ namespace Storyteller
 
     void EditorUi::ComposeGameDocumentPanel()
     {
-        const auto mainFlags = _gameDocument->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
+        const auto document = _gameDocumentManager->GetDocument();
+        const auto proxy = _gameDocumentManager->GetProxy();
+
+        const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
         ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game").c_str(), nullptr, mainFlags);
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document").c_str());
-        auto gameName = _gameDocument->GetGameName();
+        auto gameName = document->GetGameName();
         ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str()).x);
         if (ImGui::InputText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
         {
-            _gameDocument->SetGameName(gameName);
+            document->SetGameName(gameName);
         }
         ImGui::PopItemWidth();
 
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file...").c_str()))
         {
             const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window->GetGLFWWindow());
-            _localizationManager->CreateTranslations(_gameDocument, filepath);
+            _localizationManager->CreateTranslations(document, filepath);
         }
 
 
@@ -225,11 +266,11 @@ namespace Storyteller
         {
             if (selectedTypeIndex == 0)
             {
-                _gameDocumentProxy->AddObject(ObjectType::QuestObjectType);
+                proxy->AddObject(ObjectType::QuestObjectType);
             }
             else if (selectedTypeIndex == 1)
             {
-                _gameDocumentProxy->AddObject(ObjectType::ActionObjectType);
+                proxy->AddObject(ObjectType::ActionObjectType);
             }
         }
 
@@ -261,14 +302,14 @@ namespace Storyteller
         }
         ImGui::PopItemWidth();
 
-        const auto hasSelection = _gameDocumentProxy->GetSelectedObject();
+        const auto hasSelection = proxy->GetSelectedObject();
         if (!hasSelection)
         {
             ImGui::BeginDisabled();
         }
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()))
         {
-            _gameDocumentProxy->RemoveSelected();
+            proxy->RemoveSelected();
         }
         if (!hasSelection)
         {
@@ -283,10 +324,10 @@ namespace Storyteller
         {
             if (questObjectFilter)
             {
-                _gameDocumentProxy->UpdateCache();
+                proxy->UpdateCache();
             }
 
-            _gameDocumentProxy->DoFilter(ObjectType::QuestObjectType, questObjectFilter);
+            proxy->DoFilter(ObjectType::QuestObjectType, questObjectFilter);
         }
 
         ImGui::SameLine();
@@ -294,10 +335,10 @@ namespace Storyteller
         {
             if (actionObjectFilter)
             {
-                _gameDocumentProxy->UpdateCache();
+                proxy->UpdateCache();
             }
 
-            _gameDocumentProxy->DoFilter(ObjectType::ActionObjectType, actionObjectFilter);
+            proxy->DoFilter(ObjectType::ActionObjectType, actionObjectFilter);
         }
 
 
@@ -320,12 +361,12 @@ namespace Storyteller
                     const auto tableSortSpec = sortSpecs->Specs;
                     const auto direction = tableSortSpec->SortDirection;
                     tableSortSpec->ColumnIndex;
-                    _gameDocumentProxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
+                    proxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
                     sortSpecs->SpecsDirty = false;
                 }
             }
 
-            auto objects = _gameDocumentProxy->GetObjects();
+            auto objects = proxy->GetObjects();
             for (auto row = 0; row < objects.size(); row++)
             {
                 ImGui::TableNextRow();
@@ -333,7 +374,7 @@ namespace Storyteller
                 const auto object = objects[row];
                 const auto consistent = object->IsConsistent();
                 const auto rowColor = consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
-                auto selected = _gameDocumentProxy->IsSelected(object->GetUuid());
+                auto selected = proxy->IsSelected(object->GetUuid());
 
                 ImGui::TableNextColumn();
                 ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
@@ -341,7 +382,7 @@ namespace Storyteller
                 ImGui::PopStyleColor();
                 if (ImGui::IsItemClicked(0))
                 {
-                    _gameDocumentProxy->Select(object->GetUuid());
+                    proxy->Select(object->GetUuid());
                 }
 
                 ImGui::TableNextColumn();
@@ -360,10 +401,13 @@ namespace Storyteller
 
     void EditorUi::ComposePropertiesPanel()
     {
+        const auto document = _gameDocumentManager->GetDocument();
+        const auto proxy = _gameDocumentManager->GetProxy();
+
         ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Texts").c_str(), nullptr);
         ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
 
-        const auto selectedObject = _gameDocumentProxy->GetSelectedObject();
+        const auto selectedObject = proxy->GetSelectedObject();
         const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
         const auto uuidString = std::to_string(selectedUuid);
 
@@ -386,7 +430,7 @@ namespace Storyteller
         }
 
         ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation").c_str());
-        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocument->GetGameName(), sourceText, true) : std::string();
+        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(document->GetGameName(), sourceText, true) : std::string();
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_ReadOnly);
 
 
@@ -395,13 +439,13 @@ namespace Storyteller
         if (selectedObjectType == ObjectType::QuestObjectType)
         {
             auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
-            const auto allActionObjects = _gameDocumentProxy->GetObjects(ObjectType::ActionObjectType, true);
+            const auto allActionObjects = proxy->GetObjects(ObjectType::ActionObjectType, true);
 
-            const auto entryPointObject = _gameDocumentProxy->GetEntryPoint();
+            const auto entryPointObject = proxy->GetEntryPoint();
             auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
             if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point").c_str(), &isEntryPoint) && selectedObject)
             {
-                _gameDocumentProxy->SetEntryPoint(selectedUuid);
+                proxy->SetEntryPoint(selectedUuid);
             }
 
             static auto selectedActionIndex = 0;
@@ -484,7 +528,7 @@ namespace Storyteller
 
                 for (auto row = 0; row < questObjectActions.size(); row++)
                 {
-                    const auto object = _gameDocumentProxy->GetBasicObject(questObjectActions[row]);
+                    const auto object = proxy->GetBasicObject(questObjectActions[row]);
                     if (!object)
                     {
                         continue;
@@ -511,7 +555,7 @@ namespace Storyteller
                     ImGui::Text(object->GetName().c_str());
 
                     ImGui::TableNextColumn();
-                    ImGui::Text(_localizationManager->Translate(_gameDocument->GetGameName(), actionObject->GetText()).c_str());
+                    ImGui::Text(_localizationManager->Translate(document->GetGameName(), actionObject->GetText()).c_str());
                 }
 
                 ImGui::EndTable();
@@ -522,7 +566,7 @@ namespace Storyteller
         else if (selectedObjectType == ObjectType::ActionObjectType)
         {
             auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
-            const auto allQuestObjects = _gameDocumentProxy->GetObjects(ObjectType::QuestObjectType, true);
+            const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
 
             static auto selectedQuestIndex = 0;
             if (selectedQuestIndex >= allQuestObjects.size())
@@ -563,7 +607,7 @@ namespace Storyteller
 
             ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: ").c_str());
             ImGui::SameLine();
-            const auto targetObject = _gameDocumentProxy->GetBasicObject(selectedActionObject->GetTargetUuid());
+            const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
             ImGui::Text(targetObject ? targetObject->GetName().c_str() : _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist").c_str());
         }
 
@@ -584,49 +628,6 @@ namespace Storyteller
 
         ImGui::PopStyleVar(2);
         ImGui::PopStyleColor();
-    }
-    //--------------------------------------------------------------------------
-
-    void EditorUi::Stylize()
-    {
-        auto& style = ImGui::GetStyle();
-        style.FrameBorderSize = 1.0f;
-        style.WindowMenuButtonPosition = ImGuiDir_None;
-        //style.Colors[ImGuiCol_FrameBg] = ImVec4(0.45f, 0.14f, 0.4f, 1.0f);
-        //style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.595f, 0.375f, 0.632f, 1.0f);
-        //style.Colors[ImGuiCol_WindowBg] = ImVec4(0.064f, 0.092f, 0.104f, 1.0f);
-        //style.Colors[ImGuiCol_TitleBg] = ImVec4(0.054f, 0.027f, 0.054f, 1.0f);
-        //style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.285f, 0.598f, 0.749f, 1.0f);
-        //style.Colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-        //style.Colors[ImGuiCol_SliderGrab] = ImVec4(1.0f, 0.597f, 0.963f, 1.0f);
-        //style.Colors[ImGuiCol_DockingPreview] = ImVec4(0.853f, 0.853f, 0.853f, 0.8f);
-    }
-    //--------------------------------------------------------------------------
-
-    void EditorUi::PrepareDockspace()
-    {
-        const auto windowFlags =
-            ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-        const auto viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
-        ImGui::SetNextWindowViewport(viewport->ID);
-
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("Dockspace", nullptr, windowFlags);
-        ImGui::PopStyleVar(3);
-
-        const auto& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-        {
-            const auto dockspaceId = ImGui::GetID("EditorDockspace");
-            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
-        }
     }
     //--------------------------------------------------------------------------
 

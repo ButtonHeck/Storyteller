@@ -1,7 +1,6 @@
 #pragma once
 
-#include "game_document.h"
-#include "game_document_sort_filter_proxy_view.h"
+#include "game_document_manager.h"
 #include "localization_manager.h"
 #include "window.h"
 
@@ -18,8 +17,10 @@ namespace Storyteller
 
         bool Initialize();
         void NewFrame();
-        void Prepare();
+        void Stylize();
+        void BeginDockspace();
         void Compose();
+        void EndDockspace();
         void Render();
         void EndFrame();
         void Shutdown();
@@ -30,16 +31,12 @@ namespace Storyteller
         void ComposePropertiesPanel();
         void ComposeLogPanel();
 
-        void Stylize();
-        void PrepareDockspace();
         void AddDefaultFont();
 
     private:
         Window::Ptr _window;
         LocalizationManager::Ptr _localizationManager;
-
-        GameDocument::Ptr _gameDocument;
-        GameDocumentSortFilterProxyView::Ptr _gameDocumentProxy;
+        GameDocumentManager::Ptr _gameDocumentManager;
     };
     //--------------------------------------------------------------------------
 }
