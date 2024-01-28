@@ -325,20 +325,23 @@ namespace Storyteller
                 const auto rowColor = consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
                 auto selected = proxy->IsSelected(object->GetUuid());
 
-                ImGui::TableNextColumn();
-                ImGui::PushStyleColor(ImGuiCol_Text, rowColor);
-                ImGui::Selectable(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
-                ImGui::PopStyleColor();
-                if (ImGui::IsItemClicked(0))
                 {
-                    proxy->Select(object->GetUuid());
+                    UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, rowColor} });
+
+                    ImGui::TableNextColumn();
+                    ImGui::Selectable(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+
+                    if (ImGui::IsItemClicked(0))
+                    {
+                        proxy->Select(object->GetUuid());
+                    }
+
+                    ImGui::TableNextColumn();
+                    ImGui::Text(std::to_string(object->GetUuid()).c_str());
+
+                    ImGui::TableNextColumn();
+                    ImGui::Text(object->GetName().c_str());
                 }
-
-                ImGui::TableNextColumn();
-                ImGui::TextColored(rowColor, std::to_string(object->GetUuid()).c_str());
-
-                ImGui::TableNextColumn();
-                ImGui::TextColored(rowColor, object->GetName().c_str());
             }
 
             ImGui::EndTable();
@@ -556,7 +559,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeLogPanel()
     {
-        ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+        UiUtils::StyleColorGuard guard({ {ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0)} });
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f));
 
@@ -566,7 +569,6 @@ namespace Storyteller
         ImGui::End();
 
         ImGui::PopStyleVar(2);
-        ImGui::PopStyleColor();
     }
     //--------------------------------------------------------------------------
 }
