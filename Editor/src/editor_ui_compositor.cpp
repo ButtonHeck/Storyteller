@@ -165,11 +165,22 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanel()
     {
-        const auto document = _gameDocumentManager->GetDocument();
-        const auto proxy = _gameDocumentManager->GetProxy();
+        const auto mainFlags = _gameDocumentManager->GetDocument()->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
+        if (ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game").c_str(), nullptr, mainFlags))
+        {
+            ComposeGameDocumentPanelGame();
+            ComposeGameDocumentPanelObjectsManagement();
+            ComposeGameDocumentPanelFilters();
+            ComposeGameDocumentPanelObjectsTable();
 
-        const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
-        ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game").c_str(), nullptr, mainFlags);
+            ImGui::End();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeGameDocumentPanelGame()
+    {
+        const auto document = _gameDocumentManager->GetDocument();
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document").c_str());
 
@@ -187,9 +198,15 @@ namespace Storyteller
             const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window->GetGLFWWindow());
             _localizationManager->CreateTranslations(document, filepath);
         }
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUiCompositor::ComposeGameDocumentPanelObjectsManagement()
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management").c_str());
+
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create").c_str()))
         {
             if (_state.selectedTypeIndex == 0)
@@ -238,32 +255,43 @@ namespace Storyteller
                 proxy->RemoveSelected();
             }
         }
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUiCompositor::ComposeGameDocumentPanelFilters()
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Filters").c_str());
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)).c_str(), &_state.questObjectFilter))
-        {
-            if (_state.questObjectFilter)
-            {
-                proxy->UpdateCache();
-            }
 
-            proxy->DoFilter(ObjectType::QuestObjectType, _state.questObjectFilter);
-        }
-
+        ComposeGameDocumentPanelFilterCheckbox(ObjectType::QuestObjectType, _state.questObjectFilter);
         ImGui::SameLine();
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)).c_str(), &_state.actionObjectFilter))
+        ComposeGameDocumentPanelFilterCheckbox(ObjectType::ActionObjectType, _state.actionObjectFilter);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeGameDocumentPanelFilterCheckbox(ObjectType objectType, bool& filterState)
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
+
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(objectType)).c_str(), &filterState))
         {
-            if (_state.actionObjectFilter)
+            if (filterState)
             {
                 proxy->UpdateCache();
             }
 
-            proxy->DoFilter(ObjectType::ActionObjectType, _state.actionObjectFilter);
+            proxy->DoFilter(objectType, filterState);
         }
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUiCompositor::ComposeGameDocumentPanelObjectsTable()
+    {
+        const auto proxy = _gameDocumentManager->GetProxy();
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects").c_str());
+
         const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
             | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
 
@@ -315,8 +343,6 @@ namespace Storyteller
 
             ImGui::EndTable();
         }
-
-        ImGui::End();
     }
     //--------------------------------------------------------------------------
 

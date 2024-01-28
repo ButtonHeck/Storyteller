@@ -40,6 +40,12 @@ namespace Storyteller
         void ComposeMenuItemDemoWindow();
 
         void ComposeGameDocumentPanel();
+        void ComposeGameDocumentPanelGame();
+        void ComposeGameDocumentPanelObjectsManagement();
+        void ComposeGameDocumentPanelFilters();
+        void ComposeGameDocumentPanelFilterCheckbox(ObjectType objectType, bool& filterState);
+        void ComposeGameDocumentPanelObjectsTable();
+
         void ComposePropertiesPanel();
         void ComposeLogPanel();
 
