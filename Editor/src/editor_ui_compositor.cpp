@@ -34,93 +34,130 @@ namespace Storyteller
     {
         if (ImGui::BeginMenuBar())
         {
-            if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File").c_str()))
-            {
-                const auto document = _gameDocumentManager->GetDocument();
+            ComposeMenuFile();
 
-                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str()))
-                {
-                    if (document->IsDirty())
-                    {
-                        const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to create new document?").c_str(),
-                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window->GetGLFWWindow());
-
-                        if (sureNew)
-                        {
-                            _gameDocumentManager->NewDocument(std::string());
-                        }
-                    }
-                    else
-                    {
-                        _gameDocumentManager->NewDocument(std::string());
-                    }
-                }
-
-                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str()))
-                {
-                    if (document->IsDirty())
-                    {
-                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to open other document?").c_str(),
-                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window->GetGLFWWindow());
-
-                        if (sureOpen)
-                        {
-                            const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
-                            if (!filepath.empty())
-                            {
-                                _gameDocumentManager->NewDocument(filepath);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
-                        if (!filepath.empty())
-                        {
-                            _gameDocumentManager->NewDocument(filepath);
-                        }
-                    }
-                }
-
-                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save").c_str()))
-                {
-                    _gameDocumentManager->Save();
-                }
-
-                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as...").c_str()))
-                {
-                    const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
-                    _gameDocumentManager->Save(filepath);
-                }
-
-                ImGui::Separator();
-
-                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str()))
-                {
-                    if (document->IsDirty())
-                    {
-                        const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to exit?").c_str(),
-                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window->GetGLFWWindow());
-
-                        if (sureQuit)
-                        {
-                            _window->SetShouldClose(true);
-                        }
-                    }
-                    else
-                    {
-                        _window->SetShouldClose(true);
-                    }
-                }
-
-                if (ImGui::MenuItem("Demo window"))
-                {
-                    _state.demoWindow = !_state.demoWindow;
-                }
-
-                ImGui::EndMenu();
-            }
             ImGui::EndMenuBar();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuFile()
+    {
+        if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File").c_str()))
+        {
+            ComposeMenuItemNew();
+            ComposeMenuItemOpen();
+            ComposeMenuItemSave();
+            ComposeMenuItemSaveAs();
+
+            ImGui::Separator();
+
+            ComposeMenuItemQuit();
+            ComposeMenuItemDemoWindow();
+
+            ImGui::EndMenu();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemNew()
+    {
+        if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str()))
+        {
+            if (_gameDocumentManager->GetDocument()->IsDirty())
+            {
+                const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to create new document?").c_str(),
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window->GetGLFWWindow());
+
+                if (sureNew)
+                {
+                    _gameDocumentManager->NewDocument(std::string());
+                }
+            }
+            else
+            {
+                _gameDocumentManager->NewDocument(std::string());
+            }
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemOpen()
+    {
+        if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str()))
+        {
+            if (_gameDocumentManager->GetDocument()->IsDirty())
+            {
+                const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to open other document?").c_str(),
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window->GetGLFWWindow());
+
+                if (sureOpen)
+                {
+                    const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
+                    if (!filepath.empty())
+                    {
+                        _gameDocumentManager->NewDocument(filepath);
+                    }
+                }
+            }
+            else
+            {
+                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
+                if (!filepath.empty())
+                {
+                    _gameDocumentManager->NewDocument(filepath);
+                }
+            }
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemSave()
+    {
+        if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save").c_str()))
+        {
+            _gameDocumentManager->Save();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemSaveAs()
+    {
+        if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as...").c_str()))
+        {
+            const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window->GetGLFWWindow());
+            _gameDocumentManager->Save(filepath);
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemQuit()
+    {
+        if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str()))
+        {
+            if (_gameDocumentManager->GetDocument()->IsDirty())
+            {
+                const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to exit?").c_str(),
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window->GetGLFWWindow());
+
+                if (sureQuit)
+                {
+                    _window->SetShouldClose(true);
+                }
+            }
+            else
+            {
+                _window->SetShouldClose(true);
+            }
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemDemoWindow()
+    {
+        if (ImGui::MenuItem("Demo window"))
+        {
+            _state.demoWindow = !_state.demoWindow;
         }
     }
     //--------------------------------------------------------------------------

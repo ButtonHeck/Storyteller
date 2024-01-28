@@ -31,6 +31,14 @@ namespace Storyteller
 
     private:
         void ComposeMenu();
+        void ComposeMenuFile();
+        void ComposeMenuItemNew();
+        void ComposeMenuItemOpen();
+        void ComposeMenuItemSave();
+        void ComposeMenuItemSaveAs();
+        void ComposeMenuItemQuit();
+        void ComposeMenuItemDemoWindow();
+
         void ComposeGameDocumentPanel();
         void ComposePropertiesPanel();
         void ComposeLogPanel();
