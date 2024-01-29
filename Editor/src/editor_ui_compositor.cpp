@@ -22,7 +22,11 @@ namespace Storyteller
         ComposeMenu();
         ComposeGameDocumentPanel();
         ComposePropertiesPanel();
-        ComposeLogPanel();
+
+        if (_state.logPanel)
+        {
+            ComposeLogPanel();
+        }
 
         if (_state.demoWindow)
         {
@@ -36,6 +40,7 @@ namespace Storyteller
         if (ImGui::BeginMenuBar())
         {
             ComposeMenuFile();
+            ComposeMenuView();
 
             ImGui::EndMenuBar();
         }
@@ -55,6 +60,17 @@ namespace Storyteller
 
             ComposeMenuItemQuit();
             ComposeMenuItemDemoWindow();
+
+            ImGui::EndMenu();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuView()
+    {
+        if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "View").c_str()))
+        {
+            ComposeMenuItemLog();
 
             ImGui::EndMenu();
         }
@@ -156,10 +172,13 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemDemoWindow()
     {
-        if (ImGui::MenuItem("Demo window"))
-        {
-            _state.demoWindow = !_state.demoWindow;
-        }
+        ImGui::MenuItem("Demo window", nullptr, &_state.demoWindow);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemLog()
+    {
+        ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str(), nullptr, &_state.logPanel);
     }
     //--------------------------------------------------------------------------
 

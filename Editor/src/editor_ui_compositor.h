@@ -27,17 +27,22 @@ namespace Storyteller
             int selectedChildActionIndex = 0;
             int selectedActionIndex = 0;
             int selectedQuestIndex = 0;
+
+            //TODO: save/load to editor config
+            bool logPanel = true;
         };
 
     private:
         void ComposeMenu();
         void ComposeMenuFile();
+        void ComposeMenuView();
         void ComposeMenuItemNew();
         void ComposeMenuItemOpen();
         void ComposeMenuItemSave();
         void ComposeMenuItemSaveAs();
         void ComposeMenuItemQuit();
         void ComposeMenuItemDemoWindow();
+        void ComposeMenuItemLog();
 
         void ComposeGameDocumentPanel();
         void ComposeGameDocumentPanelGame();
