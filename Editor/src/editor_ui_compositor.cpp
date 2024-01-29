@@ -180,14 +180,15 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelGame()
     {
-        const auto document = _gameDocumentManager->GetDocument();
-
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document").c_str());
 
+        const auto document = _gameDocumentManager->GetDocument();
+
         {
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str()).x);
+            const auto title = _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name");
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
             auto gameName = document->GetGameName();
-            if (ImGui::InputText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+            if (ImGui::InputText(title.c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
             {
                 document->SetGameName(gameName);
             }
@@ -203,9 +204,9 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelObjectsManagement()
     {
-        const auto proxy = _gameDocumentManager->GetProxy();
-
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management").c_str());
+
+        const auto proxy = _gameDocumentManager->GetProxy();
 
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create").c_str()))
         {
@@ -220,8 +221,9 @@ namespace Storyteller
         };
 
         {
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), typeItems[_state.selectedTypeIndex].c_str()))
+            const auto title = _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type");
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            if (ImGui::BeginCombo(title.c_str(), typeItems[_state.selectedTypeIndex].c_str()))
             {
                 for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
                 {
@@ -279,9 +281,9 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelObjectsTable()
     {
-        const auto proxy = _gameDocumentManager->GetProxy();
-
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects").c_str());
+
+        const auto proxy = _gameDocumentManager->GetProxy();
 
         const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
             | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
@@ -313,11 +315,10 @@ namespace Storyteller
 
                 const auto object = objects[row];
                 const auto consistent = object->IsConsistent();
-                const auto rowColor = consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
                 auto selected = proxy->IsSelected(object->GetUuid());
 
                 {
-                    UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, rowColor} });
+                    UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)} });
 
                     ImGui::TableNextColumn();
                     ImGui::Selectable(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
@@ -342,74 +343,88 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanel()
     {
-        const auto proxy = _gameDocumentManager->GetProxy();
-        const auto selectedObject = proxy->GetSelectedObject();
-
-        if (ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Texts").c_str(), nullptr))
+        if (ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties").c_str(), nullptr))
         {
-            ComposePropertiesPanelCommon();
+            const auto selectedObject = _gameDocumentManager->GetProxy()->GetSelectedObject();
 
-            ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties").c_str());
-            const auto selectedObjectType = selectedObject ? selectedObject->GetObjectType() : ObjectType::ErrorObjectType;
-            if (selectedObjectType == ObjectType::QuestObjectType)
+            if (selectedObject)
             {
-                ComposePropertiesPanelQuestObject();
-            }
-            else if (selectedObjectType == ObjectType::ActionObjectType)
-            {
-                ComposePropertiesPanelActionObject();
+                const auto selectedObjectType = selectedObject->GetObjectType();
+                if (selectedObjectType == ObjectType::QuestObjectType)
+                {
+                    ComposePropertiesPanelName(selectedObject);
+                    ComposePropertiesPanelTexts(selectedObject);
+                    ComposePropertiesPanelQuestObject(selectedObject);
+                }
+                else if (selectedObjectType == ObjectType::ActionObjectType)
+                {
+                    ComposePropertiesPanelName(selectedObject);
+                    ComposePropertiesPanelTexts(selectedObject);
+                    ComposePropertiesPanelActionObject(selectedObject);
+                }
             }
 
             ImGui::End();
         }
     }
+    //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelCommon()
+    void EditorUiCompositor::ComposePropertiesPanelName(BasicObject::Ptr selectedObject)
     {
-        const auto proxy = _gameDocumentManager->GetProxy();
-        const auto selectedObject = proxy->GetSelectedObject();
-        const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
-        const auto uuidString = std::to_string(selectedUuid);
+        //TODO: assert selectedObject != nullptr
 
-        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
 
+        const auto uuidString = std::to_string(selectedObject->GetUuid());
+
+        UiUtils::ItemWidthGuard guard(-FLT_MIN);
+        auto objectName = selectedObject->GetName();
+        if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue))
         {
-            UiUtils::ItemWidthGuard guard(-FLT_MIN);
-            auto objectName = selectedObject ? selectedObject->GetName() : std::string();
-            if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue) && selectedObject)
-            {
-                selectedObject->SetName(objectName);
-            }
+            selectedObject->SetName(objectName);
         }
+    }
+    //--------------------------------------------------------------------------
 
-        const auto availableHeight = ImGui::GetContentRegionAvail().y;
+    void EditorUiCompositor::ComposePropertiesPanelTexts(BasicObject::Ptr selectedObject)
+    {
+        //TODO: assert selectedObject != nullptr
 
-        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text").c_str());
+
+        const auto uuidString = std::to_string(selectedObject->GetUuid());
+        const auto textPanelHeight = ImGui::GetContentRegionAvail().y / 4.0f;
         const auto selectedTextObject = dynamic_cast<TextObject*>(selectedObject.get());
         auto sourceText = selectedTextObject ? selectedTextObject->GetText() : std::string();
-        if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
+
+        if (ImGui::InputTextMultiline(std::string("##ObjectText").append(uuidString).c_str(), &sourceText, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_EnterReturnsTrue) && selectedTextObject)
         {
             selectedTextObject->SetText(sourceText);
         }
 
-        ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation").c_str());
+
         auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), sourceText, true) : std::string();
-        ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, availableHeight / 4.0), ImGuiInputTextFlags_ReadOnly);
+        ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_ReadOnly);
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelQuestObject()
+    void EditorUiCompositor::ComposePropertiesPanelQuestObject(BasicObject::Ptr selectedObject)
     {
+        //TODO: assert selectedObject != nullptr
+
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+
         const auto proxy = _gameDocumentManager->GetProxy();
-        const auto selectedObject = proxy->GetSelectedObject();
-        const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
+        const auto selectedUuid = selectedObject->GetUuid();
 
         auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
         const auto allActionObjects = proxy->GetObjects(ObjectType::ActionObjectType, true);
 
         const auto entryPointObject = proxy->GetEntryPoint();
-        auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedObject->GetUuid()) : false;
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point").c_str(), &isEntryPoint) && selectedObject)
+        auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedUuid) : false;
+
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point").c_str(), &isEntryPoint))
         {
             proxy->SetEntryPoint(selectedUuid);
         }
@@ -421,7 +436,7 @@ namespace Storyteller
 
         auto isFinal = selectedQuestObject->IsFinal();
         ImGui::SameLine();
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final").c_str(), &isFinal) && selectedObject)
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final").c_str(), &isFinal))
         {
             selectedQuestObject->SetFinal(isFinal);
         }
@@ -437,8 +452,9 @@ namespace Storyteller
         ImGui::SameLine();
 
         {
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name").c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
+            const auto title = _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name");
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            if (ImGui::BeginCombo(title.c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
             {
                 for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
                 {
@@ -466,7 +482,7 @@ namespace Storyteller
 
         {
             UiUtils::DisableGuard guard(questObjectActions.empty());
-            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()) && !questObjectActions.empty())
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()))
             {
                 selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
             }
@@ -519,12 +535,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelActionObject()
+    void EditorUiCompositor::ComposePropertiesPanelActionObject(BasicObject::Ptr selectedObject)
     {
-        const auto proxy = _gameDocumentManager->GetProxy();
-        const auto selectedObject = proxy->GetSelectedObject();
-        const auto selectedUuid = selectedObject ? selectedObject->GetUuid() : Storyteller::UUID::InvalidUuid;
+        //TODO: assert selectedObject != nullptr
 
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+
+        const auto proxy = _gameDocumentManager->GetProxy();
         auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
         const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
 
@@ -541,8 +558,9 @@ namespace Storyteller
         ImGui::SameLine();
 
         {
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str()).x);
-            if (ImGui::BeginCombo(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name").c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
+            const auto title = _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest stage name");
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            if (ImGui::BeginCombo(title.c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
             {
                 for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
                 {
@@ -569,7 +587,7 @@ namespace Storyteller
         ImGui::Text(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: ").c_str());
         ImGui::SameLine();
         const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
-        ImGui::Text(targetObject ? targetObject->GetName().c_str() : _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist").c_str());
+        ImGui::Text(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist").c_str());
     }
     //--------------------------------------------------------------------------
 
