@@ -3,6 +3,7 @@
 #include "window.h"
 #include "game_document_manager.h"
 #include "localization_manager.h"
+#include "settings.h"
 
 #include <memory>
 
@@ -17,6 +18,9 @@ namespace Storyteller
 
         void Compose();
 
+        void SaveSettings(Settings::Ptr settings) const;
+        void LoadSettings(Settings::Ptr settings);
+
     private:
         struct UiComponentsState
         {
@@ -27,8 +31,6 @@ namespace Storyteller
             int selectedChildActionIndex = 0;
             int selectedActionIndex = 0;
             int selectedQuestIndex = 0;
-
-            //TODO: save/load to editor config
             bool logPanel = true;
         };
 

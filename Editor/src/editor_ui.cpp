@@ -127,6 +127,18 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void EditorUi::SaveSettings(Settings::Ptr settings) const
+    {
+        _compositor->SaveSettings(settings);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUi::LoadSettings(Settings::Ptr settings)
+    {
+        _compositor->LoadSettings(settings);
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUi::AddDefaultFont()
     {
         // TODO: extract to separate font class

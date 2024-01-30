@@ -20,6 +20,12 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
+    EditorApplication::~EditorApplication()
+    {
+        SaveSettings();
+    }
+    //--------------------------------------------------------------------------
+
     std::string EditorApplication::GetApplicationName() const
     {
         return "Storyteller editor";
@@ -58,6 +64,8 @@ namespace Storyteller
             _ui->EndFrame();
         });
 
+        LoadSettings();
+
         return true;
     }
     //--------------------------------------------------------------------------
@@ -81,6 +89,22 @@ namespace Storyteller
 
         _ui->Shutdown();
         _window->Shutdown();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorApplication::SaveSettings() const
+    {
+        _settings->StartSave();
+        _ui->SaveSettings(_settings);
+        _settings->EndSave();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorApplication::LoadSettings()
+    {
+        _settings->StartLoad();
+        _ui->LoadSettings(_settings);
+        _settings->EndLoad();
     }
     //--------------------------------------------------------------------------
 }

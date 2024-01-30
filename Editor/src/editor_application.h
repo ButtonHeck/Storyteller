@@ -10,11 +10,16 @@ namespace Storyteller
     {
     public:
         EditorApplication();
+        ~EditorApplication();
 
         std::string GetApplicationName() const override;
 
         bool Initialize() override;
         void Run() override;
+
+    private:
+        void SaveSettings() const;
+        void LoadSettings();
 
     private:
         Window::Ptr _window;

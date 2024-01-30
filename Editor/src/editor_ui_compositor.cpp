@@ -35,6 +35,22 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void EditorUiCompositor::SaveSettings(Settings::Ptr settings) const
+    {
+        settings->StartSaveGroup("EditorUiCompositor");
+        settings->SaveBool("Log", _state.logPanel);
+        settings->EndSaveGroup();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::LoadSettings(Settings::Ptr settings)
+    {
+        settings->StartLoadGroup("EditorUiCompositor");
+        _state.logPanel = settings->GetBool("Log");
+        settings->EndLoadGroup();
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUiCompositor::ComposeMenu()
     {
         if (ImGui::BeginMenuBar())

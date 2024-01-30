@@ -2,14 +2,20 @@
 #include "filesystem_utils.h"
 #include "log.h"
 
+#include <rapidjson/istreamwrapper.h>
+
 #include <fstream>
+#include <filesystem>
 
 namespace Storyteller
 {
     Settings::Settings(const std::string& name)
-        : _filename(name + ".json")
+        : _name(name)
+        , _filename(std::filesystem::current_path().append(name + ".json").generic_string())
         , _stringBuffer()
         , _writer(_stringBuffer)
+        , _loadedDocument()
+        , _scope("")
         , _success(true)
     {}
     //--------------------------------------------------------------------------
@@ -25,14 +31,16 @@ namespace Storyteller
             return false;
         }
 
-        _success = true;
+        _success &= _writer.StartObject();
 
-        return true;
+        return _success;
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndSave()
     {
+        _success &= _writer.EndObject();
+
         std::ofstream outputStream(_filename, std::ios::out | std::ios::trunc);
         if (!outputStream.is_open() || !outputStream.good())
         {
@@ -44,8 +52,6 @@ namespace Storyteller
         outputStream << _stringBuffer.GetString();
         outputStream.close();
 
-        _success &= true;
-
         return _success;
     }
     //--------------------------------------------------------------------------
@@ -53,7 +59,7 @@ namespace Storyteller
     bool Settings::StartSaveGroup(const std::string& groupName)
     {
         _success &= _writer.Key(groupName.c_str());
-        _success &= _writer.StartArray();
+        _success &= _writer.StartObject();
 
         return _success;
     }
@@ -61,7 +67,7 @@ namespace Storyteller
 
     bool Settings::EndSaveGroup()
     {
-        _success &= _writer.EndArray();
+        _success &= _writer.EndObject();
 
         return _success;
     }
@@ -121,13 +127,106 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void Settings::StartLoad()
+    bool Settings::StartLoad()
     {
+        STRTLR_CORE_LOG_INFO("Settings: loading from '{}'", _filename);
+
+        if (!std::filesystem::exists(_filename))
+        {
+            STRTLR_CORE_LOG_WARN("Settings: insufficient path");
+            _success = false;
+            return false;
+        }
+
+        std::ifstream inputStream(_filename);
+        if (!inputStream.is_open() || !inputStream.good())
+        {
+            return false;
+        }
+
+        rapidjson::IStreamWrapper jsonStream(inputStream);
+        _loadedDocument.ParseStream(jsonStream);
+        inputStream.close();
+
+        if (_loadedDocument.HasParseError())
+        {
+            STRTLR_CORE_LOG_ERROR("Settings: JSON parsing error '{}'", _loadedDocument.GetParseError());
+            _success = false;
+            return false;
+        }
+
+        return true;
     }
     //--------------------------------------------------------------------------
 
-    void Settings::EndLoad()
+    bool Settings::EndLoad()
     {
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::StartLoadGroup(const std::string& groupName)
+    {
+        if (!_loadedDocument.HasMember(groupName.c_str()) || !_loadedDocument[groupName.c_str()].IsObject())
+        {
+            STRTLR_CORE_LOG_ERROR("Settings: cannot find group '{}', or the group is not an object type", groupName);
+            _success = false;
+            return false;
+        }
+
+        _scope = groupName;
+
+        return true;
+    }
+
+    bool Settings::EndLoadGroup()
+    {
+        _scope = "";
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::GetBool(const std::string& name, bool defaultValue)
+    {
+        const auto scopeObject = _loadedDocument[_scope.c_str()].GetObject();
+        if (!scopeObject.HasMember(name.c_str()))
+        {
+            STRTLR_CORE_LOG_ERROR("Settings: cannot find bool for '{}'", name);
+            return defaultValue;
+        }
+
+        return scopeObject[name.c_str()].GetBool();
+    }
+    //--------------------------------------------------------------------------
+
+    int Settings::GetInt(const std::string& name, int defaultValue)
+    {
+        return 0;
+    }
+    //--------------------------------------------------------------------------
+
+    unsigned int Settings::GetUInt(const std::string& name, unsigned int defaultValue)
+    {
+        return 0;
+    }
+    //--------------------------------------------------------------------------
+
+    int64_t Settings::GetInt64(const std::string& name, int64_t defaultValue)
+    {
+        return 0;
+    }
+    //--------------------------------------------------------------------------
+
+    uint64_t Settings::GetUInt64(const std::string& name, uint64_t defaultValue)
+    {
+        return 0;
+    }
+    //--------------------------------------------------------------------------
+
+    std::string Settings::GetString(const std::string& name, const std::string& defaultValue)
+    {
+        return std::string();
     }
     //--------------------------------------------------------------------------     
 }

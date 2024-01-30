@@ -3,6 +3,7 @@
 #include "window.h"
 #include "localization_manager.h"
 #include "editor_ui_compositor.h"
+#include "settings.h"
 
 #include <memory>
 
@@ -24,6 +25,9 @@ namespace Storyteller
         void Render();
         void EndFrame();
         void Shutdown();
+
+        void SaveSettings(Settings::Ptr settings) const;
+        void LoadSettings(Settings::Ptr settings);
 
     private:
         void AddDefaultFont();
