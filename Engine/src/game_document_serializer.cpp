@@ -184,6 +184,8 @@ namespace Storyteller
         rapidjson::IStreamWrapper jsonStream(inputStream);
         rapidjson::Document jsonDocument;
         jsonDocument.ParseStream(jsonStream);
+        inputStream.close();
+
         if (jsonDocument.HasParseError())
         {
             STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON parsing error '{}'", jsonDocument.GetParseError());
