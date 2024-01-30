@@ -21,6 +21,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/filesystem_utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/log.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/application.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/settings.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -35,6 +36,7 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/filesystem_utils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/log.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/application.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/settings.cpp"
 )
 
 add_library(${PROJECT_NAME}
@@ -44,7 +46,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
 	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    PRIVATE "${VENDOR_DIR}/rapidjson/include"
+    PUBLIC "${VENDOR_DIR}/rapidjson/include"
     PUBLIC "${VENDOR_DIR}/spdlog/include"
 )
 

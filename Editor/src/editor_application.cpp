@@ -20,6 +20,12 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
+    std::string EditorApplication::GetApplicationName() const
+    {
+        return "Storyteller editor";
+    }
+    //--------------------------------------------------------------------------
+
     bool EditorApplication::Initialize()
     {
         if (!Application::Initialize())

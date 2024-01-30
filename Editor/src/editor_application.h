@@ -11,6 +11,8 @@ namespace Storyteller
     public:
         EditorApplication();
 
+        std::string GetApplicationName() const override;
+
         bool Initialize() override;
         void Run() override;
 
