@@ -1,18 +1,22 @@
-#pragma once 
+#pragma once
+
+#include <rapidjson/document.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/pointer.h>
 
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace Storyteller
 {
-    class SettingsJson;
-
-    class Settings
+    class SettingsJson
     {
     public:
-        typedef std::shared_ptr<Settings> Ptr;
+        typedef std::shared_ptr<SettingsJson> Ptr;
 
-        explicit Settings(const std::string& name);
+        explicit SettingsJson(const std::string& name);
 
         bool StartSave();
         bool EndSave();
@@ -39,7 +43,16 @@ namespace Storyteller
         std::string GetString(const std::string& name, const std::string& defaultValue = "");
 
     private:
-        std::shared_ptr<SettingsJson> _impl;
+        std::string GetCurrentScopeString() const;
+
+    private:
+        const std::string _name;
+        const std::string _filename;
+
+        rapidjson::StringBuffer _stringBuffer;
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> _writer;
+        rapidjson::Document _loadedDocument;
+        std::vector<std::string> _scope;
     };
     //--------------------------------------------------------------------------
 }

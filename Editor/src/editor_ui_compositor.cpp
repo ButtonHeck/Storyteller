@@ -46,7 +46,7 @@ namespace Storyteller
     void EditorUiCompositor::LoadSettings(Settings::Ptr settings)
     {
         settings->StartLoadGroup("EditorUiCompositor");
-        _state.logPanel = settings->GetBool("Log");
+        _state.logPanel = settings->GetBool("Log", true);
         settings->EndLoadGroup();
     }
     //--------------------------------------------------------------------------

@@ -129,13 +129,17 @@ namespace Storyteller
 
     void EditorUi::SaveSettings(Settings::Ptr settings) const
     {
+        settings->StartSaveGroup("EditorUi");
         _compositor->SaveSettings(settings);
+        settings->EndSaveGroup();
     }
     //--------------------------------------------------------------------------
 
     void EditorUi::LoadSettings(Settings::Ptr settings)
     {
+        settings->StartLoadGroup("EditorUi");
         _compositor->LoadSettings(settings);
+        settings->EndLoadGroup();
     }
     //--------------------------------------------------------------------------
 
