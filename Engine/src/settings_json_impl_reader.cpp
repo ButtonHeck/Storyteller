@@ -3,6 +3,7 @@
 
 #include <rapidjson/pointer.h>
 #include <rapidjson/istreamwrapper.h>
+#include <rapidjson/error/en.h>
 
 #include <algorithm>
 #include <numeric>
@@ -43,7 +44,7 @@ namespace Storyteller
 
         if (_document.HasParseError())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: JSON parsing error '{}'", _document.GetParseError());
+            STRTLR_CORE_LOG_ERROR("SettingsReader: JSON parsing error '{}'", rapidjson::GetParseError_En(_document.GetParseError()));
             return false;
         }
 
