@@ -21,6 +21,13 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
+    Window::~Window()
+    {
+        glfwDestroyWindow(_window);
+        glfwTerminate();
+    }
+    //--------------------------------------------------------------------------
+
     bool Window::Initialize()
     {
         if (!glfwInit())
@@ -126,13 +133,6 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void Window::Shutdown()
-    {
-        glfwDestroyWindow(_window);
-        glfwTerminate();
-    }
-    //--------------------------------------------------------------------------
-
     void Window::MakeContextCurrent()
     {
         glfwMakeContextCurrent(_window);
@@ -152,6 +152,29 @@ namespace Storyteller
     GLFWwindow* Window::GetGLFWWindow() const
     {
         return _window;
+    }
+    //--------------------------------------------------------------------------
+
+    void Window::SaveSettings(Settings::Ptr settings) const
+    {
+        int width;
+        int height;
+        glfwGetWindowSize(_window, &width, &height);
+
+        settings->StartSaveGroup("Window");
+        settings->SaveUInt("Width", width);
+        settings->SaveUInt("Height", height);
+        settings->EndSaveGroup();
+    }
+    //--------------------------------------------------------------------------
+
+    void Window::LoadSettings(Settings::Ptr settings)
+    {
+        settings->StartLoadGroup("Window");
+        const auto width = settings->GetUInt("Width", 1920);
+        const auto height = settings->GetUInt("Height", 1080);
+        glfwSetWindowSize(_window, width, height);
+        settings->EndLoadGroup();
     }
     //--------------------------------------------------------------------------
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "localization_manager.h"
+#include "settings.h"
 
 #include <functional>
 #include <memory>
@@ -15,6 +16,7 @@ namespace Storyteller
         typedef std::shared_ptr<Window> Ptr;
 
         Window(LocalizationManager::Ptr localizationManager);
+        ~Window();
 
         bool Initialize();
         bool ShouldClose() const;
@@ -22,10 +24,12 @@ namespace Storyteller
         void ToggleFullscreen();
         void ProcessEvents();
         void SwapBuffers() const;
-        void Shutdown();
         void MakeContextCurrent();
         void SetRefreshCallback(std::function<void()> refreshCallback);
         GLFWwindow* GetGLFWWindow() const;
+
+        void SaveSettings(Settings::Ptr settings) const;
+        void LoadSettings(Settings::Ptr settings);
 
     private:
         GLFWwindow* _window;

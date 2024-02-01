@@ -88,7 +88,6 @@ namespace Storyteller
         }
 
         _ui->Shutdown();
-        _window->Shutdown();
     }
     //--------------------------------------------------------------------------
 
@@ -96,6 +95,7 @@ namespace Storyteller
     {
         _settings->StartSave();
         _ui->SaveSettings(_settings);
+        _window->SaveSettings(_settings);
         _settings->EndSave();
     }
     //--------------------------------------------------------------------------
@@ -104,6 +104,7 @@ namespace Storyteller
     {
         _settings->StartLoad();
         _ui->LoadSettings(_settings);
+        _window->LoadSettings(_settings);
         _settings->EndLoad();
     }
     //--------------------------------------------------------------------------
