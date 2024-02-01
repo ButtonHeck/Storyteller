@@ -1,8 +1,8 @@
 #include "settings_json_impl_reader.h"
 #include "log.h"
 
-#include <rapidjson/istreamwrapper.h>
 #include <rapidjson/pointer.h>
+#include <rapidjson/istreamwrapper.h>
 
 #include <algorithm>
 #include <numeric>
@@ -14,8 +14,9 @@ namespace Storyteller
     SettingsJsonReader::SettingsJsonReader(const std::string& name)
         : _name(name)
         , _filename(std::filesystem::current_path().append(name + ".json").generic_string())
-        , _loadedDocument()
+        , _document()
         , _scope()
+        , _currentGroup(nullptr)
     {}
     //--------------------------------------------------------------------------
 
@@ -36,14 +37,16 @@ namespace Storyteller
         }
 
         rapidjson::IStreamWrapper jsonStream(inputStream);
-        _loadedDocument.ParseStream(jsonStream);
+        _document.ParseStream(jsonStream);
         inputStream.close();
 
-        if (_loadedDocument.HasParseError())
+        if (_document.HasParseError())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: JSON parsing error '{}'", _loadedDocument.GetParseError());
+            STRTLR_CORE_LOG_ERROR("SettingsReader: JSON parsing error '{}'", _document.GetParseError());
             return false;
         }
+
+        _currentGroup = rapidjson::Pointer("/").Get(_document);
 
         return true;
     }
@@ -57,7 +60,7 @@ namespace Storyteller
 
     bool SettingsJsonReader::StartLoadGroup(const std::string& groupName)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return false;
         }
@@ -69,20 +72,21 @@ namespace Storyteller
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
-        if (!currentScopeObjectPointer)
+        _currentGroup = rapidjson::Pointer(GetCurrentScopeString().c_str()).Get(_document);
+        if (!_currentGroup)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
             return false;
         }
 
-        if (!currentScopeObjectPointer->HasMember(groupName.c_str()) || !(*currentScopeObjectPointer)[groupName.c_str()].IsObject())
+        if (!_currentGroup->HasMember(groupName.c_str()) || !(*_currentGroup)[groupName.c_str()].IsObject())
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find group '{}', or the group is not an object type", groupName);
             return false;
         }
 
         _scope.push_back(groupName);
+        _currentGroup = rapidjson::Pointer(GetCurrentScopeString().c_str()).Get(_document);
 
         return true;
     }
@@ -93,6 +97,15 @@ namespace Storyteller
         if (!_scope.empty())
         {
             _scope.pop_back();
+
+            const auto currentScopeString = GetCurrentScopeString();
+            _currentGroup = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
+            if (!_currentGroup)
+            {
+                STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+                return false;
+            }
+
             return true;
         }
 
@@ -103,38 +116,30 @@ namespace Storyteller
 
     bool SettingsJsonReader::GetBool(const std::string& name, bool defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsBool())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find bool for '{}/{}'", GetCurrentScopeString(), name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsBool())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find bool for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetBool();
+        return (*_currentGroup)[name.c_str()].GetBool();
     }
     //--------------------------------------------------------------------------
 
     int SettingsJsonReader::GetInt(const std::string& name, int defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return defaultValue;
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
+        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
         if (!currentScopeObjectPointer)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
@@ -153,13 +158,13 @@ namespace Storyteller
 
     unsigned int SettingsJsonReader::GetUInt(const std::string& name, unsigned int defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return defaultValue;
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
+        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
         if (!currentScopeObjectPointer)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
@@ -178,13 +183,13 @@ namespace Storyteller
 
     int64_t SettingsJsonReader::GetInt64(const std::string& name, int64_t defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return defaultValue;
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
+        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
         if (!currentScopeObjectPointer)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
@@ -203,13 +208,13 @@ namespace Storyteller
 
     uint64_t SettingsJsonReader::GetUInt64(const std::string& name, uint64_t defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return defaultValue;
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
+        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
         if (!currentScopeObjectPointer)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
@@ -228,13 +233,13 @@ namespace Storyteller
 
     double SettingsJsonReader::GetDouble(const std::string& name, double defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return defaultValue;
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
+        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
         if (!currentScopeObjectPointer)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
@@ -253,13 +258,13 @@ namespace Storyteller
 
     std::string SettingsJsonReader::GetString(const std::string& name, const std::string& defaultValue)
     {
-        if (!_loadedDocument.IsObject())
+        if (!_document.IsObject())
         {
             return defaultValue;
         }
 
         const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_loadedDocument);
+        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
         if (!currentScopeObjectPointer)
         {
             STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
