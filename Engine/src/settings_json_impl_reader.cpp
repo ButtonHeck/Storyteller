@@ -16,6 +16,7 @@ namespace Storyteller
         , _filename(std::filesystem::current_path().append(name + ".json").generic_string())
         , _document()
         , _scope()
+        , _scopeString("")
         , _currentGroup(nullptr)
     {}
     //--------------------------------------------------------------------------
@@ -46,7 +47,7 @@ namespace Storyteller
             return false;
         }
 
-        _currentGroup = rapidjson::Pointer("/").Get(_document);
+        _currentGroup = rapidjson::Pointer("").Get(_document);
 
         return true;
     }
@@ -71,11 +72,10 @@ namespace Storyteller
             return false;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        _currentGroup = rapidjson::Pointer(GetCurrentScopeString().c_str()).Get(_document);
+        _currentGroup = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
         if (!_currentGroup)
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", _scopeString);
             return false;
         }
 
@@ -86,7 +86,8 @@ namespace Storyteller
         }
 
         _scope.push_back(groupName);
-        _currentGroup = rapidjson::Pointer(GetCurrentScopeString().c_str()).Get(_document);
+        _scopeString = GetCurrentScopeString();
+        _currentGroup = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
 
         return true;
     }
@@ -97,14 +98,8 @@ namespace Storyteller
         if (!_scope.empty())
         {
             _scope.pop_back();
-
-            const auto currentScopeString = GetCurrentScopeString();
-            _currentGroup = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-            if (!_currentGroup)
-            {
-                STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
-                return false;
-            }
+            _scopeString = GetCurrentScopeString();
+            _currentGroup = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
 
             return true;
         }
@@ -123,7 +118,7 @@ namespace Storyteller
 
         if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsBool())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find bool for '{}/{}'", GetCurrentScopeString(), name);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find bool for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -133,151 +128,103 @@ namespace Storyteller
 
     int SettingsJsonReader::GetInt(const std::string& name, int defaultValue)
     {
-        if (!_document.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsInt())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find int for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsInt())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find int for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetInt();
+        return (*_currentGroup)[name.c_str()].GetInt();
     }
     //--------------------------------------------------------------------------
 
     unsigned int SettingsJsonReader::GetUInt(const std::string& name, unsigned int defaultValue)
     {
-        if (!_document.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsUint())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find uint for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsUint())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find uint for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetUint();
+        return (*_currentGroup)[name.c_str()].GetUint();
     }
     //--------------------------------------------------------------------------
 
     int64_t SettingsJsonReader::GetInt64(const std::string& name, int64_t defaultValue)
     {
-        if (!_document.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsInt64())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find int64 for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsInt64())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find int64 for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetInt64();
+        return (*_currentGroup)[name.c_str()].GetInt64();
     }
     //--------------------------------------------------------------------------
 
     uint64_t SettingsJsonReader::GetUInt64(const std::string& name, uint64_t defaultValue)
     {
-        if (!_document.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsUint64())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find uint64 for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsUint64())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find uint64 for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetUint64();
+        return (*_currentGroup)[name.c_str()].GetUint64();
     }
     //--------------------------------------------------------------------------
 
     double SettingsJsonReader::GetDouble(const std::string& name, double defaultValue)
     {
-        if (!_document.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsDouble())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find double for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsDouble())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find double for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetDouble();
+        return (*_currentGroup)[name.c_str()].GetDouble();
     }
     //--------------------------------------------------------------------------
 
     std::string SettingsJsonReader::GetString(const std::string& name, const std::string& defaultValue)
     {
-        if (!_document.IsObject())
+        if (!_currentGroup)
         {
             return defaultValue;
         }
 
-        const auto currentScopeString = GetCurrentScopeString();
-        const auto currentScopeObjectPointer = rapidjson::Pointer(currentScopeString.c_str()).Get(_document);
-        if (!currentScopeObjectPointer)
+        if (!_currentGroup->HasMember(name.c_str()) || !(*_currentGroup)[name.c_str()].IsString())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", currentScopeString);
+            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find string for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
-        if (!currentScopeObjectPointer->HasMember(name.c_str()) || !(*currentScopeObjectPointer)[name.c_str()].IsString())
-        {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find string for '{}/{}'", currentScopeString, name);
-            return defaultValue;
-        }
-
-        return (*currentScopeObjectPointer)[name.c_str()].GetString();
+        return (*_currentGroup)[name.c_str()].GetString();
     }
     //--------------------------------------------------------------------------
 

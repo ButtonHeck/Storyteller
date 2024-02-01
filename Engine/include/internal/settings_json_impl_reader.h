@@ -36,6 +36,7 @@ namespace Storyteller
         const std::string _filename;
         rapidjson::Document _document;
         std::vector<std::string> _scope;
+        std::string _scopeString;
         rapidjson::Value* _currentGroup;
     };
     //--------------------------------------------------------------------------
