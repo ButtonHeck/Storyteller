@@ -1,32 +1,19 @@
 #pragma once
 
-#include "settings_json_impl_reader.h"
-#include "settings_json_impl_writer.h"
+#include <rapidjson/document.h>
 
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace Storyteller
 {
-    class SettingsJson
+    class SettingsJsonReader
     {
     public:
-        typedef std::shared_ptr<SettingsJson> Ptr;
+        typedef std::shared_ptr<SettingsJsonReader> Ptr;
 
-        explicit SettingsJson(const std::string& name);
-
-        bool StartSave();
-        bool EndSave();
-        bool StartSaveGroup(const std::string& groupName);
-        bool EndSaveGroup();
-
-        bool SaveBool(const std::string& name, bool value);
-        bool SaveInt(const std::string& name, int value);
-        bool SaveUInt(const std::string& name, unsigned int value);
-        bool SaveInt64(const std::string& name, int64_t value);
-        bool SaveUInt64(const std::string& name, uint64_t value);
-        bool SaveDouble(const std::string& name, double value);
-        bool SaveString(const std::string& name, const std::string& value);
+        explicit SettingsJsonReader(const std::string& name);
 
         bool StartLoad();
         bool EndLoad();
@@ -42,8 +29,13 @@ namespace Storyteller
         std::string GetString(const std::string& name, const std::string& defaultValue = "");
 
     private:
-        SettingsJsonReader::Ptr _reader;
-        SettingsJsonWriter::Ptr _writer;
+        std::string GetCurrentScopeString() const;
+
+    private:
+        const std::string _name;
+        const std::string _filename;
+        rapidjson::Document _loadedDocument;
+        std::vector<std::string> _scope;
     };
     //--------------------------------------------------------------------------
 }

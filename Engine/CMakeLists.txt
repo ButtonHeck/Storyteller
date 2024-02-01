@@ -25,6 +25,8 @@ set(HEADER_FILES
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/internal/settings_json_impl.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/internal/settings_json_impl_reader.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/internal/settings_json_impl_writer.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -41,6 +43,8 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_reader.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_writer.cpp"
 )
 
 add_library(${PROJECT_NAME}
