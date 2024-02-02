@@ -406,7 +406,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelName(Ptr<BasicObject> selectedObject)
     {
-        //TODO: assert selectedObject != nullptr
+        assert(selectedObject);
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str());
 
@@ -423,7 +423,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelTexts(Ptr<BasicObject> selectedObject)
     {
-        //TODO: assert selectedObject != nullptr
+        assert(selectedObject);
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text").c_str());
 
@@ -446,7 +446,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelQuestObject(Ptr<BasicObject> selectedObject)
     {
-        //TODO: assert selectedObject != nullptr
+        assert(selectedObject);
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
@@ -572,7 +572,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelActionObject(Ptr<BasicObject> selectedObject)
     {
-        //TODO: assert selectedObject != nullptr
+        assert(selectedObject);
 
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
