@@ -15,7 +15,7 @@ namespace Storyteller
     };
     //--------------------------------------------------------------------------
 
-    Window::Window(LocalizationManager::Ptr localizationManager)
+    Window::Window(Ptr<LocalizationManager> localizationManager)
         : _window(nullptr)
         , _localizationManager(localizationManager)
     {}
@@ -155,7 +155,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void Window::SaveSettings(Settings::Ptr settings) const
+    void Window::SaveSettings(Ptr<Settings> settings) const
     {
         int width;
         int height;
@@ -168,7 +168,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void Window::LoadSettings(Settings::Ptr settings)
+    void Window::LoadSettings(Ptr<Settings> settings)
     {
         settings->StartLoadGroup("Window");
         const auto width = settings->GetUInt("Width", 1920);

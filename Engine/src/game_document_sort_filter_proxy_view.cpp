@@ -10,7 +10,7 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    bool GameDocumentSortFilterProxyView::Sorter::operator()(BasicObject::Ptr a, BasicObject::Ptr b) const
+    bool GameDocumentSortFilterProxyView::Sorter::operator()(Ptr<BasicObject> a, Ptr<BasicObject> b) const
     {
         switch (sortValue)
         {
@@ -54,7 +54,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    GameDocumentSortFilterProxyView::GameDocumentSortFilterProxyView(GameDocument::Ptr document)
+    GameDocumentSortFilterProxyView::GameDocumentSortFilterProxyView(Ptr<GameDocument> document)
         : _document(document)
         , _cache(document->GetObjects())
         , _selectedUuid(UUID::InvalidUuid)
@@ -64,7 +64,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    GameDocument::Ptr GameDocumentSortFilterProxyView::GetSourceDocument() const
+    Ptr<GameDocument> GameDocumentSortFilterProxyView::GetSourceDocument() const
     {
         return _document;
     }
@@ -84,7 +84,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameDocumentSortFilterProxyView::AddObject(const BasicObject::Ptr& object)
+    bool GameDocumentSortFilterProxyView::AddObject(const Ptr<BasicObject>& object)
     {
         if (!_document->AddObject(object))
         {
@@ -116,25 +116,25 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocumentSortFilterProxyView::GetBasicObject(const UUID& uuid) const
+    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetBasicObject(const UUID& uuid) const
     {
         return _document->GetBasicObject(uuid);
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocumentSortFilterProxyView::GetBasicObject(const std::string& name) const
+    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetBasicObject(const std::string& name) const
     {
         return _document->GetBasicObject(name);
     }
     //--------------------------------------------------------------------------
 
-    const std::vector<BasicObject::Ptr>& GameDocumentSortFilterProxyView::GetObjects() const
+    const std::vector<Ptr<BasicObject>>& GameDocumentSortFilterProxyView::GetObjects() const
     {
         return _cache;
     }
     //--------------------------------------------------------------------------
 
-    std::vector<BasicObject::Ptr> GameDocumentSortFilterProxyView::GetObjects(ObjectType type, bool noEmptyName) const
+    std::vector<Ptr<BasicObject>> GameDocumentSortFilterProxyView::GetObjects(ObjectType type, bool noEmptyName) const
     {
         return _document->GetObjects(type, noEmptyName);
     }
@@ -146,7 +146,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocumentSortFilterProxyView::GetEntryPoint() const
+    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetEntryPoint() const
     {
         return _document->GetEntryPoint();
     }
@@ -178,14 +178,14 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocumentSortFilterProxyView::GetSelectedObject() const
+    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetSelectedObject() const
     {
         if (_selectedUuid == UUID::InvalidUuid)
         {
             return nullptr;
         }
 
-        const auto it = std::find_if(_cache.cbegin(), _cache.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == _selectedUuid; });
+        const auto it = std::find_if(_cache.cbegin(), _cache.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetUuid() == _selectedUuid; });
         if (it != _cache.cend())
         {
             return *it;
@@ -257,8 +257,8 @@ namespace Storyteller
 
     void GameDocumentSortFilterProxyView::DoFilter()
     {
-        std::vector<BasicObject::Ptr> temp;
-        std::copy_if(_cache.cbegin(), _cache.cend(), std::back_inserter(temp), [&](const BasicObject::Ptr obj) { return _filter.Accept(obj->GetObjectType()); });
+        std::vector<Ptr<BasicObject>> temp;
+        std::copy_if(_cache.cbegin(), _cache.cend(), std::back_inserter(temp), [&](const Ptr<BasicObject> obj) { return _filter.Accept(obj->GetObjectType()); });
         std::swap(_cache, temp);
     }
     //--------------------------------------------------------------------------

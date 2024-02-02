@@ -9,7 +9,7 @@
 
 namespace Storyteller
 {
-    ConsoleManager::ConsoleManager(const LocalizationManager::Ptr localizationManager, char separator)
+    ConsoleManager::ConsoleManager(const Ptr<LocalizationManager> localizationManager, char separator)
         : _localizationManager(localizationManager)
         , _separator(separator)
     {

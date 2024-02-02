@@ -3,7 +3,6 @@
 #include <rapidjson/document.h>
 
 #include <string>
-#include <memory>
 #include <vector>
 
 namespace Storyteller
@@ -11,8 +10,6 @@ namespace Storyteller
     class SettingsJsonReader
     {
     public:
-        typedef std::shared_ptr<SettingsJsonReader> Ptr;
-
         explicit SettingsJsonReader(const std::string& name);
 
         bool StartLoad();

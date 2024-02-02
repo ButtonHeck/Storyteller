@@ -1,7 +1,8 @@
 #pragma once 
 
+#include "pointers.h"
+
 #include <string>
-#include <memory>
 
 namespace Storyteller
 {
@@ -10,8 +11,6 @@ namespace Storyteller
     class Settings
     {
     public:
-        typedef std::shared_ptr<Settings> Ptr;
-
         explicit Settings(const std::string& name);
 
         bool StartSave();
@@ -39,7 +38,7 @@ namespace Storyteller
         std::string GetString(const std::string& name, const std::string& defaultValue = "");
 
     private:
-        std::shared_ptr<SettingsJson> _impl;
+        Ptr<SettingsJson> _impl;
     };
     //--------------------------------------------------------------------------
 }

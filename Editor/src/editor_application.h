@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pointers.h"
 #include "application.h"
 #include "window.h"
 #include "editor_ui.h"
@@ -22,8 +23,8 @@ namespace Storyteller
         void LoadSettings();
 
     private:
-        Window::Ptr _window;
-        EditorUi::Ptr _ui;
+        Ptr<Window> _window;
+        Ptr<EditorUi> _ui;
     };
     //--------------------------------------------------------------------------
 }

@@ -10,3 +10,5 @@
 #include "filesystem_utils.h"
 #include "log.h"
 #include "application.h"
+#include "settings.h"
+#include "pointers.h"

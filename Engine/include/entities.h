@@ -4,7 +4,6 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include <functional>
 
 namespace Storyteller
@@ -24,8 +23,6 @@ namespace Storyteller
     class BasicObject
     {
     public:
-        typedef std::shared_ptr<BasicObject> Ptr;
-
         explicit BasicObject(const UUID& uuid = UUID(), const std::function<void()>& changeCallback = nullptr);
         virtual ~BasicObject() = default;
 
@@ -50,8 +47,6 @@ namespace Storyteller
     class TextObject : public BasicObject
     {
     public:
-        typedef std::shared_ptr<TextObject> Ptr;
-
         explicit TextObject(const UUID& uuid = UUID(), const std::function<void()>& changeCallback = nullptr);
 
         std::string GetText() const;
@@ -68,8 +63,6 @@ namespace Storyteller
     class QuestObject : public TextObject
     {
     public:
-        typedef std::shared_ptr<QuestObject> Ptr;
-
         explicit QuestObject(const UUID& uuid = UUID(), const std::function<void()>& changeCallback = nullptr);
 
         static ObjectType GetStaticObjectType();
@@ -93,8 +86,6 @@ namespace Storyteller
     class ActionObject : public TextObject
     {
     public:
-        typedef std::shared_ptr<ActionObject> Ptr;
-
         explicit ActionObject(const UUID& uuid = UUID(), const std::function<void()>& changeCallback = nullptr);
 
         static ObjectType GetStaticObjectType();

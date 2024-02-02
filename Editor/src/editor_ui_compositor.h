@@ -4,22 +4,19 @@
 #include "game_document_manager.h"
 #include "localization_manager.h"
 #include "settings.h"
-
-#include <memory>
+#include "pointers.h"
 
 namespace Storyteller
 {
     class EditorUiCompositor
     {
     public:
-        typedef std::shared_ptr<EditorUiCompositor> Ptr;
-
-        EditorUiCompositor(Window::Ptr window, LocalizationManager::Ptr localizationManager);
+        EditorUiCompositor(Ptr<Window> window, Ptr<LocalizationManager> localizationManager);
 
         void Compose();
 
-        void SaveSettings(Settings::Ptr settings) const;
-        void LoadSettings(Settings::Ptr settings);
+        void SaveSettings(Ptr<Settings> settings) const;
+        void LoadSettings(Ptr<Settings> settings);
 
     private:
         struct UiComponentsState
@@ -54,17 +51,17 @@ namespace Storyteller
         void ComposeGameDocumentPanelObjectsTable();
 
         void ComposePropertiesPanel();
-        void ComposePropertiesPanelName(BasicObject::Ptr selectedObject);
-        void ComposePropertiesPanelTexts(BasicObject::Ptr selectedObject);
-        void ComposePropertiesPanelQuestObject(BasicObject::Ptr selectedObject);
-        void ComposePropertiesPanelActionObject(BasicObject::Ptr selectedObject);
+        void ComposePropertiesPanelName(Ptr<BasicObject> selectedObject);
+        void ComposePropertiesPanelTexts(Ptr<BasicObject> selectedObject);
+        void ComposePropertiesPanelQuestObject(Ptr<BasicObject> selectedObject);
+        void ComposePropertiesPanelActionObject(Ptr<BasicObject> selectedObject);
 
         void ComposeLogPanel();
 
     private:
-        Window::Ptr _window;
-        LocalizationManager::Ptr _localizationManager;
-        GameDocumentManager::Ptr _gameDocumentManager;
+        Ptr<Window> _window;
+        Ptr<LocalizationManager> _localizationManager;
+        Ptr<GameDocumentManager> _gameDocumentManager;
         UiComponentsState _state;
     };
     //--------------------------------------------------------------------------

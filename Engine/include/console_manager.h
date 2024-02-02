@@ -1,9 +1,9 @@
 #pragma once
 
+#include "pointers.h"
 #include "localization_manager.h"
 
 #include <string>
-#include <memory>
 #include <vector>
 
 namespace Storyteller
@@ -11,9 +11,7 @@ namespace Storyteller
     class ConsoleManager
     {
     public:
-        typedef std::shared_ptr<ConsoleManager> Ptr;
-
-        explicit ConsoleManager(const LocalizationManager::Ptr localizationManager, char separator = '*');
+        explicit ConsoleManager(const Ptr<LocalizationManager> localizationManager, char separator = '*');
 
         void SetSeparator(char separator);
 
@@ -32,7 +30,7 @@ namespace Storyteller
         std::string ReadInput() const;
 
     private:
-        LocalizationManager::Ptr const _localizationManager;
+        Ptr<LocalizationManager> const _localizationManager;
         char _separator;
     };
     //--------------------------------------------------------------------------

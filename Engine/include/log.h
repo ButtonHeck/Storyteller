@@ -1,5 +1,7 @@
 #pragma once
 
+#include "pointers.h"
+
 #ifdef _WIN32
 #define NOGDI
 #include <Windows.h>
@@ -7,7 +9,6 @@
 #endif
 #include <spdlog/spdlog.h>
 
-#include <memory>
 #include <sstream>
 
 namespace Storyteller
@@ -17,13 +18,13 @@ namespace Storyteller
     public:
         static void Initialize();
 
-        static std::shared_ptr<spdlog::logger>& CoreLogger();
-        static std::shared_ptr<spdlog::logger>& ClientLogger();
+        static Ptr<spdlog::logger>& CoreLogger();
+        static Ptr<spdlog::logger>& ClientLogger();
         static std::string_view StringLogOutput();
 
     private:
-        static std::shared_ptr<spdlog::logger> _coreLogger;
-        static std::shared_ptr<spdlog::logger> _clientLogger;
+        static Ptr<spdlog::logger> _coreLogger;
+        static Ptr<spdlog::logger> _clientLogger;
         static std::stringstream _ss;
     };
     //--------------------------------------------------------------------------

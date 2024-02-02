@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pointers.h"
 #include "game_document.h"
 
 #include <filesystem>
@@ -9,7 +10,7 @@ namespace Storyteller
     class GameDocumentSerializer
     {
     public:
-        explicit GameDocumentSerializer(GameDocument::Ptr document);
+        explicit GameDocumentSerializer(Ptr<GameDocument> document);
 
         bool Load(const std::filesystem::path& path);
         bool Save();
@@ -20,7 +21,7 @@ namespace Storyteller
         bool Deserialize(const std::filesystem::path& path);
 
     private:
-        GameDocument::Ptr _document;
+        Ptr<GameDocument> _document;
     };
     //--------------------------------------------------------------------------
 }

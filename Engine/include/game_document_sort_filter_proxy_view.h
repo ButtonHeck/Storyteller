@@ -1,19 +1,17 @@
 #pragma once
 
+#include "pointers.h"
 #include "uuid.h"
 #include "entities.h"
 #include "game_document.h"
 
 #include <set>
-#include <memory>
 
 namespace Storyteller
 {
     class GameDocumentSortFilterProxyView
     {
     public:
-        typedef std::shared_ptr<GameDocumentSortFilterProxyView> Ptr;
-
         struct Sorter
         {
             enum SortValue
@@ -26,7 +24,7 @@ namespace Storyteller
             Sorter() = default;
             Sorter(bool ascending, SortValue sortValue);
 
-            bool operator()(BasicObject::Ptr a, BasicObject::Ptr b) const;
+            bool operator()(Ptr<BasicObject> a, Ptr<BasicObject> b) const;
 
             SortValue sortValue;
             bool ascending;
@@ -44,24 +42,24 @@ namespace Storyteller
             bool active;
         };
 
-        explicit GameDocumentSortFilterProxyView(GameDocument::Ptr document);
+        explicit GameDocumentSortFilterProxyView(Ptr<GameDocument> document);
 
-        GameDocument::Ptr GetSourceDocument() const;
+        Ptr<GameDocument> GetSourceDocument() const;
 
         bool AddObject(ObjectType type, const UUID& uuid = UUID());
-        bool AddObject(const BasicObject::Ptr& object);
+        bool AddObject(const Ptr<BasicObject>& object);
         bool RemoveObject(const UUID& uuid);
-        BasicObject::Ptr GetBasicObject(const UUID& uuid) const;
-        BasicObject::Ptr GetBasicObject(const std::string& name) const;
-        const std::vector<BasicObject::Ptr>& GetObjects() const;
-        std::vector<BasicObject::Ptr> GetObjects(ObjectType type, bool noEmptyName) const;
+        Ptr<BasicObject> GetBasicObject(const UUID& uuid) const;
+        Ptr<BasicObject> GetBasicObject(const std::string& name) const;
+        const std::vector<Ptr<BasicObject>>& GetObjects() const;
+        std::vector<Ptr<BasicObject>> GetObjects(ObjectType type, bool noEmptyName) const;
         void SetEntryPoint(const UUID& uuid);
-        BasicObject::Ptr GetEntryPoint() const;
+        Ptr<BasicObject> GetEntryPoint() const;
 
         void Select(const UUID& uuid);
         bool IsSelected(const UUID& uuid) const;
         bool RemoveSelected();
-        BasicObject::Ptr GetSelectedObject() const;
+        Ptr<BasicObject> GetSelectedObject() const;
 
         void UpdateCache();
         void DoSort(bool ascending, Sorter::SortValue sortValue);
@@ -73,8 +71,8 @@ namespace Storyteller
         void DoFilter();
 
     private:
-        GameDocument::Ptr const _document;
-        std::vector<BasicObject::Ptr> _cache;
+        Ptr<GameDocument> const _document;
+        std::vector<Ptr<BasicObject>> _cache;
         UUID _selectedUuid;
         Sorter _sorter;
         Filter _filter;

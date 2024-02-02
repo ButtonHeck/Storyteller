@@ -2,9 +2,9 @@
 
 #include "localization_manager.h"
 #include "settings.h"
+#include "pointers.h"
 
 #include <functional>
-#include <memory>
 
 struct GLFWwindow;
 
@@ -13,9 +13,7 @@ namespace Storyteller
     class Window
     {
     public:
-        typedef std::shared_ptr<Window> Ptr;
-
-        Window(LocalizationManager::Ptr localizationManager);
+        Window(Ptr<LocalizationManager> localizationManager);
         ~Window();
 
         bool Initialize();
@@ -28,12 +26,12 @@ namespace Storyteller
         void SetRefreshCallback(std::function<void()> refreshCallback);
         GLFWwindow* GetGLFWWindow() const;
 
-        void SaveSettings(Settings::Ptr settings) const;
-        void LoadSettings(Settings::Ptr settings);
+        void SaveSettings(Ptr<Settings> settings) const;
+        void LoadSettings(Ptr<Settings> settings);
 
     private:
         GLFWwindow* _window;
-        LocalizationManager::Ptr _localizationManager;
+        Ptr<LocalizationManager> _localizationManager;
     };
     //--------------------------------------------------------------------------
 }

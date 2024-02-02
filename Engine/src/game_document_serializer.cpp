@@ -22,7 +22,7 @@ namespace Storyteller
 #define JSON_KEY_ACTIONS "Actions"
 #define JSON_KEY_TARGET "Target"
 
-    GameDocumentSerializer::GameDocumentSerializer(GameDocument::Ptr document)
+    GameDocumentSerializer::GameDocumentSerializer(Ptr<GameDocument> document)
         : _document(document)
     {}
     //--------------------------------------------------------------------------
@@ -255,7 +255,7 @@ namespace Storyteller
                     return false;
                 }
 
-                auto questObject = std::make_shared<QuestObject>(objectUuid, [this]() { _document->SetDirty(true); });
+                auto questObject = CreatePtr<QuestObject>(objectUuid, [this]() { _document->SetDirty(true); });
                 questObject->SetText(objectText);
                 questObject->SetName(objectName);
 
@@ -283,7 +283,7 @@ namespace Storyteller
                     return false;
                 }
 
-                auto actionObject = std::make_shared<ActionObject>(objectUuid, [this]() { _document->SetDirty(true); });
+                auto actionObject = CreatePtr<ActionObject>(objectUuid, [this]() { _document->SetDirty(true); });
                 actionObject->SetTargetUuid(UUID(jsonObject[JSON_KEY_TARGET].GetUint64()));
                 actionObject->SetText(objectText);
                 actionObject->SetName(objectName);

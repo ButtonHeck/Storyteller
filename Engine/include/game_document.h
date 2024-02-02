@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pointers.h"
 #include "uuid.h"
 #include "entities.h"
 
@@ -12,8 +13,6 @@ namespace Storyteller
     class GameDocument
     {
     public:
-        typedef std::shared_ptr<GameDocument> Ptr;
-
         explicit GameDocument(const std::string& pathString = "");
         explicit GameDocument(const std::filesystem::path& path = "");
 
@@ -29,14 +28,14 @@ namespace Storyteller
         void SetDirty(bool dirty);
 
         bool AddObject(ObjectType type, const UUID& uuid = UUID());
-        bool AddObject(const BasicObject::Ptr& object);
+        bool AddObject(const Ptr<BasicObject>& object);
         bool RemoveObject(const UUID& uuid);
-        BasicObject::Ptr GetBasicObject(const UUID& uuid) const;
-        BasicObject::Ptr GetBasicObject(const std::string& name) const;
-        const std::vector<BasicObject::Ptr>& GetObjects() const;
-        std::vector<BasicObject::Ptr> GetObjects(ObjectType type, bool noEmptyName) const;
+        Ptr<BasicObject> GetBasicObject(const UUID& uuid) const;
+        Ptr<BasicObject> GetBasicObject(const std::string& name) const;
+        const std::vector<Ptr<BasicObject>>& GetObjects() const;
+        std::vector<Ptr<BasicObject>> GetObjects(ObjectType type, bool noEmptyName) const;
         void SetEntryPoint(const UUID& uuid);
-        BasicObject::Ptr GetEntryPoint() const;
+        Ptr<BasicObject> GetEntryPoint() const;
 
         bool CheckConsistency() const;
 
@@ -44,7 +43,7 @@ namespace Storyteller
         std::string _gameName;
         std::filesystem::path _path;
         bool _dirty;
-        std::vector<BasicObject::Ptr> _objects;
+        std::vector<Ptr<BasicObject>> _objects;
         UUID _entryPointUuid;
     };
     //--------------------------------------------------------------------------

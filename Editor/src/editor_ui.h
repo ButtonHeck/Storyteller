@@ -4,17 +4,14 @@
 #include "localization_manager.h"
 #include "editor_ui_compositor.h"
 #include "settings.h"
-
-#include <memory>
+#include "pointers.h"
 
 namespace Storyteller
 {
     class EditorUi
     {
     public:
-        typedef std::shared_ptr<EditorUi> Ptr;
-
-        EditorUi(Window::Ptr window, LocalizationManager::Ptr localizationManager);
+        EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager);
 
         bool Initialize();
         void NewFrame();
@@ -26,15 +23,15 @@ namespace Storyteller
         void EndFrame();
         void Shutdown();
 
-        void SaveSettings(Settings::Ptr settings) const;
-        void LoadSettings(Settings::Ptr settings);
+        void SaveSettings(Ptr<Settings> settings) const;
+        void LoadSettings(Ptr<Settings> settings);
 
     private:
         void AddDefaultFont();
 
     private:
-        Window::Ptr _window;
-        EditorUiCompositor::Ptr _compositor;
+        Ptr<Window> _window;
+        Ptr<EditorUiCompositor> _compositor;
     };
     //--------------------------------------------------------------------------
 }

@@ -3,7 +3,7 @@
 #include "storyteller.h"
 
 #include <boost/locale.hpp>
-#include <memory>
+
 #include <iostream>
 
 namespace Storyteller

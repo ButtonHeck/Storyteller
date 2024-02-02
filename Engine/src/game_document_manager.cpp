@@ -47,13 +47,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    GameDocument::Ptr GameDocumentManager::GetDocument() const
+    Ptr<GameDocument> GameDocumentManager::GetDocument() const
     {
         return _document;
     }
     //--------------------------------------------------------------------------
 
-    GameDocumentSortFilterProxyView::Ptr GameDocumentManager::GetProxy()
+    Ptr<GameDocumentSortFilterProxyView> GameDocumentManager::GetProxy()
     {
         if (!_proxy)
         {

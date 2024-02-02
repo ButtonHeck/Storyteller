@@ -10,7 +10,7 @@
 
 namespace Storyteller
 {
-    EditorUiCompositor::EditorUiCompositor(Window::Ptr window, LocalizationManager::Ptr localizationManager)
+    EditorUiCompositor::EditorUiCompositor(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
         : _window(window)
         , _localizationManager(localizationManager)
         , _gameDocumentManager(new GameDocumentManager())
@@ -35,7 +35,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::SaveSettings(Settings::Ptr settings) const
+    void EditorUiCompositor::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUiCompositor");
         settings->SaveBool("Log", _state.logPanel);
@@ -43,7 +43,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::LoadSettings(Settings::Ptr settings)
+    void EditorUiCompositor::LoadSettings(Ptr<Settings> settings)
     {
         settings->StartLoadGroup("EditorUiCompositor");
         _state.logPanel = settings->GetBool("Log", true);
@@ -404,7 +404,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelName(BasicObject::Ptr selectedObject)
+    void EditorUiCompositor::ComposePropertiesPanelName(Ptr<BasicObject> selectedObject)
     {
         //TODO: assert selectedObject != nullptr
 
@@ -421,7 +421,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelTexts(BasicObject::Ptr selectedObject)
+    void EditorUiCompositor::ComposePropertiesPanelTexts(Ptr<BasicObject> selectedObject)
     {
         //TODO: assert selectedObject != nullptr
 
@@ -444,7 +444,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelQuestObject(BasicObject::Ptr selectedObject)
+    void EditorUiCompositor::ComposePropertiesPanelQuestObject(Ptr<BasicObject> selectedObject)
     {
         //TODO: assert selectedObject != nullptr
 
@@ -570,7 +570,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ComposePropertiesPanelActionObject(BasicObject::Ptr selectedObject)
+    void EditorUiCompositor::ComposePropertiesPanelActionObject(Ptr<BasicObject> selectedObject)
     {
         //TODO: assert selectedObject != nullptr
 

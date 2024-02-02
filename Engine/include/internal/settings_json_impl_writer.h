@@ -3,7 +3,6 @@
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 
-#include <memory>
 #include <string>
 
 namespace Storyteller
@@ -11,8 +10,6 @@ namespace Storyteller
     class SettingsJsonWriter
     {
     public:
-        typedef std::shared_ptr<SettingsJsonWriter> Ptr;
-
         explicit SettingsJsonWriter(const std::string& name);
 
         bool StartSave();

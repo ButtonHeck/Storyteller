@@ -77,7 +77,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("GameDocument: add object ({}) of type '{}'", uuid, ObjectTypeToString(type));
 
-        if (type == ObjectType::ErrorObjectType || std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == uuid; }) != _objects.cend())
+        if (type == ObjectType::ErrorObjectType || std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetUuid() == uuid; }) != _objects.cend())
         {
             STRTLR_CORE_LOG_WARN("GameDocument: type is invalid or ({}) is already exist", uuid);
             return false;
@@ -86,12 +86,12 @@ namespace Storyteller
         switch (type)
         {
         case ObjectType::QuestObjectType:
-            _objects.push_back(std::make_shared<QuestObject>(uuid, [this]() { SetDirty(true); }));
+            _objects.push_back(CreatePtr<QuestObject>(uuid, [this]() { SetDirty(true); }));
             SetDirty(true);
             return true;
 
         case ObjectType::ActionObjectType:
-            _objects.push_back(std::make_shared<ActionObject>(uuid, [this]() { SetDirty(true); }));
+            _objects.push_back(CreatePtr<ActionObject>(uuid, [this]() { SetDirty(true); }));
             SetDirty(true);
             return true;
 
@@ -103,11 +103,11 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameDocument::AddObject(const BasicObject::Ptr& object)
+    bool GameDocument::AddObject(const Ptr<BasicObject>& object)
     {
         STRTLR_CORE_LOG_INFO("GameDocument: add object ({}) of type '{}'", object->GetUuid(), ObjectTypeToString(object->GetObjectType()));
 
-        if (std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == object->GetUuid(); }) != _objects.cend())
+        if (std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetUuid() == object->GetUuid(); }) != _objects.cend())
         {
             STRTLR_CORE_LOG_WARN("GameDocument: type is invalid or ({}) is already exist", object->GetUuid());
             return false;
@@ -124,7 +124,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("GameDocument: removing object ({})", uuid);
 
-        const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == uuid; });
+        const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetUuid() == uuid; });
         if (it == _objects.cend())
         {
             STRTLR_CORE_LOG_WARN("GameDocument: object ({}) is not found to remove", uuid);
@@ -137,9 +137,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocument::GetBasicObject(const UUID& uuid) const
+    Ptr<BasicObject> GameDocument::GetBasicObject(const UUID& uuid) const
     {
-        const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetUuid() == uuid; });
+        const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetUuid() == uuid; });
         if (it != _objects.cend())
         {
             return *it;
@@ -149,9 +149,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocument::GetBasicObject(const std::string& name) const
+    Ptr<BasicObject> GameDocument::GetBasicObject(const std::string& name) const
     {
-        const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr obj) { return obj->GetName() == name; });
+        const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetName() == name; });
         if (it != _objects.cend())
         {
             return *it;
@@ -161,16 +161,16 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    const std::vector<BasicObject::Ptr>& GameDocument::GetObjects() const
+    const std::vector<Ptr<BasicObject>>& GameDocument::GetObjects() const
     {
         return _objects;
     }
     //--------------------------------------------------------------------------
 
-    std::vector<BasicObject::Ptr> GameDocument::GetObjects(ObjectType type, bool noEmptyName) const
+    std::vector<Ptr<BasicObject>> GameDocument::GetObjects(ObjectType type, bool noEmptyName) const
     {
-        std::vector<BasicObject::Ptr> result;
-        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type, noEmptyName](const BasicObject::Ptr& object) 
+        std::vector<Ptr<BasicObject>> result;
+        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type, noEmptyName](const Ptr<BasicObject>& object) 
             { 
                 if (object->GetObjectType() != type)
                 {
@@ -197,7 +197,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    BasicObject::Ptr GameDocument::GetEntryPoint() const
+    Ptr<BasicObject> GameDocument::GetEntryPoint() const
     {
         return GetBasicObject(_entryPointUuid);
     }
@@ -205,7 +205,7 @@ namespace Storyteller
 
     bool GameDocument::CheckConsistency() const
     {
-        return std::find_if(_objects.cbegin(), _objects.cend(), [&](const BasicObject::Ptr ptr) { return !ptr->IsConsistent(); }) != _objects.cend()
+        return std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> ptr) { return !ptr->IsConsistent(); }) != _objects.cend()
             && GetBasicObject(_entryPointUuid) != nullptr;
     }
     //--------------------------------------------------------------------------

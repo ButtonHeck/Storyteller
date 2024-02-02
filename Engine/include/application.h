@@ -2,6 +2,7 @@
 
 #include "localization_manager.h"
 #include "settings.h"
+#include "pointers.h"
 
 namespace Storyteller
 {
@@ -18,8 +19,8 @@ namespace Storyteller
         virtual void Run();
 
     protected:
-        LocalizationManager::Ptr _localizationManager;
-        Settings::Ptr _settings;
+        Ptr<LocalizationManager> _localizationManager;
+        Ptr<Settings> _settings;
     };
     //--------------------------------------------------------------------------
 

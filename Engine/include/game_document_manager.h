@@ -1,17 +1,14 @@
 #pragma once
 
+#include "pointers.h"
 #include "game_document.h"
 #include "game_document_sort_filter_proxy_view.h"
-
-#include <memory>
 
 namespace Storyteller
 {
     class GameDocumentManager
     {
     public:
-        typedef std::shared_ptr<GameDocumentManager> Ptr;
-
         GameDocumentManager();
 
         void NewDocument(const std::string& pathString = "");
@@ -21,12 +18,12 @@ namespace Storyteller
         bool Save();
         bool Save(const std::filesystem::path& path);
 
-        GameDocument::Ptr GetDocument() const;
-        GameDocumentSortFilterProxyView::Ptr GetProxy();
+        Ptr<GameDocument> GetDocument() const;
+        Ptr<GameDocumentSortFilterProxyView> GetProxy();
 
     private:
-        GameDocument::Ptr _document;
-        GameDocumentSortFilterProxyView::Ptr _proxy;
+        Ptr<GameDocument> _document;
+        Ptr<GameDocumentSortFilterProxyView> _proxy;
     };
     //--------------------------------------------------------------------------
 }

@@ -1,18 +1,16 @@
 #pragma once
 
+#include "pointers.h"
 #include "settings_json_impl_reader.h"
 #include "settings_json_impl_writer.h"
 
 #include <string>
-#include <memory>
 
 namespace Storyteller
 {
     class SettingsJson
     {
     public:
-        typedef std::shared_ptr<SettingsJson> Ptr;
-
         explicit SettingsJson(const std::string& name);
 
         bool StartSave();
@@ -42,8 +40,8 @@ namespace Storyteller
         std::string GetString(const std::string& name, const std::string& defaultValue = "");
 
     private:
-        SettingsJsonReader::Ptr _reader;
-        SettingsJsonWriter::Ptr _writer;
+        Ptr<SettingsJsonReader> _reader;
+        Ptr<SettingsJsonWriter> _writer;
     };
     //--------------------------------------------------------------------------
 }

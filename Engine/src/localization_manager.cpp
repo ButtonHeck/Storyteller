@@ -69,7 +69,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool LocalizationManager::CreateTranslations(const GameDocument::Ptr document, const std::filesystem::path& path) const
+    bool LocalizationManager::CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), path.generic_string());
 

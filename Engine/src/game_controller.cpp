@@ -3,8 +3,8 @@
 
 namespace Storyteller
 {
-    GameController::GameController(const GameDocument::Ptr gameDocument, const LocalizationManager::Ptr localizationManager)
-        : _consoleManager(std::make_shared<ConsoleManager>(localizationManager))
+    GameController::GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager)
+        : _consoleManager(new ConsoleManager(localizationManager))
         , _gameDocument(gameDocument)
         , _localizationManager(localizationManager)
         , _gameName(_gameDocument->GetGameName())
@@ -66,7 +66,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::CheckObject(const BasicObject::Ptr object, ObjectType type) const
+    bool GameController::CheckObject(const Ptr<BasicObject> object, ObjectType type) const
     {
         if (!object)
         {
@@ -90,7 +90,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::ProcessActions(BasicObject::Ptr currentObject, const QuestObject* currentQuestObject, bool& finalReached)
+    bool GameController::ProcessActions(Ptr<BasicObject> currentObject, const QuestObject* currentQuestObject, bool& finalReached)
     {
         const auto& questActions = currentQuestObject->GetActions();
         if (!PrintActions(questActions))

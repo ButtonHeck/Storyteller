@@ -7,7 +7,7 @@
 
 namespace Storyteller
 {
-    EditorUi::EditorUi(Window::Ptr window, LocalizationManager::Ptr localizationManager)
+    EditorUi::EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
         : _window(window)
         , _compositor(new EditorUiCompositor(_window, localizationManager))
     {}
@@ -127,7 +127,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::SaveSettings(Settings::Ptr settings) const
+    void EditorUi::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUi");
         _compositor->SaveSettings(settings);
@@ -135,7 +135,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::LoadSettings(Settings::Ptr settings)
+    void EditorUi::LoadSettings(Ptr<Settings> settings)
     {
         settings->StartLoadGroup("EditorUi");
         _compositor->LoadSettings(settings);
