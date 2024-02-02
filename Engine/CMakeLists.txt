@@ -22,6 +22,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/log.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/application.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/settings.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/pointers.h"
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/internal/settings_json_impl.h"
