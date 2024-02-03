@@ -21,6 +21,9 @@ namespace Storyteller
         bool ShouldClose() const override;
         void SetShouldClose(bool close) override;
         void SetFullscreen(bool fullscreen) override;
+        bool IsFullscreen() const override;
+        void SetVSync(bool vSync) override;
+        bool IsVSync() const override;
         void ProcessEvents() override;
         void SwapBuffers() const override;
         void MakeContextCurrent() override;

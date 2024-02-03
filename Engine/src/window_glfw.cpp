@@ -5,13 +5,19 @@
 
 namespace Storyteller
 {
+    constexpr auto defaultWidth = 1920;
+    constexpr auto defaultHeight = 1080;
+
     struct WindowUserData
     {
         bool updateContinuously = true;
         bool fullscreen = false;
-        int width = 1920;
-        int height = 1080;
+        int width = defaultWidth;
+        int height = defaultHeight;
+        int windowedWidth = width;
+        int windowedHeight = height;
         std::function<void()> refreshCallback = nullptr;
+        bool vSync = true;
     };
     //--------------------------------------------------------------------------
 
@@ -42,9 +48,9 @@ namespace Storyteller
 
         InitializeHints();
 
-        _window = glfwCreateWindow(1920, 1080, "", nullptr, nullptr);
+        _window = glfwCreateWindow(defaultWidth, defaultHeight, "", nullptr, nullptr);
 
-        glfwSwapInterval(1);
+        SetVSync(true);
         glfwSetWindowUserPointer(_window, new WindowUserData());
         MakeContextCurrent();
 
@@ -91,10 +97,46 @@ namespace Storyteller
         else
         {
             glfwSetWindowMonitor(_window, nullptr,
-                (monitorW - userData->width) / 2,
-                (monitorH - userData->height) / 2,
-                userData->width, userData->height, GLFW_DONT_CARE);
+                (monitorW - userData->windowedWidth) / 2,
+                (monitorH - userData->windowedHeight) / 2,
+                userData->windowedWidth, userData->windowedHeight, GLFW_DONT_CARE);
         }
+    }
+    //--------------------------------------------------------------------------
+
+    bool WindowGlfw::IsFullscreen() const
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            return userData->fullscreen;
+        }
+
+        return false;
+    }
+    //--------------------------------------------------------------------------
+
+    void WindowGlfw::SetVSync(bool vSync)
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->vSync = vSync;
+        }
+
+        glfwSwapInterval(vSync ? 1 : 0);
+    }
+    //--------------------------------------------------------------------------
+
+    bool WindowGlfw::IsVSync() const
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            return userData->vSync;
+        }
+
+        return true;
     }
     //--------------------------------------------------------------------------
 
@@ -146,9 +188,15 @@ namespace Storyteller
         int height;
         glfwGetWindowSize(_window, &width, &height);
 
+        const auto userData = GetUserPointer(_window);
+
         settings->StartSaveGroup("Window");
         settings->SaveUInt("Width", width);
         settings->SaveUInt("Height", height);
+        settings->SaveUInt("WindowedWidth", userData ? userData->windowedWidth : defaultWidth);
+        settings->SaveUInt("WindowedHeight", userData ? userData->windowedHeight : defaultHeight);
+        settings->SaveBool("Fullscreen", IsFullscreen());
+        settings->SaveBool("VSync", IsVSync());
         settings->EndSaveGroup();
     }
     //--------------------------------------------------------------------------
@@ -156,9 +204,28 @@ namespace Storyteller
     void WindowGlfw::LoadSettings(Ptr<Settings> settings)
     {
         settings->StartLoadGroup("Window");
-        const auto width = settings->GetUInt("Width", 1920);
-        const auto height = settings->GetUInt("Height", 1080);
-        glfwSetWindowSize(_window, width, height);
+        const auto width = settings->GetUInt("Width", defaultWidth);
+        const auto height = settings->GetUInt("Height", defaultHeight);
+        const auto windowedWidth = settings->GetUInt("WindowedWidth", defaultWidth);
+        const auto windowedHeight = settings->GetUInt("WindowedHeight", defaultHeight);
+        const auto fullscreen = settings->GetBool("Fullscreen", false);
+        const auto vSync = settings->GetBool("VSync", true);
+
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->windowedWidth = windowedWidth;
+            userData->windowedHeight = windowedHeight;
+        }
+
+        SetVSync(vSync);
+        SetFullscreen(fullscreen);
+
+        if (!fullscreen)
+        {
+            glfwSetWindowSize(_window, width, height);
+        }
+
         settings->EndLoadGroup();
     }
     //--------------------------------------------------------------------------
@@ -182,6 +249,12 @@ namespace Storyteller
             {
                 userData->width = width;
                 userData->height = height;
+
+                if (!userData->fullscreen)
+                {
+                    userData->windowedWidth = width;
+                    userData->windowedHeight = height;
+                }
             }
             }
         );

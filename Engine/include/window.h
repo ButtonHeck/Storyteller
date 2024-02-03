@@ -20,6 +20,9 @@ namespace Storyteller
         virtual bool ShouldClose() const = 0;
         virtual void SetShouldClose(bool close) = 0;
         virtual void SetFullscreen(bool fullscreen) = 0;
+        virtual bool IsFullscreen() const = 0;
+        virtual void SetVSync(bool vSync) = 0;
+        virtual bool IsVSync() const = 0;
         virtual void ProcessEvents() = 0;
         virtual void SwapBuffers() const = 0;
         virtual void MakeContextCurrent() = 0;

@@ -87,6 +87,7 @@ namespace Storyteller
         if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "View").c_str()))
         {
             ComposeMenuItemLog();
+            ComposeMenuItemFullscreen();
 
             ImGui::EndMenu();
         }
@@ -195,6 +196,16 @@ namespace Storyteller
     void EditorUiCompositor::ComposeMenuItemLog()
     {
         ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str(), nullptr, &_state.logPanel);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemFullscreen()
+    {
+        auto isFullscreen = _window->IsFullscreen();
+        if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Fullscreen").c_str(), nullptr, &isFullscreen))
+        {
+            _window->SetFullscreen(isFullscreen);
+        }        
     }
     //--------------------------------------------------------------------------
 
