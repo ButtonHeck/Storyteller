@@ -12,3 +12,4 @@
 #include "application.h"
 #include "settings.h"
 #include "pointers.h"
+#include "dialogs.h"

@@ -24,7 +24,7 @@ namespace Storyteller
 			{
 				ofn.lpstrInitialDir = currentDir;
 			}
-				
+
 			ofn.lpstrFilter = filter;
 			ofn.nFilterIndex = 1;
 			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
@@ -52,7 +52,7 @@ namespace Storyteller
 			{
 				ofn.lpstrInitialDir = currentDir;
 			}
-				
+
 			ofn.lpstrFilter = filter;
 			ofn.nFilterIndex = 1;
 			ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;

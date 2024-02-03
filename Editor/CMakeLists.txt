@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 set(SOURCE_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_application.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.h"

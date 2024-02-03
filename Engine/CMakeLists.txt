@@ -26,6 +26,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/pointers.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/window.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/window_glfw.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/dialogs.h"
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/internal/settings_json_impl.h"
@@ -52,6 +53,7 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_writer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
 )
 
 add_library(${PROJECT_NAME}
