@@ -21,8 +21,11 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/filesystem_utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/log.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/application.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/window_application.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/settings.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/pointers.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/window.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/window_glfw.h"
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/internal/settings_json_impl.h"
@@ -42,10 +45,13 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/filesystem_utils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/log.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/application.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/window_application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_reader.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_writer.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
 )
 
 add_library(${PROJECT_NAME}
@@ -56,9 +62,11 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
 	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PUBLIC "${VENDOR_DIR}/glfw/include"
+    PUBLIC "${VENDOR_DIR}/spdlog/include"
+
 	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/internal"
     PRIVATE "${VENDOR_DIR}/rapidjson/include"
-    PUBLIC "${VENDOR_DIR}/spdlog/include"
 )
 
 target_compile_definitions(${PROJECT_NAME}
@@ -69,5 +77,9 @@ if(Boost_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
 endif()
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE glfw
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Storyteller")

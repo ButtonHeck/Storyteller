@@ -21,7 +21,7 @@ namespace Storyteller
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 
         //TODO: extract to separate class (eg EditorUiGlfwOpengl)
-        ImGui_ImplGlfw_InitForOpenGL(_window->GetGLFWWindow(), true);
+        ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()), true);
         ImGui_ImplOpenGL3_Init("#version 450");
 
         AddDefaultFont();

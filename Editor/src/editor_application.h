@@ -1,13 +1,13 @@
 #pragma once
 
 #include "pointers.h"
-#include "application.h"
+#include "window_application.h"
 #include "window.h"
 #include "editor_ui.h"
 
 namespace Storyteller
 {
-    class EditorApplication : public Application
+    class EditorApplication : public WindowApplication
     {
     public:
         EditorApplication();
@@ -23,7 +23,6 @@ namespace Storyteller
         void LoadSettings();
 
     private:
-        Ptr<Window> _window;
         Ptr<EditorUi> _ui;
     };
     //--------------------------------------------------------------------------

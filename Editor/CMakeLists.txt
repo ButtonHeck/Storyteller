@@ -11,8 +11,6 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_application.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_application.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/window.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_compositor.h"
@@ -45,13 +43,11 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME}
-	PRIVATE "${VENDOR_DIR}/glfw/include"
 	PRIVATE "${VENDOR_DIR}/imgui"
 	PRIVATE "${VENDOR_DIR}/spdlog/include"
 )
 
 target_link_libraries(${PROJECT_NAME}
-	PRIVATE glfw
     PRIVATE StorytellerEngine
 )
 

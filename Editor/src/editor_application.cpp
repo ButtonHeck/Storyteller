@@ -15,7 +15,7 @@ namespace Storyteller
     //--------------------------------------------------------------------------
 
     EditorApplication::EditorApplication()
-        : _window(nullptr)
+        : WindowApplication()
         , _ui(nullptr)
     {}
     //--------------------------------------------------------------------------
@@ -34,19 +34,13 @@ namespace Storyteller
 
     bool EditorApplication::Initialize()
     {
-        if (!Application::Initialize())
+        if (!WindowApplication::Initialize())
         {
             return false;
         }
 
         _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
         _localizationManager->Build("ru_RU.UTF-8");
-
-        _window.reset(new Window(_localizationManager));
-        if (!_window || !_window->Initialize())
-        {
-            return false;
-        }
 
         _ui.reset(new EditorUi(_window, _localizationManager));
         if (!_ui || !_ui->Initialize())
