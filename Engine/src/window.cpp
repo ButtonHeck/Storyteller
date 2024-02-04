@@ -3,10 +3,14 @@
 
 namespace Storyteller
 {
-    // TODO: implementation based on variables
     Window* Window::CreateWindow()
     {
+#ifdef STRTLR_WINDOW_BACKEND_GLFW
         return new WindowGlfw();
+#else
+#error "No window backend is defined!"
+#endif
+        return nullptr;
     }
     //--------------------------------------------------------------------------
 }

@@ -71,6 +71,13 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE "${VENDOR_DIR}/rapidjson/include"
 )
 
+option(STORYTELLER_USE_WINDOW_BACKEND_GLFW "Use GLFW for window management" ON)
+if(${STORYTELLER_USE_WINDOW_BACKEND_GLFW})
+    target_compile_definitions(${PROJECT_NAME} PRIVATE STRTLR_WINDOW_BACKEND_GLFW)
+else()
+    message(ERROR "No window backend is chosen")
+endif()
+
 target_compile_definitions(${PROJECT_NAME}
     PUBLIC STRTLR_TR_DOMAIN_ENGINE="Storyteller"
 )
