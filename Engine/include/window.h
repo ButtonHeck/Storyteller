@@ -11,6 +11,13 @@ namespace Storyteller
     class Window
     {
     public:
+        enum Mode
+        {
+            FullscreenMode,
+            WindowedFullscreenMode,
+            WindowedMode
+        };
+
         static Window* CreateWindow();
 
         virtual ~Window() = default;
@@ -19,8 +26,8 @@ namespace Storyteller
         virtual void SetTitle(const std::string& title) = 0;
         virtual bool ShouldClose() const = 0;
         virtual void SetShouldClose(bool close) = 0;
-        virtual void SetFullscreen(bool fullscreen) = 0;
-        virtual bool IsFullscreen() const = 0;
+        virtual void SetScreenMode(Mode mode) = 0;
+        virtual Mode GetScreenMode() const = 0;
         virtual void SetVSync(bool vSync) = 0;
         virtual bool IsVSync() const = 0;
         virtual void ProcessEvents() = 0;

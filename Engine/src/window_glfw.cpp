@@ -11,7 +11,7 @@ namespace Storyteller
     struct WindowUserData
     {
         bool updateContinuously = true;
-        bool fullscreen = false;
+        Window::Mode screenMode = Window::WindowedMode;
         int width = defaultWidth;
         int height = defaultHeight;
         int windowedWidth = width;
@@ -79,43 +79,53 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::SetFullscreen(bool fullscreen)
+    void WindowGlfw::SetScreenMode(Mode mode)
     {
         const auto userData = GetUserPointer(_window);
-        if (!userData || userData->fullscreen == fullscreen)
+        if (!userData || userData->screenMode == mode)
         {
             return;
         }
 
-        userData->fullscreen = fullscreen;
-        const auto vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        const auto monitorW = vidmode->width;
-        const auto monitorH = vidmode->height;
-        if (userData->fullscreen)
+        userData->screenMode = mode;
+
+        const auto monitor = glfwGetPrimaryMonitor();
+        const auto videoMode = glfwGetVideoMode(monitor);
+        const auto monitorWidth = videoMode->width;
+        const auto monitorHeight = videoMode->height;
+
+        if (mode == FullscreenMode)
         {
-            int x, y, w, h;
-            glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
-            glfwSetWindowMonitor(_window, nullptr, x, y, w, h, vidmode->refreshRate);
+            glfwSetWindowMonitor(_window, monitor, 0, 0, monitorWidth, monitorHeight, videoMode->refreshRate);
+        }
+        else if (mode == WindowedFullscreenMode)
+        {
+            int workingAreaX;
+            int workingAreaY;
+            int workingAreaWidth;
+            int workingAreaHeight;
+            glfwGetMonitorWorkarea(monitor, &workingAreaX, &workingAreaY, &workingAreaWidth, &workingAreaHeight);
+            glfwSetWindowMonitor(_window, nullptr, workingAreaX, workingAreaY, workingAreaWidth, workingAreaHeight, videoMode->refreshRate);
         }
         else
         {
             glfwSetWindowMonitor(_window, nullptr,
-                (monitorW - userData->windowedWidth) / 2,
-                (monitorH - userData->windowedHeight) / 2,
-                userData->windowedWidth, userData->windowedHeight, GLFW_DONT_CARE);
+                (monitorWidth - userData->windowedWidth) / 2,
+                (monitorHeight - userData->windowedHeight) / 2,
+                userData->windowedWidth, userData->windowedHeight, videoMode->refreshRate);
         }
     }
     //--------------------------------------------------------------------------
 
-    bool WindowGlfw::IsFullscreen() const
+    Window::Mode WindowGlfw::GetScreenMode() const
     {
         const auto userData = GetUserPointer(_window);
         if (userData)
         {
-            return userData->fullscreen;
+            return userData->screenMode;
         }
 
-        return false;
+        return WindowedMode;
     }
     //--------------------------------------------------------------------------
 
@@ -218,7 +228,7 @@ namespace Storyteller
         settings->SaveUInt("Height", height);
         settings->SaveUInt("WindowedWidth", userData ? userData->windowedWidth : defaultWidth);
         settings->SaveUInt("WindowedHeight", userData ? userData->windowedHeight : defaultHeight);
-        settings->SaveBool("Fullscreen", IsFullscreen());
+        settings->SaveInt("ScreenMode", GetScreenMode());
         settings->SaveBool("VSync", IsVSync());
         settings->EndSaveGroup();
     }
@@ -231,7 +241,7 @@ namespace Storyteller
         const auto height = settings->GetUInt("Height", defaultHeight);
         const auto windowedWidth = settings->GetUInt("WindowedWidth", defaultWidth);
         const auto windowedHeight = settings->GetUInt("WindowedHeight", defaultHeight);
-        const auto fullscreen = settings->GetBool("Fullscreen", false);
+        const auto screenMode = Window::Mode(settings->GetInt("ScreenMode", WindowedMode));
         const auto vSync = settings->GetBool("VSync", true);
 
         const auto userData = GetUserPointer(_window);
@@ -242,9 +252,9 @@ namespace Storyteller
         }
 
         SetVSync(vSync);
-        SetFullscreen(fullscreen);
+        SetScreenMode(screenMode);
 
-        if (!fullscreen)
+        if (screenMode == WindowedMode)
         {
             glfwSetWindowSize(_window, width, height);
         }
@@ -273,7 +283,7 @@ namespace Storyteller
                 userData->width = width;
                 userData->height = height;
 
-                if (!userData->fullscreen)
+                if (userData->screenMode == WindowedMode)
                 {
                     userData->windowedWidth = width;
                     userData->windowedHeight = height;

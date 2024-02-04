@@ -20,8 +20,8 @@ namespace Storyteller
         void SetTitle(const std::string& title) override;
         bool ShouldClose() const override;
         void SetShouldClose(bool close) override;
-        void SetFullscreen(bool fullscreen) override;
-        bool IsFullscreen() const override;
+        void SetScreenMode(Mode mode) override;
+        Mode GetScreenMode() const override;
         void SetVSync(bool vSync) override;
         bool IsVSync() const override;
         void ProcessEvents() override;

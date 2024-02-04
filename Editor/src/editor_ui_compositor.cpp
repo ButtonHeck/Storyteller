@@ -201,10 +201,11 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemFullscreen()
     {
-        auto isFullscreen = _window->IsFullscreen();
+        const auto screenMode = _window->GetScreenMode();
+        auto isFullscreen = screenMode == Window::WindowedFullscreenMode;
         if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Fullscreen").c_str(), nullptr, &isFullscreen))
         {
-            _window->SetFullscreen(isFullscreen);
+            _window->SetScreenMode(isFullscreen ? Window::WindowedFullscreenMode : Window::WindowedMode);
         }        
     }
     //--------------------------------------------------------------------------
