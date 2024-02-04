@@ -10,14 +10,22 @@ namespace Storyteller
 {
 	namespace Dialogs
 	{
-		std::string OpenFile(const char* filter, GLFWwindow* window)
+		std::string OpenFile(const char* filter, Ptr<Window> window)
 		{
+			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
+			if (!implWindow)
+			{
+				return std::string();
+			}
+
+			window->BeginBlock();
+
 			OPENFILENAMEA ofn;
 			CHAR szFile[260] = { 0 };
 			CHAR currentDir[256] = { 0 };
 			ZeroMemory(&ofn, sizeof(OPENFILENAME));
 			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.hwndOwner = glfwGetWin32Window(window);
+			ofn.hwndOwner = glfwGetWin32Window(implWindow);
 			ofn.lpstrFile = szFile;
 			ofn.nMaxFile = sizeof(szFile);
 			if (GetCurrentDirectoryA(256, currentDir))
@@ -31,21 +39,33 @@ namespace Storyteller
 
 			if (GetOpenFileNameA(&ofn) == TRUE)
 			{
+				window->EndBlock();
+
 				return ofn.lpstrFile;
 			}
+
+			window->EndBlock();
 
 			return std::string();
 		}
 		//--------------------------------------------------------------------------
 
-		std::string SaveFile(const char* filter, GLFWwindow* window)
+		std::string SaveFile(const char* filter, Ptr<Window> window)
 		{
+			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
+			if (!implWindow)
+			{
+				return std::string();
+			}
+
+			window->BeginBlock();
+
 			OPENFILENAMEA ofn;
 			CHAR szFile[260] = { 0 };
 			CHAR currentDir[256] = { 0 };
 			ZeroMemory(&ofn, sizeof(OPENFILENAME));
 			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.hwndOwner = glfwGetWin32Window(window);
+			ofn.hwndOwner = glfwGetWin32Window(implWindow);
 			ofn.lpstrFile = szFile;
 			ofn.nMaxFile = sizeof(szFile);
 			if (GetCurrentDirectoryA(256, currentDir))
@@ -60,16 +80,31 @@ namespace Storyteller
 
 			if (GetSaveFileNameA(&ofn) == TRUE)
 			{
+				window->EndBlock();
+
 				return ofn.lpstrFile;
 			}
+
+			window->EndBlock();
 
 			return std::string();
 		}
 		//--------------------------------------------------------------------------
 
-		bool Message(const char* text, const char* caption, GLFWwindow* window)
+		bool Message(const char* text, const char* caption, Ptr<Window> window)
 		{
-			const auto result = MessageBox(glfwGetWin32Window(window), text, caption, MB_YESNO);
+			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
+			if (!implWindow)
+			{
+				return false;
+			}
+
+			window->BeginBlock();
+
+			const auto result = MessageBox(glfwGetWin32Window(implWindow), text, caption, MB_YESNO);
+
+			window->EndBlock();
+
 			return result == IDYES;
 		}
 		//--------------------------------------------------------------------------

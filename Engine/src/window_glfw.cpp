@@ -18,6 +18,7 @@ namespace Storyteller
         int windowedHeight = height;
         std::function<void()> refreshCallback = nullptr;
         bool vSync = true;
+        bool blocked = false;
     };
     //--------------------------------------------------------------------------
 
@@ -92,7 +93,9 @@ namespace Storyteller
         const auto monitorH = vidmode->height;
         if (userData->fullscreen)
         {
-            glfwSetWindowMonitor(_window, glfwGetPrimaryMonitor(), 0, 0, monitorW, monitorH, vidmode->refreshRate);
+            int x, y, w, h;
+            glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &x, &y, &w, &h);
+            glfwSetWindowMonitor(_window, nullptr, x, y, w, h, vidmode->refreshRate);
         }
         else
         {
@@ -182,6 +185,26 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void WindowGlfw::BeginBlock()
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->blocked = true;
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void WindowGlfw::EndBlock()
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->blocked = false;
+        }
+    }
+    //--------------------------------------------------------------------------
+
     void WindowGlfw::SaveSettings(Ptr<Settings> settings) const
     {
         int width;
@@ -263,6 +286,11 @@ namespace Storyteller
             const auto userData = GetUserPointer(window);
             if (userData)
             {
+                if (userData->blocked)
+                {
+                    return;
+                }
+
                 if (userData->refreshCallback)
                 {
                     userData->refreshCallback();

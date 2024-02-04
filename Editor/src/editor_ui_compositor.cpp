@@ -101,7 +101,7 @@ namespace Storyteller
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
                 const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to create new document?").c_str(),
-                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window);
 
                 if (sureNew)
                 {
@@ -123,11 +123,11 @@ namespace Storyteller
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
                 const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to open other document?").c_str(),
-                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window);
 
                 if (sureOpen)
                 {
-                    const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+                    const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                     if (!filepath.empty())
                     {
                         _gameDocumentManager->NewDocument(filepath);
@@ -136,7 +136,7 @@ namespace Storyteller
             }
             else
             {
-                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                 if (!filepath.empty())
                 {
                     _gameDocumentManager->NewDocument(filepath);
@@ -159,7 +159,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as...").c_str()))
         {
-            const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+            const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window);
             _gameDocumentManager->Save(filepath);
         }
     }
@@ -172,7 +172,7 @@ namespace Storyteller
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
                 const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to exit?").c_str(),
-                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window);
 
                 if (sureQuit)
                 {
@@ -242,7 +242,7 @@ namespace Storyteller
 
         if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file...").c_str()))
         {
-            const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()));
+            const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window);
             _localizationManager->CreateTranslations(document, filepath);
         }
     }

@@ -30,6 +30,9 @@ namespace Storyteller
         void SetRefreshCallback(std::function<void()> refreshCallback) override;
         void* GetImplPointer() const override;
 
+        void BeginBlock() override;
+        void EndBlock() override;
+
         void SaveSettings(Ptr<Settings> settings) const override;
         void LoadSettings(Ptr<Settings> settings) override;
 
