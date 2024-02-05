@@ -32,7 +32,7 @@ namespace Storyteller
         class StyleColorGuard
         {
         public:
-            StyleColorGuard(std::initializer_list<std::pair<ImGuiCol_, ImVec4>>&& colors);
+            explicit StyleColorGuard(std::initializer_list<std::pair<ImGuiCol_, ImVec4>>&& colors);
             ~StyleColorGuard();
 
         private:
@@ -43,11 +43,22 @@ namespace Storyteller
         class StyleVarGuard
         {
         public:
-            StyleVarGuard(std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>>&& variables);
+            explicit StyleVarGuard(std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>>&& variables);
             ~StyleVarGuard();
 
         private:
             std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>> _variables;
+        };
+        //--------------------------------------------------------------------------
+
+        class IDGuard
+        {
+        public:
+            explicit IDGuard(int id);
+            ~IDGuard();
+
+        private:
+            const int _id;
         };
         //--------------------------------------------------------------------------
     }

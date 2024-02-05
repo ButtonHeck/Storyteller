@@ -24,6 +24,8 @@ namespace Storyteller
             }
         }
         //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+
 
         ItemWidthGuard::ItemWidthGuard(float width)
         {
@@ -36,6 +38,8 @@ namespace Storyteller
             ImGui::PopItemWidth();
         }
         //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+
 
         StyleColorGuard::StyleColorGuard(std::initializer_list<std::pair<ImGuiCol_, ImVec4>>&& colors)
             : _colors(colors)
@@ -52,6 +56,8 @@ namespace Storyteller
             ImGui::PopStyleColor(_colors.size());
         }
         //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+
 
         StyleVarGuard::StyleVarGuard(std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>>&& variables)
             : _variables(variables)
@@ -75,6 +81,21 @@ namespace Storyteller
         StyleVarGuard::~StyleVarGuard()
         {
             ImGui::PopStyleVar(_variables.size());
+        }
+        //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+
+
+        IDGuard::IDGuard(int id)
+            : _id(id)
+        {
+            ImGui::PushID(_id);
+        }
+        //--------------------------------------------------------------------------
+
+        IDGuard::~IDGuard()
+        {
+            ImGui::PopID();
         }
         //--------------------------------------------------------------------------
     }
