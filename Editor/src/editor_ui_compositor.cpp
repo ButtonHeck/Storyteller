@@ -591,7 +591,7 @@ namespace Storyteller
         ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
-        auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
+        const auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
         const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
 
         if (_state.selectedQuestIndex >= allQuestObjects.size())
@@ -599,9 +599,12 @@ namespace Storyteller
             _state.selectedQuestIndex = 0;
         }
 
-        if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target").c_str()))
         {
-            selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
+            UiUtils::DisableGuard guard(allQuestObjects.empty());
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target").c_str()))
+            {
+                selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
+            }
         }
 
         ImGui::SameLine();
