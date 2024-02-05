@@ -289,14 +289,6 @@ namespace Storyteller
                 ImGui::EndCombo();
             }
         }
-
-        {
-            UiUtils::DisableGuard guard(!proxy->GetSelectedObject().get());
-            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove").c_str()))
-            {
-                proxy->RemoveSelected();
-            }
-        }
     }
     //--------------------------------------------------------------------------
 
@@ -335,8 +327,9 @@ namespace Storyteller
         const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
             | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
 
-        if (ImGui::BeginTable(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects").c_str(), 3, objectsTableFlags))
+        if (ImGui::BeginTable(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects").c_str(), 4, objectsTableFlags))
         {
+            ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort);
             ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupColumn(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
@@ -349,8 +342,7 @@ namespace Storyteller
                 {
                     const auto tableSortSpec = sortSpecs->Specs;
                     const auto direction = tableSortSpec->SortDirection;
-                    tableSortSpec->ColumnIndex;
-                    proxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex));
+                    proxy->DoSort(direction == ImGuiSortDirection_Ascending, GameDocumentSortFilterProxyView::Sorter::SortValue(tableSortSpec->ColumnIndex - 1));
                     sortSpecs->SpecsDirty = false;
                 }
             }
@@ -363,6 +355,16 @@ namespace Storyteller
                 const auto object = objects[row];
                 const auto consistent = object->IsConsistent();
                 auto selected = proxy->IsSelected(object->GetUuid());
+
+                {
+                    UiUtils::IDGuard guard(object->GetUuid());
+                    ImGui::TableNextColumn();
+                    if (ImGui::SmallButton(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Delete").c_str()))
+                    {
+                        proxy->RemoveObject(object->GetUuid());
+                        objects = proxy->GetObjects();
+                    }
+                }
 
                 {
                     UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)} });
