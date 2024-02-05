@@ -17,13 +17,18 @@ namespace Storyteller
         ~WindowGlfw();
 
         bool Initialize() override;
+
         void SetTitle(const std::string& title) override;
-        bool ShouldClose() const override;
+
         void SetShouldClose(bool close) override;
+        bool ShouldClose() const override;
+
         void SetScreenMode(Mode mode) override;
         Mode GetScreenMode() const override;
+
         void SetVSync(bool vSync) override;
         bool IsVSync() const override;
+
         void ProcessEvents() override;
         void SwapBuffers() const override;
         void MakeContextCurrent() override;

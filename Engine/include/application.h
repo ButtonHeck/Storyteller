@@ -16,7 +16,7 @@ namespace Storyteller
         virtual std::string GetApplicationName() const = 0;
 
         virtual bool Initialize();
-        virtual void Run();
+        virtual void Run() = 0;
 
     protected:
         Ptr<LocalizationManager> _localizationManager;

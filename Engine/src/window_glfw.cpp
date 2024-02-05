@@ -51,7 +51,6 @@ namespace Storyteller
 
         _window = glfwCreateWindow(defaultWidth, defaultHeight, "", nullptr, nullptr);
 
-        SetVSync(true);
         glfwSetWindowUserPointer(_window, new WindowUserData());
         MakeContextCurrent();
 
@@ -67,15 +66,15 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool WindowGlfw::ShouldClose() const
-    {
-        return glfwWindowShouldClose(_window);
-    }
-    //--------------------------------------------------------------------------
-
     void WindowGlfw::SetShouldClose(bool close)
     {
         glfwSetWindowShouldClose(_window, close);
+    }
+    //--------------------------------------------------------------------------
+
+    bool WindowGlfw::ShouldClose() const
+    {
+        return glfwWindowShouldClose(_window);
     }
     //--------------------------------------------------------------------------
 
@@ -230,6 +229,7 @@ namespace Storyteller
         settings->SaveUInt("WindowedHeight", userData ? userData->windowedHeight : defaultHeight);
         settings->SaveInt("ScreenMode", GetScreenMode());
         settings->SaveBool("VSync", IsVSync());
+        settings->SaveBool("UpdateContinuously", userData ? userData->updateContinuously : true);
         settings->EndSaveGroup();
     }
     //--------------------------------------------------------------------------
@@ -243,12 +243,14 @@ namespace Storyteller
         const auto windowedHeight = settings->GetUInt("WindowedHeight", defaultHeight);
         const auto screenMode = Window::Mode(settings->GetInt("ScreenMode", WindowedMode));
         const auto vSync = settings->GetBool("VSync", true);
+        const auto updateContinuously = settings->GetBool("UpdateContinuously", true);
 
         const auto userData = GetUserPointer(_window);
         if (userData)
         {
             userData->windowedWidth = windowedWidth;
             userData->windowedHeight = windowedHeight;
+            userData->updateContinuously = updateContinuously;
         }
 
         SetVSync(vSync);

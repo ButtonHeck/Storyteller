@@ -20,8 +20,6 @@ namespace Storyteller
             return false;
         }
 
-        _window->SetTitle(GetApplicationName());
-
         return true;
     }
     //--------------------------------------------------------------------------
