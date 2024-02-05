@@ -1,7 +1,7 @@
 #include "editor_ui_compositor.h"
-#include "dialogs.h"
-#include "log.h"
 #include "ui_utils.h"
+#include "Storyteller/log.h"
+#include "Storyteller/dialogs.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>

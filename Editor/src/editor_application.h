@@ -1,9 +1,9 @@
 #pragma once
 
-#include "pointers.h"
-#include "window_application.h"
-#include "window.h"
 #include "editor_ui.h"
+#include "Storyteller/pointers.h"
+#include "Storyteller/window_application.h"
+#include "Storyteller/window.h"
 
 namespace Storyteller
 {

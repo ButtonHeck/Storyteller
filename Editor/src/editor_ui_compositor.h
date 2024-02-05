@@ -1,10 +1,10 @@
 #pragma once
 
-#include "window.h"
-#include "game_document_manager.h"
-#include "localization_manager.h"
-#include "settings.h"
-#include "pointers.h"
+#include "Storyteller/window.h"
+#include "Storyteller/game_document_manager.h"
+#include "Storyteller/localization_manager.h"
+#include "Storyteller/settings.h"
+#include "Storyteller/pointers.h"
 
 namespace Storyteller
 {

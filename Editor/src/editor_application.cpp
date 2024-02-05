@@ -1,6 +1,6 @@
 #include "editor_application.h"
-#include "entry_point.h"
-#include "storyteller.h"
+#include "Storyteller/entry_point.h"
+#include "Storyteller/storyteller.h"
 
 #include <boost/locale.hpp>
 
