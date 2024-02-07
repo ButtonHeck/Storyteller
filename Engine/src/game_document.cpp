@@ -28,8 +28,11 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("GameDocument: set name '{}'", gameName);
 
-        _gameName = gameName;
-        SetDirty(true);
+        if (_gameName != gameName)
+        {
+            _gameName = gameName;
+            SetDirty(true);
+        }
     }
     //--------------------------------------------------------------------------
 
