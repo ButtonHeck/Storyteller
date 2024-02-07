@@ -203,6 +203,26 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool GameDocument::SetObjectName(const UUID& uuid, const std::string& name) const
+    {
+        if (std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> ptr) { return !ptr->GetName().empty() && ptr->GetName() == name; }) != _objects.cend())
+        {
+            STRTLR_CORE_LOG_WARN("GameDocument: object name '{}' already exists", name);
+            return false;
+        }
+
+        const auto object = GetBasicObject(uuid);
+        if (!object)
+        {
+            STRTLR_CORE_LOG_WARN("GameDocument: cannot find object ({})", uuid);
+            return false;
+        }
+
+        object->SetName(name);
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
     bool GameDocument::CheckConsistency() const
     {
         return std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> ptr) { return !ptr->IsConsistent(); }) != _objects.cend()

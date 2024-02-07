@@ -430,7 +430,11 @@ namespace Storyteller
         auto objectName = selectedObject->GetName();
         if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue))
         {
-            selectedObject->SetName(objectName);
+            if (!_gameDocumentManager->GetProxy()->SetObjectName(selectedObject->GetUuid(), objectName))
+            {
+                Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name already exists").c_str(), 
+                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning").c_str(), _window, Dialogs::OkButtons);
+            }
         }
     }
     //--------------------------------------------------------------------------

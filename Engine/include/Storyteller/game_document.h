@@ -36,6 +36,7 @@ namespace Storyteller
         std::vector<Ptr<BasicObject>> GetObjects(ObjectType type, bool noEmptyName) const;
         void SetEntryPoint(const UUID& uuid);
         Ptr<BasicObject> GetEntryPoint() const;
+        bool SetObjectName(const UUID& uuid, const std::string& name) const;
 
         bool CheckConsistency() const;
 

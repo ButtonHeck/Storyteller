@@ -91,7 +91,7 @@ namespace Storyteller
 		}
 		//--------------------------------------------------------------------------
 
-		bool Message(const char* text, const char* caption, Ptr<Window> window)
+		bool Message(const char* text, const char* caption, Ptr<Window> window, MessageButtons buttons)
 		{
 			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
 			if (!implWindow)
@@ -101,11 +101,14 @@ namespace Storyteller
 
 			window->BeginBlock();
 
-			const auto result = MessageBox(glfwGetWin32Window(implWindow), text, caption, MB_YESNO);
+			const auto nativeButtons = (buttons == YesNoButtons)
+				? MB_YESNO
+				: (buttons == OkButtons ? MB_OK : MB_OKCANCEL);
+			const auto result = MessageBox(glfwGetWin32Window(implWindow), text, caption, nativeButtons);
 
 			window->EndBlock();
 
-			return result == IDYES;
+			return result == IDYES || result == IDOK;
 		}
 		//--------------------------------------------------------------------------
 	}

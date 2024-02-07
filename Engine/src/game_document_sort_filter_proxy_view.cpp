@@ -152,6 +152,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool GameDocumentSortFilterProxyView::SetObjectName(const UUID& uuid, const std::string& name) const
+    {
+        return _document->SetObjectName(uuid, name);
+    }
+    //--------------------------------------------------------------------------
+
     void GameDocumentSortFilterProxyView::Select(const UUID& uuid)
     {
         STRTLR_CORE_LOG_INFO("GameDocumentSortFilterProxyView: select ({})", uuid);
