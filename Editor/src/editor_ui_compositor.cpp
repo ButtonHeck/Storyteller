@@ -35,6 +35,20 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool EditorUiCompositor::ReadyToClose() const
+    {
+        if (!_gameDocumentManager->GetDocument()->IsDirty())
+        {
+            return true;
+        }
+
+        const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, quit anyway?").c_str(),
+            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window);
+
+        return sureQuit;
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUiCompositor::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUiCompositor");
@@ -100,7 +114,7 @@ namespace Storyteller
         {
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
-                const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to create new document?").c_str(),
+                const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, are you sure to create new document?").c_str(),
                     _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window);
 
                 if (sureNew)
@@ -122,7 +136,7 @@ namespace Storyteller
         {
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
-                const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to open other document?").c_str(),
+                const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, are you sure to open other document?").c_str(),
                     _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window);
 
                 if (sureOpen)
@@ -169,20 +183,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str()))
         {
-            if (_gameDocumentManager->GetDocument()->IsDirty())
-            {
-                const auto sureQuit = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document is not saved, are you sure to exit?").c_str(),
-                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit").c_str(), _window);
-
-                if (sureQuit)
-                {
-                    _window->SetShouldClose(true);
-                }
-            }
-            else
-            {
-                _window->SetShouldClose(true);
-            }
+            _window->SetShouldClose(ReadyToClose());
         }
     }
     //--------------------------------------------------------------------------

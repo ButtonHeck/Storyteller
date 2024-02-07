@@ -23,6 +23,8 @@ namespace Storyteller
         void EndFrame();
         void Shutdown();
 
+        bool ReadyToClose() const;
+
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);
 

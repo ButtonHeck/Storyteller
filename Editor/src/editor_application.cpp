@@ -57,6 +57,10 @@ namespace Storyteller
             _ui->EndFrame();
         });
 
+        _window->SetCloseCallback([&]() {
+            return _ui->ReadyToClose();
+        });
+
         LoadSettings();
 
         return true;

@@ -127,6 +127,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool EditorUi::ReadyToClose() const
+    {
+        return _compositor->ReadyToClose();
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUi::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUi");

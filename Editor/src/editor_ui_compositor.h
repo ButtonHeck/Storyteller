@@ -15,6 +15,8 @@ namespace Storyteller
 
         void Compose();
 
+        bool ReadyToClose() const;
+
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);
 

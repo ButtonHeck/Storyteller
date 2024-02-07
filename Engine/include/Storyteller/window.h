@@ -38,8 +38,10 @@ namespace Storyteller
         virtual void ProcessEvents() = 0;
         virtual void SwapBuffers() const = 0;
         virtual void MakeContextCurrent() = 0;
-        virtual void SetRefreshCallback(std::function<void()> refreshCallback) = 0;
         virtual void* GetImplPointer() const = 0;
+
+        virtual void SetRefreshCallback(std::function<void()> refreshCallback) = 0;
+        virtual void SetCloseCallback(std::function<bool()> closeCallback) = 0;
 
         virtual void BeginBlock() = 0;
         virtual void EndBlock() = 0;

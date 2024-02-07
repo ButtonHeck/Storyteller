@@ -17,6 +17,7 @@ namespace Storyteller
         int windowedWidth = width;
         int windowedHeight = height;
         std::function<void()> refreshCallback = nullptr;
+        std::function<bool()> closeCallback = nullptr;
         bool vSync = true;
         bool blocked = false;
     };
@@ -178,6 +179,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void* WindowGlfw::GetImplPointer() const
+    {
+        return _window;
+    }
+    //--------------------------------------------------------------------------
+
     void WindowGlfw::SetRefreshCallback(std::function<void()> refreshCallback)
     {
         const auto userData = GetUserPointer(_window);
@@ -188,9 +195,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void* WindowGlfw::GetImplPointer() const
+    void WindowGlfw::SetCloseCallback(std::function<bool()> closeCallback)
     {
-        return _window;
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->closeCallback = closeCallback;
+        }
     }
     //--------------------------------------------------------------------------
 
@@ -310,6 +321,18 @@ namespace Storyteller
             }
 
             glfwSwapBuffers(window);
+            }
+        );
+
+        glfwSetWindowCloseCallback(_window, [](GLFWwindow* window) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->closeCallback && !userData->closeCallback())
+                {
+                    glfwSetWindowShouldClose(window, false);
+                }
+            }
             }
         );
     }

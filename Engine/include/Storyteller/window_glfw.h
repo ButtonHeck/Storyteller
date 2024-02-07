@@ -32,8 +32,10 @@ namespace Storyteller
         void ProcessEvents() override;
         void SwapBuffers() const override;
         void MakeContextCurrent() override;
-        void SetRefreshCallback(std::function<void()> refreshCallback) override;
         void* GetImplPointer() const override;
+
+        void SetRefreshCallback(std::function<void()> refreshCallback) override;
+        void SetCloseCallback(std::function<bool()> closeCallback) override;
 
         void BeginBlock() override;
         void EndBlock() override;
