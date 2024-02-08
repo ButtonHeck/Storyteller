@@ -131,7 +131,7 @@ namespace Storyteller
         {
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
-                const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, are you sure to create new document?").c_str(),
+                const auto sureNew = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, create new document anyway?").c_str(),
                     _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New").c_str(), _window);
 
                 if (sureNew)
@@ -153,7 +153,7 @@ namespace Storyteller
         {
             if (_gameDocumentManager->GetDocument()->IsDirty())
             {
-                const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, are you sure to open other document?").c_str(),
+                const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, open other document anyway?").c_str(),
                     _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window);
 
                 if (sureOpen)
@@ -193,7 +193,7 @@ namespace Storyteller
                 {
                     if (_gameDocumentManager->GetDocument()->IsDirty())
                     {
-                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, are you sure to open other document?").c_str(),
+                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, open other document anyway?").c_str(),
                             _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window);
 
                         if (sureOpen)
@@ -201,7 +201,7 @@ namespace Storyteller
                             const auto success = _gameDocumentManager->OpenDocument(recent);
                             if (!success)
                             {
-                                Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Chosen file is not exists or is malformed").c_str(),
+                                Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged").c_str(),
                                     _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning").c_str(), _window, Dialogs::OkButtons);
                                 recentDirty = true;
                             }
@@ -212,7 +212,7 @@ namespace Storyteller
                         const auto success = _gameDocumentManager->OpenDocument(recent);
                         if (!success)
                         {
-                            Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Chosen file is not exists or is malformed").c_str(),
+                            Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged").c_str(),
                                 _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning").c_str(), _window, Dialogs::OkButtons);
                             recentDirty = true;
                         }
@@ -516,7 +516,7 @@ namespace Storyteller
         {
             if (oldObjectName != objectName && !_gameDocumentManager->GetProxy()->SetObjectName(selectedObject->GetUuid(), objectName))
             {
-                Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name already exists").c_str(), 
+                Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name already exists").c_str(), 
                     _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning").c_str(), _window, Dialogs::OkButtons);
             }
         }
