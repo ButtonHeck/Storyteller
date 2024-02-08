@@ -136,12 +136,12 @@ namespace Storyteller
 
                 if (sureNew)
                 {
-                    _gameDocumentManager->NewDocument(std::string());
+                    _gameDocumentManager->NewDocument();
                 }
             }
             else
             {
-                _gameDocumentManager->NewDocument(std::string());
+                _gameDocumentManager->NewDocument();
             }
         }
     }
@@ -163,7 +163,7 @@ namespace Storyteller
                     {
                         _recentList.remove(filepath);
                         _recentList.push_front(filepath);
-                        _gameDocumentManager->NewDocument(filepath);
+                        _gameDocumentManager->OpenDocument(filepath);
                     }
                 }
             }
@@ -174,7 +174,7 @@ namespace Storyteller
                 {
                     _recentList.remove(filepath);
                     _recentList.push_front(filepath);
-                    _gameDocumentManager->NewDocument(filepath);
+                    _gameDocumentManager->OpenDocument(filepath);
                 }
             }
         }
@@ -199,13 +199,13 @@ namespace Storyteller
                         if (sureOpen)
                         {
                             recentToUpdate = recent;
-                            _gameDocumentManager->NewDocument(recent); //todo: missing/malformed json fix
+                            _gameDocumentManager->OpenDocument(recent); //todo: missing/malformed json fix
                         }
                     }
                     else
                     {
                         recentToUpdate = recent;
-                        _gameDocumentManager->NewDocument(recent); //todo: missing/malformed json fix
+                        _gameDocumentManager->OpenDocument(recent); //todo: missing/malformed json fix
                     }
                 }
             }

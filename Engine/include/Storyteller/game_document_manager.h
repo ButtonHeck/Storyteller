@@ -11,8 +11,9 @@ namespace Storyteller
     public:
         GameDocumentManager();
 
-        void NewDocument(const std::string& pathString = "");
-        void NewDocument(const std::filesystem::path& path = "");
+        void NewDocument();
+        void OpenDocument(const std::string& pathString);
+        void OpenDocument(const std::filesystem::path& path);
 
         bool Load(const std::filesystem::path& path);
         bool Save();
