@@ -70,7 +70,11 @@ namespace Storyteller
         const auto recentSize = settings->StartLoadArray("RecentDocuments");
         for (auto i = 0; i < recentSize; i++)
         {
-            _recentList.insert(settings->GetString(i));
+            const auto recentDocument = settings->GetString(i);
+            if (!recentDocument.empty())
+            {
+                _recentList.push_back(recentDocument);
+            }
         }
         settings->EndLoadArray();
         settings->EndLoadGroup();
@@ -157,7 +161,8 @@ namespace Storyteller
                     const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                     if (!filepath.empty())
                     {
-                        _recentList.insert(filepath);
+                        _recentList.remove(filepath);
+                        _recentList.push_front(filepath);
                         _gameDocumentManager->NewDocument(filepath);
                     }
                 }
@@ -167,7 +172,8 @@ namespace Storyteller
                 const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                 if (!filepath.empty())
                 {
-                    _recentList.insert(filepath);
+                    _recentList.remove(filepath);
+                    _recentList.push_front(filepath);
                     _gameDocumentManager->NewDocument(filepath);
                 }
             }
@@ -177,8 +183,10 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemOpenRecent()
     {
+        UiUtils::DisableGuard guard(_recentList.empty());
         if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent").c_str()))
         {
+            auto recentToUpdate = std::string();
             for (const auto& recent : _recentList)
             {
                 if (ImGui::MenuItem(recent.c_str()))
@@ -190,16 +198,32 @@ namespace Storyteller
 
                         if (sureOpen)
                         {
-                            _gameDocumentManager->NewDocument(recent);
+                            recentToUpdate = recent;
+                            _gameDocumentManager->NewDocument(recent); //todo: missing/malformed json fix
                         }
                     }
                     else
                     {
-                        _gameDocumentManager->NewDocument(recent);
+                        recentToUpdate = recent;
+                        _gameDocumentManager->NewDocument(recent); //todo: missing/malformed json fix
                     }
                 }
             }
-            //todo: clear recent menu item (only if non-empty)
+
+            if (!recentToUpdate.empty())
+            {
+                _recentList.remove(recentToUpdate);
+                _recentList.push_front(recentToUpdate);
+            }
+
+            if (!_recentList.empty())
+            {
+                ImGui::Separator();
+                if (ImGui::MenuItem(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear").c_str()))
+                {
+                    _recentList.clear();
+                }
+            }
 
             ImGui::EndMenu();
         }
