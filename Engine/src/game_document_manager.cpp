@@ -16,19 +16,27 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void GameDocumentManager::OpenDocument(const std::string& pathString)
+    bool GameDocumentManager::OpenDocument(const std::string& pathString)
     {
-        OpenDocument(std::filesystem::path(pathString));
+        return OpenDocument(std::filesystem::path(pathString));
     }
     //--------------------------------------------------------------------------
 
-    void GameDocumentManager::OpenDocument(const std::filesystem::path& path)
+    bool GameDocumentManager::OpenDocument(const std::filesystem::path& path)
     {
-        _document.reset(new GameDocument(path));
+        auto newDocument = CreatePtr<GameDocument>(path);
+        GameDocumentSerializer serializer(newDocument);
+        const auto success = serializer.Load(path);
 
-        Load(path);
+        if (success)
+        {
+            _document.swap(newDocument);
+            _proxy.reset();
 
-        _proxy.reset();
+            return true;
+        }
+
+        return false;
     }
     //--------------------------------------------------------------------------
 

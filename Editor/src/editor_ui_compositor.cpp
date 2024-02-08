@@ -186,8 +186,8 @@ namespace Storyteller
         UiUtils::DisableGuard guard(_recentList.empty());
         if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent").c_str()))
         {
-            auto recentToUpdate = std::string();
-            for (const auto& recent : _recentList)
+            auto recentDirty = false;
+            for (const auto recent : _recentList)
             {
                 if (ImGui::MenuItem(recent.c_str()))
                 {
@@ -198,22 +198,34 @@ namespace Storyteller
 
                         if (sureOpen)
                         {
-                            recentToUpdate = recent;
-                            _gameDocumentManager->OpenDocument(recent); //todo: missing/malformed json fix
+                            const auto success = _gameDocumentManager->OpenDocument(recent);
+                            if (!success)
+                            {
+                                Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Chosen file is not exists or is malformed").c_str(),
+                                    _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning").c_str(), _window, Dialogs::OkButtons);
+                                recentDirty = true;
+                            }
                         }
                     }
                     else
                     {
-                        recentToUpdate = recent;
-                        _gameDocumentManager->OpenDocument(recent); //todo: missing/malformed json fix
+                        const auto success = _gameDocumentManager->OpenDocument(recent);
+                        if (!success)
+                        {
+                            Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Chosen file is not exists or is malformed").c_str(),
+                                _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning").c_str(), _window, Dialogs::OkButtons);
+                            recentDirty = true;
+                        }
                     }
-                }
-            }
 
-            if (!recentToUpdate.empty())
-            {
-                _recentList.remove(recentToUpdate);
-                _recentList.push_front(recentToUpdate);
+                    _recentList.remove(recent);
+                    if (!recentDirty)
+                    {
+                        _recentList.push_front(recent);
+                    }
+
+                    break;
+                }
             }
 
             if (!_recentList.empty())
