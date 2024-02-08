@@ -38,6 +38,7 @@ namespace Storyteller
 
     private:
         std::string GetCurrentScopeString() const;
+        bool ValidToGetFromArray(int index) const;
 
     private:
         const std::string _name;
