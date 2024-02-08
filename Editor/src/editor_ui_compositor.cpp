@@ -53,6 +53,12 @@ namespace Storyteller
     {
         settings->StartSaveGroup("EditorUiCompositor");
         settings->SaveBool("Log", _state.logPanel);
+        settings->StartSaveArray("RecentDocuments");
+        for (const auto& recent : _recentList)
+        {
+            settings->SaveString(recent);
+        }
+        settings->EndSaveArray();
         settings->EndSaveGroup();
     }
     //--------------------------------------------------------------------------
@@ -61,6 +67,12 @@ namespace Storyteller
     {
         settings->StartLoadGroup("EditorUiCompositor");
         _state.logPanel = settings->GetBool("Log", true);
+        const auto recentSize = settings->StartLoadArray("RecentDocuments");
+        for (auto i = 0; i < recentSize; i++)
+        {
+            _recentList.insert(settings->GetString(i));
+        }
+        settings->EndLoadArray();
         settings->EndLoadGroup();
     }
     //--------------------------------------------------------------------------
@@ -83,6 +95,7 @@ namespace Storyteller
         {
             ComposeMenuItemNew();
             ComposeMenuItemOpen();
+            ComposeMenuItemOpenRecent();
             ComposeMenuItemSave();
             ComposeMenuItemSaveAs();
 
@@ -144,6 +157,7 @@ namespace Storyteller
                     const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                     if (!filepath.empty())
                     {
+                        _recentList.insert(filepath);
                         _gameDocumentManager->NewDocument(filepath);
                     }
                 }
@@ -153,9 +167,41 @@ namespace Storyteller
                 const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                 if (!filepath.empty())
                 {
+                    _recentList.insert(filepath);
                     _gameDocumentManager->NewDocument(filepath);
                 }
             }
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeMenuItemOpenRecent()
+    {
+        if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent").c_str()))
+        {
+            for (const auto& recent : _recentList)
+            {
+                if (ImGui::MenuItem(recent.c_str()))
+                {
+                    if (_gameDocumentManager->GetDocument()->IsDirty())
+                    {
+                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, are you sure to open other document?").c_str(),
+                            _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open").c_str(), _window);
+
+                        if (sureOpen)
+                        {
+                            _gameDocumentManager->NewDocument(recent);
+                        }
+                    }
+                    else
+                    {
+                        _gameDocumentManager->NewDocument(recent);
+                    }
+                }
+            }
+            //todo: clear recent menu item (only if non-empty)
+
+            ImGui::EndMenu();
         }
     }
     //--------------------------------------------------------------------------

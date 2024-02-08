@@ -71,6 +71,30 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool SettingsJsonWriter::StartSaveArray(const std::string& arrayName)
+    {
+        if (_writer.Key(arrayName.c_str()))
+        {
+            return _writer.StartArray();
+        }
+
+        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save array '{}'", arrayName);
+        return false;
+    }
+    //--------------------------------------------------------------------------
+
+    bool SettingsJsonWriter::EndSaveArray()
+    {
+        return _writer.EndArray();
+    }
+    //--------------------------------------------------------------------------
+
+    bool SettingsJsonWriter::SaveBool(bool value)
+    {
+        return _writer.Bool(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool SettingsJsonWriter::SaveBool(const std::string& name, bool value)
     {
         if (_writer.Key(name.c_str()))
@@ -80,6 +104,12 @@ namespace Storyteller
 
         STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
         return false;
+    }
+    //--------------------------------------------------------------------------
+
+    bool SettingsJsonWriter::SaveInt(int value)
+    {
+        return _writer.Int(value);
     }
     //--------------------------------------------------------------------------
 
@@ -95,6 +125,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool SettingsJsonWriter::SaveUInt(unsigned int value)
+    {
+        return _writer.Uint(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool SettingsJsonWriter::SaveUInt(const std::string& name, unsigned int value)
     {
         if (_writer.Key(name.c_str()))
@@ -104,6 +140,12 @@ namespace Storyteller
 
         STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
         return false;
+    }
+    //--------------------------------------------------------------------------
+
+    bool SettingsJsonWriter::SaveInt64(int64_t value)
+    {
+        return _writer.Int64(value);
     }
     //--------------------------------------------------------------------------
 
@@ -119,6 +161,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool SettingsJsonWriter::SaveUInt64(uint64_t value)
+    {
+        return _writer.Uint64(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool SettingsJsonWriter::SaveUInt64(const std::string& name, uint64_t value)
     {
         if (_writer.Key(name.c_str()))
@@ -131,6 +179,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool SettingsJsonWriter::SaveDouble(double value)
+    {
+        return _writer.Double(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool SettingsJsonWriter::SaveDouble(const std::string& name, double value)
     {
         if (_writer.Key(name.c_str()))
@@ -140,6 +194,12 @@ namespace Storyteller
 
         STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
         return false;
+    }
+    //--------------------------------------------------------------------------
+
+    bool SettingsJsonWriter::SaveString(const std::string& value)
+    {
+        return _writer.String(value.c_str());
     }
     //--------------------------------------------------------------------------
 

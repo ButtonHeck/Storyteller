@@ -6,6 +6,8 @@
 #include "Storyteller/settings.h"
 #include "Storyteller/pointers.h"
 
+#include <set>
+
 namespace Storyteller
 {
     class EditorUiCompositor
@@ -39,6 +41,7 @@ namespace Storyteller
         void ComposeMenuView();
         void ComposeMenuItemNew();
         void ComposeMenuItemOpen();
+        void ComposeMenuItemOpenRecent();
         void ComposeMenuItemSave();
         void ComposeMenuItemSaveAs();
         void ComposeMenuItemQuit();
@@ -66,6 +69,7 @@ namespace Storyteller
         Ptr<LocalizationManager> _localizationManager;
         Ptr<GameDocumentManager> _gameDocumentManager;
         UiComponentsState _state;
+        std::set<std::string> _recentList; //todo: storage based on order of insertion (vector?)
     };
     //--------------------------------------------------------------------------
 }

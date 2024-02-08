@@ -30,11 +30,35 @@ namespace Storyteller
     {
         return _impl->EndSaveGroup();
     }
-    //--------------------------------------------------------------------------   
+    //--------------------------------------------------------------------------
+
+    bool Settings::StartSaveArray(const std::string& arrayName)
+    {
+        return _impl->StartSaveArray(arrayName);
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::EndSaveArray()
+    {
+        return _impl->EndSaveArray();
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::SaveBool(bool value)
+    {
+        return _impl->SaveBool(value);
+    }
+    //--------------------------------------------------------------------------
 
     bool Settings::SaveBool(const std::string& name, bool value)
     {
         return _impl->SaveBool(name, value);
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::SaveInt(int value)
+    {
+        return _impl->SaveInt(value);
     }
     //--------------------------------------------------------------------------
 
@@ -44,9 +68,21 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool Settings::SaveUInt(unsigned int value)
+    {
+        return _impl->SaveUInt(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool Settings::SaveUInt(const std::string& name, unsigned int value)
     {
         return _impl->SaveUInt(name, value);
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::SaveInt64(int64_t value)
+    {
+        return _impl->SaveInt64(value);
     }
     //--------------------------------------------------------------------------
 
@@ -56,15 +92,33 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool Settings::SaveUInt64(uint64_t value)
+    {
+        return _impl->SaveUInt64(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool Settings::SaveUInt64(const std::string& name, uint64_t value)
     {
         return _impl->SaveUInt64(name, value);
     }
     //--------------------------------------------------------------------------
 
+    bool Settings::SaveDouble(double value)
+    {
+        return _impl->SaveDouble(value);
+    }
+    //--------------------------------------------------------------------------
+
     bool Settings::SaveDouble(const std::string& name, double value)
     {
         return _impl->SaveDouble(name, value);
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::SaveString(const std::string& value)
+    {
+        return _impl->SaveString(value);
     }
     //--------------------------------------------------------------------------
 
@@ -98,9 +152,33 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    int Settings::StartLoadArray(const std::string& arrayName)
+    {
+        return _impl->StartLoadArray(arrayName);
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::EndLoadArray()
+    {
+        return _impl->EndLoadArray();
+    }
+    //--------------------------------------------------------------------------
+
+    bool Settings::GetBool(int index, bool defaultValue)
+    {
+        return _impl->GetBool(index, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
     bool Settings::GetBool(const std::string& name, bool defaultValue)
     {
         return _impl->GetBool(name, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
+    int Settings::GetInt(int index, int defaultValue)
+    {
+        return _impl->GetInt(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
@@ -110,9 +188,21 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    unsigned int Settings::GetUInt(int index, unsigned int defaultValue)
+    {
+        return _impl->GetUInt(index, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
     unsigned int Settings::GetUInt(const std::string& name, unsigned int defaultValue)
     {
         return _impl->GetUInt(name, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
+    int64_t Settings::GetInt64(int index, int64_t defaultValue)
+    {
+        return _impl->GetInt64(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
@@ -122,15 +212,33 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    uint64_t Settings::GetUInt64(int index, uint64_t defaultValue)
+    {
+        return _impl->GetUInt64(index, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
     uint64_t Settings::GetUInt64(const std::string& name, uint64_t defaultValue)
     {
         return _impl->GetUInt64(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
+    double Settings::GetDouble(int index, double defaultValue)
+    {
+        return _impl->GetDouble(index, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
     double Settings::GetDouble(const std::string& name, double defaultValue)
     {
         return _impl->GetDouble(name, defaultValue);
+    }
+    //--------------------------------------------------------------------------
+
+    std::string Settings::GetString(int index, const std::string& defaultValue)
+    {
+        return _impl->GetString(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
