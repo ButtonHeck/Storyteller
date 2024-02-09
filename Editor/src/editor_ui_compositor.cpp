@@ -295,8 +295,11 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanel()
     {
-        const auto mainFlags = _gameDocumentManager->GetDocument()->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
-        if (ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game").c_str(), nullptr, mainFlags))
+        const auto document = _gameDocumentManager->GetDocument();
+        const auto documentPath = document->GetPathString();
+        const auto windowTitle = std::string(documentPath.empty() ? _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document") : documentPath).append("###").append("Game");
+        const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
+        if (ImGui::Begin(windowTitle.c_str(), nullptr, mainFlags))
         {
             ComposeGameDocumentPanelGame();
             ComposeGameDocumentPanelObjectsManagement();
