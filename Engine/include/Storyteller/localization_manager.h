@@ -13,7 +13,7 @@ namespace Storyteller
     class LocalizationManager
     {
     public:
-        explicit LocalizationManager(const std::string& defaultPath = "");
+        explicit LocalizationManager(const std::string& defaultPath = ".");
 
         void Build(const std::string& localeString);
         void AddMessagesPath(const std::string& path);
