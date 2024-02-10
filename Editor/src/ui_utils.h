@@ -61,5 +61,12 @@ namespace Storyteller
             const int _id;
         };
         //--------------------------------------------------------------------------
+
+        class GroupGuard
+        {
+        public:
+            GroupGuard();
+            ~GroupGuard();
+        };
     }
 }

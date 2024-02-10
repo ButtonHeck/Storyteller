@@ -4,6 +4,7 @@
 #include "Storyteller/dialogs.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -53,6 +54,7 @@ namespace Storyteller
     {
         settings->StartSaveGroup("EditorUiCompositor");
         settings->SaveBool("Log", _state.logPanel);
+        settings->SaveBool("LogAutoscroll", _state.logAutoscroll);
         settings->StartSaveArray("RecentDocuments");
         for (const auto& recent : _recentList)
         {
@@ -67,6 +69,7 @@ namespace Storyteller
     {
         settings->StartLoadGroup("EditorUiCompositor");
         _state.logPanel = settings->GetBool("Log", true);
+        _state.logAutoscroll = settings->GetBool("LogAutoscroll", false);
         const auto recentSize = settings->StartLoadArray("RecentDocuments");
         for (auto i = 0; i < recentSize; i++)
         {
@@ -736,12 +739,38 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeLogPanel()
     {
-        UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0)} });
-        UiUtils::StyleVarGuard varGuard({ {ImGuiStyleVar_FrameBorderSize, 0.0f}, {ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 1.0f)} });
-
         ImGui::Begin(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log").c_str(), nullptr);
-        auto logDataStr = std::string(Log::StringLogOutput());
-        ImGui::InputTextMultiline("##Log", &logDataStr, ImVec2(-FLT_MIN, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
+
+        {
+            UiUtils::GroupGuard groupGuard;
+            UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_Border, _state.logAutoscroll ? ImVec4(1, 1, 1, 1) : ImGui::GetStyleColorVec4(ImGuiCol_Border)}});
+            if (ImGui::Button(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Autoscroll").c_str()))
+            {
+                _state.logAutoscroll = !_state.logAutoscroll;
+            }
+        }
+
+        ImGui::SameLine();
+
+        {
+            UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0)} });
+            auto logDataStr = std::string(Log::StringLogOutput());
+            const char* logViewName = "##LogView";
+            ImGui::InputTextMultiline(logViewName, &logDataStr, ImVec2(ImGui::GetContentRegionAvail().x, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
+
+            if (_state.logAutoscroll)
+            {
+                const auto& imguiContext = *GImGui;
+                const char* windowName = nullptr;
+                ImFormatStringToTempBuffer(&windowName, nullptr, "%s/%s_%08X", imguiContext.CurrentWindow->Name, logViewName, ImGui::GetID(logViewName));
+                auto* logWindow = ImGui::FindWindowByName(windowName);
+                if (logWindow)
+                {
+                    ImGui::SetScrollY(logWindow, logWindow->ScrollMax.y);
+                }
+            }
+        }
+
         ImGui::End();
     }
     //--------------------------------------------------------------------------

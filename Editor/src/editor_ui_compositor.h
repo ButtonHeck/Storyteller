@@ -33,6 +33,7 @@ namespace Storyteller
             int selectedActionIndex = 0;
             int selectedQuestIndex = 0;
             bool logPanel = true;
+            bool logAutoscroll = false;
         };
 
     private:
