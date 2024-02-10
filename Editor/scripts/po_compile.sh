@@ -1,2 +1,2 @@
 cd ../locale/ru_RU/LC_MESSAGES
-msgfmt -o Storyteller.mo Storyteller.po
+msgfmt -o StorytellerEditor.mo StorytellerEditor.po
