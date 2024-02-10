@@ -1,14 +1,12 @@
 #include "editor_ui.h"
 
-#include <GLFW/glfw3.h>
 #include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
 
 namespace Storyteller
 {
     EditorUi::EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
         : _window(window)
+        , _uiImpl(new EditorUiImplOpenglGLFW(_window))
         , _compositor(new EditorUiCompositor(_window, localizationManager))
     {}
     //--------------------------------------------------------------------------
@@ -20,9 +18,7 @@ namespace Storyteller
         auto& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
 
-        //TODO: extract to separate class (eg EditorUiGlfwOpengl)
-        ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()), true);
-        ImGui_ImplOpenGL3_Init("#version 450");
+        _uiImpl->Initialize();
 
         AddDefaultFont();
 
@@ -32,10 +28,7 @@ namespace Storyteller
 
     void EditorUi::NewFrame()
     {
-        //TODO: extract to impl ui
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        _uiImpl->NewFrame();
     }
     //--------------------------------------------------------------------------
 
@@ -97,18 +90,7 @@ namespace Storyteller
     void EditorUi::Render()
     {
         ImGui::Render();
-
-        //TODO: extract to impl class
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        const auto& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            const auto backupContext = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backupContext);
-        }
+        _uiImpl->Render();
     }
     //--------------------------------------------------------------------------
 
@@ -120,9 +102,7 @@ namespace Storyteller
 
     void EditorUi::Shutdown()
     {
-        //TODO: extract to impl class
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
+        _uiImpl->Shutdown();
         ImGui::DestroyContext();
     }
     //--------------------------------------------------------------------------

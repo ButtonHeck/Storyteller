@@ -11,6 +11,8 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_impl_opengl_glfw.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_impl_opengl_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_compositor.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_compositor.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/ui_utils.h"
