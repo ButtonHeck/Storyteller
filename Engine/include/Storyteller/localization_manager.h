@@ -13,12 +13,12 @@ namespace Storyteller
     class LocalizationManager
     {
     public:
-        explicit LocalizationManager(const std::string& defaultPath = ".");
+        explicit LocalizationManager(const std::string& defaultPath = "locale");
 
-        void Build(const std::string& localeString);
+        void SetLocale(const std::string& localeString);
         void AddMessagesPath(const std::string& path);
         void AddMessagesDomain(const std::string& domain);
-        std::string Translate(const std::string& domain, const std::string& message, bool noStore = false);
+        std::string Translate(const std::string& domain, const std::string& message, bool noCache = false);
         bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const;
 
     private:
@@ -29,7 +29,7 @@ namespace Storyteller
         typedef std::string DomainName;
         typedef std::map<SourceMessage, std::string> MessagesTranslations;
         typedef std::map<DomainName, MessagesTranslations> DomainMessages;
-        DomainMessages _messages;
+        DomainMessages _messagesCache;
     };
     //--------------------------------------------------------------------------
 }

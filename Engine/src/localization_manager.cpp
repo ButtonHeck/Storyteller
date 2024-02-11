@@ -20,9 +20,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void LocalizationManager::Build(const std::string& localeString)
+    void LocalizationManager::SetLocale(const std::string& localeString)
     {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: building locale '{}'", localeString);
+        STRTLR_CORE_LOG_INFO("LocalizationManager: set locale '{}'", localeString);
 
         _localeString = localeString;
         std::locale::global(_localeGenerator(_localeString));
@@ -46,11 +46,11 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message, bool noStore)
+    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message, bool noCache)
     {
-        if (_messages.contains(domain))
+        if (_messagesCache.contains(domain))
         {
-            const auto& domainTranslations = _messages[domain];
+            const auto& domainTranslations = _messagesCache[domain];
             if (domainTranslations.contains(message))
             {
                 return domainTranslations.at(message);
@@ -58,12 +58,12 @@ namespace Storyteller
         }
 
         const auto translation = boost::locale::translate(message).str(domain);
-        if (translation == message && noStore)
+        if (translation == message && noCache)
         {
             return "No translation";
         }
 
-        _messages[domain][message] = translation;
+        _messagesCache[domain][message] = translation;
 
         return translation;
     }

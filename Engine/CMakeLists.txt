@@ -79,10 +79,6 @@ else()
     message(ERROR "No window backend is chosen")
 endif()
 
-target_compile_definitions(${PROJECT_NAME}
-    PUBLIC STRTLR_TR_DOMAIN_ENGINE="Storyteller"
-)
-
 if(Boost_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})

@@ -2,8 +2,6 @@
 #include "Storyteller/entry_point.h"
 #include "Storyteller/storyteller.h"
 
-#include <boost/locale.hpp>
-
 namespace Storyteller
 {
     Application* CreateApplication()
@@ -37,8 +35,8 @@ namespace Storyteller
             return false;
         }
 
-        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
-        _localizationManager->Build("ru_RU.UTF-8");
+        _localizationManager->AddMessagesDomain("StorytellerEditor");
+        _localizationManager->SetLocale("ru_RU.UTF-8");
 
         _ui.reset(new EditorUi(_window, _localizationManager));
         if (!_ui || !_ui->Initialize())
@@ -46,7 +44,7 @@ namespace Storyteller
             return false;
         }
 
-        _window->SetTitle(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, GetApplicationName()));
+        _window->SetTitle(_localizationManager->Translate("StorytellerEditor", "Storyteller editor"));
         _window->SetRefreshCallback([&]() {
             _ui->NewFrame();
             _ui->Stylize();
