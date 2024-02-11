@@ -422,7 +422,7 @@ namespace Storyteller
 
         if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects").c_str(), 4, objectsTableFlags))
         {
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Action").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
@@ -456,6 +456,21 @@ namespace Storyteller
                     {
                         proxy->RemoveObject(object->GetUuid());
                         objects = proxy->GetObjects();
+                    }
+
+                    if (object->GetObjectType() == ObjectType::ActionObjectType)
+                    {
+                        const auto actionObject = dynamic_cast<ActionObject*>(object.get());
+                        const auto actionHasValidTarget = actionObject && actionObject->GetTargetUuid() != UUID::InvalidUuid && proxy->GetBasicObject(actionObject->GetTargetUuid());
+                        UiUtils::DisableGuard disableGuard(!actionHasValidTarget);
+                        ImGui::SameLine();
+                        if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Find target").c_str()))
+                        {
+                            if (actionHasValidTarget)
+                            {
+                                proxy->Select(actionObject->GetTargetUuid());
+                            }
+                        }
                     }
                 }
 
@@ -627,18 +642,13 @@ namespace Storyteller
             _state.selectedChildActionIndex = 0;
         }
 
-        {
-            UiUtils::DisableGuard guard(questObjectActions.empty());
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Remove").c_str()))
-            {
-                selectedQuestObject->RemoveAction(questObjectActions.at(_state.selectedChildActionIndex));
-            }
-        }
+        ImGui::SeparatorText(_localizationManager->Translate("Storyteller", "Actions").c_str());
 
         const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable 
             | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_ScrollY;
-        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 3, actionsTableFlags))
+        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 4, actionsTableFlags))
         {
+            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
@@ -662,6 +672,25 @@ namespace Storyteller
                 auto selected = _state.selectedChildActionIndex == row;
 
                 ImGui::TableNextRow();
+
+                {
+                    UiUtils::IDGuard guard(actionObject->GetUuid());
+                    ImGui::TableNextColumn();
+                    if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Delete").c_str()))
+                    {
+                        selectedQuestObject->RemoveAction(actionObject->GetUuid());
+                        continue;
+                    }
+
+                    ImGui::SameLine();
+                    if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Find action").c_str()))
+                    {
+                        proxy->Select(actionObject->GetUuid());
+                        break;
+                    }
+                }
+
+                UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, actionObject->IsConsistent() ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                 ImGui::TableNextColumn();
                 ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
