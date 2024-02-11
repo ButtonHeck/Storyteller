@@ -19,7 +19,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("SettingsWriter: saving to '{}'", _filename);
 
-        if (!Filesystem::CheckPathAndTryCreate(_filename))
+        if (!Filesystem::CreatePathTree(_filename))
         {
             STRTLR_CORE_LOG_WARN("SettingsWriter: insufficient path");
             return false;

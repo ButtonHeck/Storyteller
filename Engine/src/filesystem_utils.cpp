@@ -2,25 +2,45 @@
 
 namespace Storyteller
 {
-    bool Filesystem::CheckPathAndTryCreate(const std::filesystem::path& path)
+    namespace Filesystem
     {
-        if (path.empty() || !path.has_filename() || !path.has_extension())
+        bool PathIsValid(const std::filesystem::path& path)
         {
-            return false;
+            return !path.empty() && path.has_filename() && path.has_extension();
         }
+        //--------------------------------------------------------------------------
 
-        auto tempPath = path;
-        while (!std::filesystem::exists(tempPath.parent_path()))
+        bool CreatePathTree(const std::filesystem::path& path)
         {
-            if (!std::filesystem::create_directory(tempPath.parent_path()))
+            if (!PathIsValid(path))
             {
                 return false;
             }
 
-            tempPath = tempPath.parent_path();
-        }
+            auto tempPath = path;
+            while (!std::filesystem::exists(tempPath.parent_path()))
+            {
+                if (!std::filesystem::create_directory(tempPath.parent_path()))
+                {
+                    return false;
+                }
 
-        return true;
+                tempPath = tempPath.parent_path();
+            }
+
+            return true;
+        }
+        //--------------------------------------------------------------------------
+
+        std::string PathUnicode(const std::filesystem::path& path)
+        {
+            if (!PathIsValid(path))
+            {
+                return std::string();
+            }
+
+            return path.generic_u8string();
+        }
+        //--------------------------------------------------------------------------
     }
-    //--------------------------------------------------------------------------
 }

@@ -2,6 +2,7 @@
 #include "ui_utils.h"
 #include "Storyteller/log.h"
 #include "Storyteller/dialogs.h"
+#include "Storyteller/filesystem_utils.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -192,10 +193,8 @@ namespace Storyteller
             auto recentDirty = false;
             for (const auto recentCopy : _recentList)
             {
-                const auto recentPath = std::filesystem::path(recentCopy);
-                const auto itemTitle = recentPath.empty() ? recentCopy : recentPath.generic_u8string();
-
-                if (ImGui::MenuItem(itemTitle.c_str()))
+                const auto recentUnicode = Filesystem::PathUnicode(recentCopy);
+                if (ImGui::MenuItem(recentUnicode.empty() ? recentCopy.c_str() : recentUnicode.c_str()))
                 {
                     if (_gameDocumentManager->GetDocument()->IsDirty())
                     {
@@ -303,8 +302,8 @@ namespace Storyteller
     {
         const auto document = _gameDocumentManager->GetDocument();
         const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
-        const auto documentPath = document->GetPath();
-        auto windowTitle = documentPath.empty() ? _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document") : documentPath.generic_u8string();
+        const auto pathUnicode = Filesystem::PathUnicode(document->GetPath());
+        auto windowTitle = pathUnicode.empty() ? _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document") : pathUnicode;
         windowTitle.append("###").append("GamePanel");
 
         if (ImGui::Begin(windowTitle.c_str(), nullptr, mainFlags))

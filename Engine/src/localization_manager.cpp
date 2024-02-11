@@ -73,7 +73,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), path.generic_string());
 
-        if (!Filesystem::CheckPathAndTryCreate(path))
+        if (!Filesystem::CreatePathTree(path))
         {
             return false;
         }

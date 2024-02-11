@@ -6,7 +6,13 @@ namespace Storyteller
 {
     namespace Filesystem
     {
-        bool CheckPathAndTryCreate(const std::filesystem::path& path);
+        bool PathIsValid(const std::filesystem::path& path);
+        //--------------------------------------------------------------------------
+
+        bool CreatePathTree(const std::filesystem::path& path);
+        //--------------------------------------------------------------------------
+
+        std::string PathUnicode(const std::filesystem::path& path);
         //--------------------------------------------------------------------------
     }
 }

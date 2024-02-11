@@ -62,7 +62,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", path.generic_string());
 
-        if (!Filesystem::CheckPathAndTryCreate(path))
+        if (!Filesystem::CreatePathTree(path))
         {
             STRTLR_CORE_LOG_WARN("GameDocumentSerializer: insufficient path");
             return false;
