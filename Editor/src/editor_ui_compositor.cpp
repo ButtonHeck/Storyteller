@@ -190,9 +190,12 @@ namespace Storyteller
         if (ImGui::BeginMenu(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent").c_str()))
         {
             auto recentDirty = false;
-            for (const auto recent : _recentList)
+            for (const auto recentCopy : _recentList)
             {
-                if (ImGui::MenuItem(recent.c_str()))
+                const auto recentPath = std::filesystem::path(recentCopy);
+                const auto itemTitle = recentPath.empty() ? recentCopy : recentPath.generic_u8string();
+
+                if (ImGui::MenuItem(itemTitle.c_str()))
                 {
                     if (_gameDocumentManager->GetDocument()->IsDirty())
                     {
@@ -201,7 +204,7 @@ namespace Storyteller
 
                         if (sureOpen)
                         {
-                            const auto success = _gameDocumentManager->OpenDocument(recent);
+                            const auto success = _gameDocumentManager->OpenDocument(recentCopy);
                             if (!success)
                             {
                                 Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged").c_str(),
@@ -212,7 +215,7 @@ namespace Storyteller
                     }
                     else
                     {
-                        const auto success = _gameDocumentManager->OpenDocument(recent);
+                        const auto success = _gameDocumentManager->OpenDocument(recentCopy);
                         if (!success)
                         {
                             Dialogs::Message(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged").c_str(),
@@ -221,10 +224,10 @@ namespace Storyteller
                         }
                     }
 
-                    _recentList.remove(recent);
+                    _recentList.remove(recentCopy);
                     if (!recentDirty)
                     {
-                        _recentList.push_front(recent);
+                        _recentList.push_front(recentCopy);
                     }
 
                     break;
@@ -299,9 +302,11 @@ namespace Storyteller
     void EditorUiCompositor::ComposeGameDocumentPanel()
     {
         const auto document = _gameDocumentManager->GetDocument();
-        const auto documentPath = document->GetPathString();
-        const auto windowTitle = std::string(documentPath.empty() ? _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document") : documentPath).append("###").append("Game");
         const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
+        const auto documentPath = document->GetPath();
+        auto windowTitle = documentPath.empty() ? _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document") : documentPath.generic_u8string();
+        windowTitle.append("###").append("GamePanel");
+
         if (ImGui::Begin(windowTitle.c_str(), nullptr, mainFlags))
         {
             ComposeGameDocumentPanelGame();
