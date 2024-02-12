@@ -31,6 +31,7 @@ namespace Storyteller
 
     private:
         void AddDefaultFont();
+        void AddIconsFont();
 
     private:
         Ptr<Window> _window;

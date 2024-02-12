@@ -1,5 +1,6 @@
 #include "editor_ui_compositor.h"
 #include "ui_utils.h"
+#include "icons_font.h"
 #include "Storyteller/log.h"
 #include "Storyteller/dialogs.h"
 #include "Storyteller/filesystem_utils.h"
@@ -348,9 +349,14 @@ namespace Storyteller
 
         const auto proxy = _gameDocumentManager->GetProxy();
 
-        if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Create").c_str()))
+        if (ImGui::Button(ICON_FK_PLUS))
         {
             proxy->AddObject(ObjectType(_state.selectedTypeIndex));
+        }
+
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
         }
 
         ImGui::SameLine();
@@ -452,24 +458,38 @@ namespace Storyteller
                 {
                     UiUtils::IDGuard guard(object->GetUuid());
                     ImGui::TableNextColumn();
-                    if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Delete").c_str()))
+                    if (ImGui::Button(ICON_FK_TRASH))
                     {
                         proxy->RemoveObject(object->GetUuid());
                         objects = proxy->GetObjects();
+                    }
+
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                    {
+                        ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Delete object").c_str());
                     }
 
                     if (object->GetObjectType() == ObjectType::ActionObjectType)
                     {
                         const auto actionObject = dynamic_cast<ActionObject*>(object.get());
                         const auto actionHasValidTarget = actionObject && actionObject->GetTargetUuid() != UUID::InvalidUuid && proxy->GetBasicObject(actionObject->GetTargetUuid());
-                        UiUtils::DisableGuard disableGuard(!actionHasValidTarget);
                         ImGui::SameLine();
-                        if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Find target").c_str()))
+
                         {
-                            if (actionHasValidTarget)
+                            UiUtils::DisableGuard disableGuard(!actionHasValidTarget);
+                            if (ImGui::Button(ICON_FK_SEARCH))
                             {
-                                proxy->Select(actionObject->GetTargetUuid());
+                                if (actionHasValidTarget)
+                                {
+                                    proxy->Select(actionObject->GetTargetUuid());
+                                }
                             }
+                        }
+
+
+                        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                        {
+                            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Find object").c_str());
                         }
                     }
                 }
@@ -605,10 +625,15 @@ namespace Storyteller
 
         {
             UiUtils::DisableGuard guard(allActionObjects.empty());
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Add action").c_str()))
+            if (ImGui::Button(ICON_FK_PLUS))
             {
                 selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
             }
+        }
+
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Add action to object").c_str());
         }
 
         ImGui::SameLine();
@@ -616,6 +641,7 @@ namespace Storyteller
         {
             const auto title = _localizationManager->Translate("StorytellerEditor", "Action name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            UiUtils::DisableGuard disableGuard(allActionObjects.empty());
             if (ImGui::BeginCombo(title.c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
             {
                 for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
@@ -676,17 +702,27 @@ namespace Storyteller
                 {
                     UiUtils::IDGuard guard(actionObject->GetUuid());
                     ImGui::TableNextColumn();
-                    if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Delete").c_str()))
+                    if (ImGui::Button(ICON_FK_TRASH))
                     {
                         selectedQuestObject->RemoveAction(actionObject->GetUuid());
                         continue;
                     }
 
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                    {
+                        ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Remove action from object").c_str());
+                    }
+
                     ImGui::SameLine();
-                    if (ImGui::SmallButton(_localizationManager->Translate("StorytellerEditor", "Find action").c_str()))
+                    if (ImGui::Button(ICON_FK_SEARCH))
                     {
                         proxy->Select(actionObject->GetUuid());
                         break;
+                    }
+
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                    {
+                        ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Find action object").c_str());
                     }
                 }
 
@@ -727,18 +763,37 @@ namespace Storyteller
         }
 
         {
+            UiUtils::DisableGuard guard(selectedActionObject->GetTargetUuid() == UUID::InvalidUuid);
+            if (ImGui::Button(ICON_FK_CIRCLE_O))
+            {
+                selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
+            }
+        }
+
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        {
+            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Clear target").c_str());
+        }
+
+        ImGui::SameLine();
+        {
             UiUtils::DisableGuard guard(allQuestObjects.empty());
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Set target").c_str()))
+            if (ImGui::Button(ICON_FK_BULLSEYE))
             {
                 selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
             }
         }
 
-        ImGui::SameLine();
-
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
         {
-            const auto title = _localizationManager->Translate("StorytellerEditor", "Quest stage name");
+            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Set target").c_str());
+        }
+
+        ImGui::SameLine();
+        {
+            const auto title = _localizationManager->Translate("StorytellerEditor", "Quest object name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            UiUtils::DisableGuard disableGuard(allQuestObjects.empty());
             if (ImGui::BeginCombo(title.c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
             {
                 for (auto questIndex = 0; questIndex < allQuestObjects.size(); questIndex++)
@@ -758,11 +813,6 @@ namespace Storyteller
             }
         }
 
-        if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Clear target").c_str()))
-        {
-            selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
-        }
-
         ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Current target name: ").c_str());
         ImGui::SameLine();
         const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
@@ -776,10 +826,18 @@ namespace Storyteller
 
         {
             UiUtils::GroupGuard groupGuard;
-            UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_Border, _state.logAutoscroll ? ImVec4(1, 1, 1, 1) : ImGui::GetStyleColorVec4(ImGuiCol_Border)}});
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Autoscroll").c_str()))
+
             {
-                _state.logAutoscroll = !_state.logAutoscroll;
+                UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_Border, _state.logAutoscroll ? ImVec4(1, 1, 1, 1) : ImGui::GetStyleColorVec4(ImGuiCol_Border)} });
+                if (ImGui::Button(ICON_FK_ARROW_DOWN))
+                {
+                    _state.logAutoscroll = !_state.logAutoscroll;
+                }
+            }
+
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            {
+                ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Autoscroll to end").c_str());
             }
         }
 

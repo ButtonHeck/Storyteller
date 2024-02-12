@@ -1,4 +1,5 @@
 #include "editor_ui.h"
+#include "icons_font.h"
 
 #include <imgui.h>
 
@@ -21,6 +22,7 @@ namespace Storyteller
         _uiImpl->Initialize();
 
         AddDefaultFont();
+        AddIconsFont();
 
         return true;
     }
@@ -134,8 +136,21 @@ namespace Storyteller
         // TODO: extract to separate font class
         auto& io = ImGui::GetIO();
         const auto fontSize = 18;
-        const auto fontDirectory = std::string(STRTLR_EDITOR_FONT_DIR) + "/OpenSans-Regular.ttf";
-        io.Fonts->AddFontFromFileTTF(fontDirectory.c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+        io.Fonts->AddFontFromFileTTF(std::string(STRTLR_EDITOR_FONT_DIR).append("/OpenSans-Regular.ttf").c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUi::AddIconsFont()
+    {
+        auto& io = ImGui::GetIO();
+        const auto fontSize = 18;
+        ImFontConfig iconsConfig;
+        iconsConfig.MergeMode = true;
+        iconsConfig.GlyphMinAdvanceX = fontSize;
+        iconsConfig.PixelSnapH = true;
+        iconsConfig.GlyphOffset = ImVec2(0.0f, 0.0f);
+        static const ImWchar iconsRanges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
+        io.Fonts->AddFontFromFileTTF(std::string(STRTLR_EDITOR_FONT_DIR).append("/forkawesome-webfont.ttf").c_str(), fontSize, &iconsConfig, iconsRanges);
     }
     //--------------------------------------------------------------------------
 }
