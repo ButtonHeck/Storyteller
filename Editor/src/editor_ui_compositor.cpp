@@ -353,11 +353,7 @@ namespace Storyteller
         {
             proxy->AddObject(ObjectType(_state.selectedTypeIndex));
         }
-
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-        {
-            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
-        }
+        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
 
         ImGui::SameLine();
 
@@ -463,11 +459,7 @@ namespace Storyteller
                         proxy->RemoveObject(object->GetUuid());
                         objects = proxy->GetObjects();
                     }
-
-                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    {
-                        ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Delete object").c_str());
-                    }
+                    UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Delete object").c_str());
 
                     if (object->GetObjectType() == ObjectType::ActionObjectType)
                     {
@@ -485,12 +477,7 @@ namespace Storyteller
                                 }
                             }
                         }
-
-
-                        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                        {
-                            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Find object").c_str());
-                        }
+                        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Find object").c_str());
                     }
                 }
 
@@ -630,11 +617,7 @@ namespace Storyteller
                 selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
             }
         }
-
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-        {
-            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Add action to object").c_str());
-        }
+        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add action to object").c_str());
 
         ImGui::SameLine();
 
@@ -707,11 +690,7 @@ namespace Storyteller
                         selectedQuestObject->RemoveAction(actionObject->GetUuid());
                         continue;
                     }
-
-                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    {
-                        ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Remove action from object").c_str());
-                    }
+                    UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Remove action from object").c_str());
 
                     ImGui::SameLine();
                     if (ImGui::Button(ICON_FK_SEARCH))
@@ -719,11 +698,7 @@ namespace Storyteller
                         proxy->Select(actionObject->GetUuid());
                         break;
                     }
-
-                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    {
-                        ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Find action object").c_str());
-                    }
+                    UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Find action object").c_str());
                 }
 
                 UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, actionObject->IsConsistent() ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
@@ -769,11 +744,7 @@ namespace Storyteller
                 selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
             }
         }
-
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-        {
-            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Clear target").c_str());
-        }
+        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Clear target").c_str());
 
         ImGui::SameLine();
         {
@@ -783,11 +754,7 @@ namespace Storyteller
                 selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
             }
         }
-
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-        {
-            ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Set target").c_str());
-        }
+        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Set target").c_str());
 
         ImGui::SameLine();
         {
@@ -834,11 +801,7 @@ namespace Storyteller
                     _state.logAutoscroll = !_state.logAutoscroll;
                 }
             }
-
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-            {
-                ImGui::SetTooltip(_localizationManager->Translate("StorytellerEditor", "Autoscroll to end").c_str());
-            }
+            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Autoscroll to end").c_str());
         }
 
         ImGui::SameLine();

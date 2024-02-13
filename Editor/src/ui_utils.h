@@ -5,6 +5,7 @@
 #include <variant>
 #include <initializer_list>
 #include <utility>
+#include <string>
 
 namespace Storyteller
 {
@@ -68,5 +69,9 @@ namespace Storyteller
             GroupGuard();
             ~GroupGuard();
         };
+        //--------------------------------------------------------------------------
+
+        void SetItemTooltip(const std::string& text);
+        //--------------------------------------------------------------------------
     }
 }

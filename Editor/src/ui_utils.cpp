@@ -112,5 +112,16 @@ namespace Storyteller
             ImGui::EndGroup();
         }
         //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+
+
+        void SetItemTooltip(const std::string& text)
+        {
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            {
+                ImGui::SetTooltip(text.c_str());
+            }
+        }
+        //--------------------------------------------------------------------------
     }
 }
