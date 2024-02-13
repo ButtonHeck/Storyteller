@@ -39,6 +39,7 @@ namespace Storyteller
         auto& style = ImGui::GetStyle();
         style.FrameBorderSize = 1.0f;
         style.WindowMenuButtonPosition = ImGuiDir_None;
+        style.DisabledAlpha = 0.4f;
         //style.Colors[ImGuiCol_FrameBg] = ImVec4(0.45f, 0.14f, 0.4f, 1.0f);
         //style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.595f, 0.375f, 0.632f, 1.0f);
         //style.Colors[ImGuiCol_WindowBg] = ImVec4(0.064f, 0.092f, 0.104f, 1.0f);
