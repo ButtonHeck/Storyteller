@@ -1,0 +1,29 @@
+-) set window icon
+-) menu shortcuts
+-) imgui percentage-based window splitting
+-) fix cyrillic paths in log output
+-) add console log output
+-) "About" menu
+-) check build on Linux!
+-) try no-docking style (editor)
+-) font related class (or classes), move to engine probably?
+-) Create rus/eng translations (engine + editor)
+-) CMake based locales settings?
+-) Add consistency categories (engine)
+-) Add consistency category viewer (editor)
+-) fix dangling action target after target has been deleted
+-) Create engine icon
+-) editor stylization
+-) add "condition"-like object to engine
+-) improving locale usage (plurals, formatting)
+-) EditorUi impl abtraction (now hardcoded OpenGL/GLFW is used)
+-) setup CMake installation
+-) explore possibility to create statusbar im ImGui (Editor)
+-) OS header with platform definitions (_declspec etc.)
+-) DLL for Engine (Windows)
+-) name/text based filter (editor)
+-) hideable UUID column (Editor)
+-) "Find" button for action's target in Properties pane
+-) Font settings (Editor)
+-) reduce disabled items alpha (Editor)
+-) application metrics (CPU, MemUsage, etc.) (Engine)
