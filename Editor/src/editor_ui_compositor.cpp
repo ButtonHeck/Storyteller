@@ -456,6 +456,19 @@ namespace Storyteller
                     ImGui::TableNextColumn();
                     if (ImGui::Button(ICON_FK_TRASH))
                     {
+                        if (object->GetObjectType() == ObjectType::QuestObjectType)
+                        {
+                            const auto actionObjects = _gameDocumentManager->GetProxy()->GetObjects(ObjectType::ActionObjectType, false);
+                            for (const auto actionObject : actionObjects)
+                            {
+                                const auto action = dynamic_cast<ActionObject*>(actionObject.get());
+                                if (action && action->GetTargetUuid() == object->GetUuid())
+                                {
+                                    action->SetTargetUuid(UUID::InvalidUuid);
+                                }
+                            }
+                        }
+
                         proxy->RemoveObject(object->GetUuid());
                         objects = proxy->GetObjects();
                     }

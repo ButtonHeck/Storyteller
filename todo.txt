@@ -11,7 +11,7 @@
 -) CMake based locales settings?
 -) Add consistency categories (engine)
 -) Add consistency category viewer (editor)
--) fix dangling action target after target has been deleted
++) fix dangling action target after target has been deleted
 -) Create engine icon
 -) editor stylization
 -) add "condition"-like object to engine
