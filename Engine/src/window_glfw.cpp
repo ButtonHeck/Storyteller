@@ -16,10 +16,13 @@ namespace Storyteller
         int height = defaultHeight;
         int windowedWidth = width;
         int windowedHeight = height;
-        std::function<void()> refreshCallback = nullptr;
-        std::function<bool()> closeCallback = nullptr;
         bool vSync = true;
         bool blocked = false;
+
+        Window::RefreshCallbackFn refreshCallback = nullptr;
+        Window::CloseCallbackFn closeCallback = nullptr;
+        Window::KeyCallbackFn keyCallback = nullptr;
+        Window::CharCallbackFn charCallback = nullptr;
     };
     //--------------------------------------------------------------------------
 
@@ -185,7 +188,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::SetRefreshCallback(std::function<void()> refreshCallback)
+    void WindowGlfw::SetRefreshCallback(RefreshCallbackFn refreshCallback)
     {
         const auto userData = GetUserPointer(_window);
         if (userData)
@@ -195,12 +198,32 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::SetCloseCallback(std::function<bool()> closeCallback)
+    void WindowGlfw::SetCloseCallback(CloseCallbackFn closeCallback)
     {
         const auto userData = GetUserPointer(_window);
         if (userData)
         {
             userData->closeCallback = closeCallback;
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void WindowGlfw::SetKeyCallback(KeyCallbackFn keyCallback)
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->keyCallback = keyCallback;
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void WindowGlfw::SetCharCallback(CharCallbackFn charCallback)
+    {
+        const auto userData = GetUserPointer(_window);
+        if (userData)
+        {
+            userData->charCallback = charCallback;
         }
     }
     //--------------------------------------------------------------------------
@@ -331,6 +354,30 @@ namespace Storyteller
                 if (userData->closeCallback && !userData->closeCallback())
                 {
                     glfwSetWindowShouldClose(window, false);
+                }
+            }
+            }
+        );
+
+        glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->keyCallback)
+                {
+                    userData->keyCallback(key, scancode, action, mods);
+                }
+            }
+            }
+        );
+
+        glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int codepoint) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->charCallback)
+                {
+                    userData->charCallback(codepoint);
                 }
             }
             }

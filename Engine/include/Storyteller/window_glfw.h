@@ -34,8 +34,10 @@ namespace Storyteller
         void MakeContextCurrent() override;
         void* GetImplPointer() const override;
 
-        void SetRefreshCallback(std::function<void()> refreshCallback) override;
-        void SetCloseCallback(std::function<bool()> closeCallback) override;
+        void SetRefreshCallback(RefreshCallbackFn refreshCallback) override;
+        void SetCloseCallback(CloseCallbackFn closeCallback) override;
+        void SetKeyCallback(KeyCallbackFn keyCallback) override;
+        void SetCharCallback(CharCallbackFn charCallback) override;
 
         void BeginBlock() override;
         void EndBlock() override;

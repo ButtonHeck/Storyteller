@@ -11,6 +11,12 @@ namespace Storyteller
     class Window
     {
     public:
+        typedef std::function<void()> RefreshCallbackFn;
+        typedef std::function<bool()> CloseCallbackFn;
+        typedef std::function<void(int key, int scancode, int action, int mods)> KeyCallbackFn;
+        typedef std::function<void(unsigned int codepoint)> CharCallbackFn;
+
+    public:
         enum Mode
         {
             FullscreenMode,
@@ -40,8 +46,10 @@ namespace Storyteller
         virtual void MakeContextCurrent() = 0;
         virtual void* GetImplPointer() const = 0;
 
-        virtual void SetRefreshCallback(std::function<void()> refreshCallback) = 0;
-        virtual void SetCloseCallback(std::function<bool()> closeCallback) = 0;
+        virtual void SetRefreshCallback(RefreshCallbackFn refreshCallback) = 0;
+        virtual void SetCloseCallback(CloseCallbackFn closeCallback) = 0;
+        virtual void SetKeyCallback(KeyCallbackFn keyCallback) = 0;
+        virtual void SetCharCallback(CharCallbackFn charCallback) = 0;
 
         virtual void BeginBlock() = 0;
         virtual void EndBlock() = 0;
