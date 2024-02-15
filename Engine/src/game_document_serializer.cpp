@@ -29,7 +29,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Load(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: load from '{}'", path.generic_string());
+        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: load from '{}'", Filesystem::PathUnicode(path));
 
         if (path.empty() || !std::filesystem::exists(path)
             || !path.has_filename() || !path.has_extension())
@@ -60,7 +60,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Save(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", path.generic_string());
+        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", Filesystem::PathUnicode(path));
 
         if (!Filesystem::CreatePathTree(path))
         {

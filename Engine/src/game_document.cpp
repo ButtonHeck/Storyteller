@@ -1,5 +1,6 @@
 #include "game_document.h"
 #include "log.h"
+#include "filesystem_utils.h"
 
 namespace Storyteller
 {
@@ -14,7 +15,7 @@ namespace Storyteller
         , _dirty(false)
         , _entryPointUuid(UUID::InvalidUuid)
     {
-        STRTLR_CORE_LOG_INFO("GameDocument: create '{}'", _path.generic_string());
+        STRTLR_CORE_LOG_INFO("GameDocument: create '{}'", Filesystem::PathUnicode(path));
     }
     //--------------------------------------------------------------------------
 
@@ -44,13 +45,13 @@ namespace Storyteller
 
     std::string GameDocument::GetPathString() const
     {
-        return _path.string();
+        return Filesystem::PathUnicode(_path);
     }
     //--------------------------------------------------------------------------
 
     void GameDocument::SetPath(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", path.generic_string());
+        STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", Filesystem::PathUnicode(path));
 
         _path = path;
     }

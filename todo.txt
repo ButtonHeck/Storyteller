@@ -1,7 +1,7 @@
 -) set window icon
 -) menu shortcuts
 -) imgui percentage-based window splitting
--) fix cyrillic paths in log output
++) fix cyrillic paths in log output
 -) add console log output
 -) "About" menu
 -) check build on Linux!
