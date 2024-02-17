@@ -33,11 +33,7 @@ namespace Storyteller
         void SwapBuffers() const override;
         void MakeContextCurrent() override;
         void* GetImplPointer() const override;
-
-        void SetRefreshCallback(RefreshCallbackFn refreshCallback) override;
-        void SetCloseCallback(CloseCallbackFn closeCallback) override;
-        void SetKeyCallback(KeyCallbackFn keyCallback) override;
-        void SetCharCallback(CharCallbackFn charCallback) override;
+        void SetEventCallback(const EventCallbackFn& callback) override;
 
         void BeginBlock() override;
         void EndBlock() override;

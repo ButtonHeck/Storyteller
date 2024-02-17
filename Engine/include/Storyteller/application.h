@@ -3,6 +3,7 @@
 #include "localization_manager.h"
 #include "settings.h"
 #include "pointers.h"
+#include "event.h"
 
 namespace Storyteller
 {
@@ -17,6 +18,7 @@ namespace Storyteller
 
         virtual bool Initialize();
         virtual void Run() = 0;
+        virtual void OnEvent(Event& event) = 0;
 
     protected:
         Ptr<LocalizationManager> _localizationManager;

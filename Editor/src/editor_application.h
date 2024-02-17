@@ -17,6 +17,7 @@ namespace Storyteller
 
         bool Initialize() override;
         void Run() override;
+        void OnEvent(Event& event) override;
 
     private:
         void SaveSettings() const;

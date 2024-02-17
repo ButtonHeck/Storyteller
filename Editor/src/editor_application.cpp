@@ -45,19 +45,7 @@ namespace Storyteller
         }
 
         _window->SetTitle(_localizationManager->Translate("StorytellerEditor", "Storyteller editor"));
-        _window->SetRefreshCallback([&]() {
-            _ui->NewFrame();
-            _ui->Stylize();
-            _ui->BeginDockspace();
-            _ui->Compose();
-            _ui->EndDockspace();
-            _ui->Render();
-            _ui->EndFrame();
-        });
-
-        _window->SetCloseCallback([&]() {
-            return _ui->ReadyToClose();
-        });
+        _window->SetEventCallback(BIND_EVENT_FUNCTION(EditorApplication::OnEvent));
 
         LoadSettings();
 
@@ -83,6 +71,34 @@ namespace Storyteller
         }
 
         _ui->Shutdown();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorApplication::OnEvent(Event& event)
+    {
+        EventDispatcher dispatcher(event);
+        dispatcher.Dispatch<WindowCloseEvent>([&](WindowCloseEvent&) {
+            if (!_ui->ReadyToClose())
+            {
+                _window->SetShouldClose(false);
+            }
+
+            return true;
+            }
+        );
+
+        dispatcher.Dispatch<WindowFramebufferRefreshEvent>([&](WindowFramebufferRefreshEvent&) {
+            _ui->NewFrame();
+            _ui->Stylize();
+            _ui->BeginDockspace();
+            _ui->Compose();
+            _ui->EndDockspace();
+            _ui->Render();
+            _ui->EndFrame();
+
+            return true;
+            }
+        );
     }
     //--------------------------------------------------------------------------
 

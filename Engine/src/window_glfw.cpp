@@ -1,5 +1,7 @@
 #include "window_glfw.h"
 #include "log.h"
+#include "window_event.h"
+#include "key_event.h"
 
 #include <GLFW/glfw3.h>
 
@@ -18,11 +20,7 @@ namespace Storyteller
         int windowedHeight = height;
         bool vSync = true;
         bool blocked = false;
-
-        Window::RefreshCallbackFn refreshCallback = nullptr;
-        Window::CloseCallbackFn closeCallback = nullptr;
-        Window::KeyCallbackFn keyCallback = nullptr;
-        Window::CharCallbackFn charCallback = nullptr;
+        Window::EventCallbackFn eventCallback;
     };
     //--------------------------------------------------------------------------
 
@@ -188,42 +186,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::SetRefreshCallback(RefreshCallbackFn refreshCallback)
+    void WindowGlfw::SetEventCallback(const EventCallbackFn& callback)
     {
         const auto userData = GetUserPointer(_window);
         if (userData)
         {
-            userData->refreshCallback = refreshCallback;
-        }
-    }
-    //--------------------------------------------------------------------------
-
-    void WindowGlfw::SetCloseCallback(CloseCallbackFn closeCallback)
-    {
-        const auto userData = GetUserPointer(_window);
-        if (userData)
-        {
-            userData->closeCallback = closeCallback;
-        }
-    }
-    //--------------------------------------------------------------------------
-
-    void WindowGlfw::SetKeyCallback(KeyCallbackFn keyCallback)
-    {
-        const auto userData = GetUserPointer(_window);
-        if (userData)
-        {
-            userData->keyCallback = keyCallback;
-        }
-    }
-    //--------------------------------------------------------------------------
-
-    void WindowGlfw::SetCharCallback(CharCallbackFn charCallback)
-    {
-        const auto userData = GetUserPointer(_window);
-        if (userData)
-        {
-            userData->charCallback = charCallback;
+            userData->eventCallback = callback;
         }
     }
     //--------------------------------------------------------------------------
@@ -324,6 +292,12 @@ namespace Storyteller
                     userData->windowedWidth = width;
                     userData->windowedHeight = height;
                 }
+
+                if (userData->eventCallback)
+                {
+                    WindowFramebufferResizeEvent event(width, height);
+                    userData->eventCallback(event);
+                }
             }
             }
         );
@@ -337,9 +311,10 @@ namespace Storyteller
                     return;
                 }
 
-                if (userData->refreshCallback)
+                if (userData->eventCallback)
                 {
-                    userData->refreshCallback();
+                    WindowFramebufferRefreshEvent event;
+                    userData->eventCallback(event);
                 }
             }
 
@@ -351,9 +326,10 @@ namespace Storyteller
             const auto userData = GetUserPointer(window);
             if (userData)
             {
-                if (userData->closeCallback && !userData->closeCallback())
+                if (userData->eventCallback)
                 {
-                    glfwSetWindowShouldClose(window, false);
+                    WindowCloseEvent event;
+                    userData->eventCallback(event);
                 }
             }
             }
@@ -363,9 +339,9 @@ namespace Storyteller
             const auto userData = GetUserPointer(window);
             if (userData)
             {
-                if (userData->keyCallback)
+                if (userData->eventCallback)
                 {
-                    userData->keyCallback(key, scancode, action, mods);
+                    //todo
                 }
             }
             }
@@ -375,9 +351,10 @@ namespace Storyteller
             const auto userData = GetUserPointer(window);
             if (userData)
             {
-                if (userData->charCallback)
+                if (userData->eventCallback)
                 {
-                    userData->charCallback(codepoint);
+                    KeyCharEvent event(codepoint);
+                    userData->eventCallback(event);
                 }
             }
             }

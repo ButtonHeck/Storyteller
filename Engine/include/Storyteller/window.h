@@ -2,19 +2,18 @@
 
 #include "settings.h"
 #include "pointers.h"
+#include "event.h"
 
 #include <string>
 #include <functional>
+#include <iostream>
 
 namespace Storyteller
 {
     class Window
     {
     public:
-        typedef std::function<void()> RefreshCallbackFn;
-        typedef std::function<bool()> CloseCallbackFn;
-        typedef std::function<void(int key, int scancode, int action, int mods)> KeyCallbackFn;
-        typedef std::function<void(unsigned int codepoint)> CharCallbackFn;
+        using EventCallbackFn = std::function<void(Event&)>;
 
     public:
         enum Mode
@@ -45,11 +44,7 @@ namespace Storyteller
         virtual void SwapBuffers() const = 0;
         virtual void MakeContextCurrent() = 0;
         virtual void* GetImplPointer() const = 0;
-
-        virtual void SetRefreshCallback(RefreshCallbackFn refreshCallback) = 0;
-        virtual void SetCloseCallback(CloseCallbackFn closeCallback) = 0;
-        virtual void SetKeyCallback(KeyCallbackFn keyCallback) = 0;
-        virtual void SetCharCallback(CharCallbackFn charCallback) = 0;
+        virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
         virtual void BeginBlock() = 0;
         virtual void EndBlock() = 0;
