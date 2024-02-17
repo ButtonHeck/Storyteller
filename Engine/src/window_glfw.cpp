@@ -2,6 +2,7 @@
 #include "log.h"
 #include "window_event.h"
 #include "key_event.h"
+#include "mouse_event.h"
 
 #include <GLFW/glfw3.h>
 
@@ -263,6 +264,45 @@ namespace Storyteller
 
     void WindowGlfw::InitializeCallbacks() const
     {
+        glfwSetWindowPosCallback(_window, [](GLFWwindow* window, int x, int y) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->eventCallback)
+                {
+                    WindowMoveEvent event(x, y);
+                    userData->eventCallback(event);
+                }
+            }
+            }
+        );
+
+        glfwSetWindowFocusCallback(_window, [](GLFWwindow* window, int focused) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->eventCallback)
+                {
+                    WindowFocusEvent event(focused);
+                    userData->eventCallback(event);
+                }
+            }
+            }
+        );
+
+        glfwSetWindowIconifyCallback(_window, [](GLFWwindow* window, int iconified) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->eventCallback)
+                {
+                    WindowIconifyEvent event(iconified);
+                    userData->eventCallback(event);
+                }
+            }
+            }
+        );
+
         glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
             const auto userData = GetUserPointer(window);
             if (userData)
@@ -324,7 +364,29 @@ namespace Storyteller
             {
                 if (userData->eventCallback)
                 {
-                    //todo
+                    switch (action)
+                    {
+                    case GLFW_PRESS:
+                    {
+                        KeyPressEvent event(key, mods, false);
+                        userData->eventCallback(event);
+                        break;
+                    }
+                    case GLFW_RELEASE:
+                    {
+                        KeyReleaseEvent event(key);
+                        userData->eventCallback(event);
+                        break;
+                    }
+                    case GLFW_REPEAT:
+                    {
+                        KeyPressEvent event(key, mods, true);
+                        userData->eventCallback(event);
+                        break;
+                    }
+                    default:
+                        break;
+                    }
                 }
             }
             }
@@ -337,6 +399,60 @@ namespace Storyteller
                 if (userData->eventCallback)
                 {
                     KeyCharEvent event(codepoint);
+                    userData->eventCallback(event);
+                }
+            }
+            }
+        );
+
+        glfwSetMouseButtonCallback(_window, [](GLFWwindow* window, int button, int action, int mods) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->eventCallback)
+                {
+                    switch (action)
+                    {
+                    case GLFW_PRESS:
+                    {
+                        MouseButtonPressEvent event(button, mods);
+                        userData->eventCallback(event);
+                        break;
+                    }
+                    case GLFW_RELEASE:
+                    {
+                        MouseButtonReleaseEvent event(button, mods);
+                        userData->eventCallback(event);
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+                }
+            }
+            }
+        );
+
+        glfwSetScrollCallback(_window, [](GLFWwindow* window, double xOffset, double yOffset) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->eventCallback)
+                {
+                    MouseScrollEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
+                    userData->eventCallback(event);
+                }
+            }
+            }
+        );
+
+        glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double xPos, double yPos) {
+            const auto userData = GetUserPointer(window);
+            if (userData)
+            {
+                if (userData->eventCallback)
+                {
+                    MouseMoveEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
                     userData->eventCallback(event);
                 }
             }

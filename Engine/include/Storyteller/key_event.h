@@ -30,8 +30,9 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(KeyPressEventType)
 
-        KeyPressEvent(const KeyCode keyCode, bool repeat = false)
+        KeyPressEvent(const KeyCode keyCode, int mods, bool repeat = false)
             : KeyEvent(keyCode)
+            , _mods(mods)
             , _repeat(repeat)
         {}
 
@@ -40,12 +41,18 @@ namespace Storyteller
             return _repeat;
         }
 
+        int GetMods() const
+        {
+            return _mods;
+        }
+
         std::string ToString() const override
         {
-            return Utils::Concatenate("KeyPressEvent: ", _keyCode, " (repeat = ", _repeat, ")");
+            return Utils::Concatenate("KeyPressEvent: ", _keyCode, " (repeat = ", _repeat, ", mods = ", _mods, ")");
         }
 
     private:
+        int _mods;
         bool _repeat;
     };
     //--------------------------------------------------------------------------

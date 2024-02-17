@@ -79,13 +79,20 @@ namespace Storyteller
             return _button;
         }
 
+        int GetMods() const
+        {
+            return _mods;
+        }
+
     protected:
-        MouseButtonEvent(const MouseCode button)
+        MouseButtonEvent(const MouseCode button, int mods)
             : _button(button)
+            , _mods(mods)
         {}
 
     protected:
         MouseCode _button;
+        int _mods;
     };
     //--------------------------------------------------------------------------
 
@@ -94,8 +101,8 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(MouseButtonPressEventType)
 
-        MouseButtonPressEvent(const MouseCode button)
-            : MouseButtonEvent(button)
+        MouseButtonPressEvent(const MouseCode button, int mods)
+            : MouseButtonEvent(button, mods)
         {}
 
         std::string ToString() const override
@@ -110,8 +117,8 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(MouseButtonReleaseEventType)
 
-        MouseButtonReleaseEvent(const MouseCode button)
-            : MouseButtonEvent(button)
+        MouseButtonReleaseEvent(const MouseCode button, int mods)
+            : MouseButtonEvent(button, mods)
         {}
 
         std::string ToString() const override
