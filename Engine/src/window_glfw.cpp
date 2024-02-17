@@ -7,29 +7,6 @@
 
 namespace Storyteller
 {
-    constexpr auto defaultWidth = 1920;
-    constexpr auto defaultHeight = 1080;
-
-    struct WindowUserData
-    {
-        bool updateContinuously = true;
-        Window::Mode screenMode = Window::WindowedMode;
-        int width = defaultWidth;
-        int height = defaultHeight;
-        int windowedWidth = width;
-        int windowedHeight = height;
-        bool vSync = true;
-        bool blocked = false;
-        Window::EventCallbackFn eventCallback;
-    };
-    //--------------------------------------------------------------------------
-
-    WindowUserData* GetUserPointer(GLFWwindow* window)
-    {
-        return reinterpret_cast<WindowUserData*>(glfwGetWindowUserPointer(window));
-    }
-    //--------------------------------------------------------------------------
-
     WindowGlfw::WindowGlfw()
         : _window(nullptr)
     {}
@@ -51,9 +28,9 @@ namespace Storyteller
 
         InitializeHints();
 
-        _window = glfwCreateWindow(defaultWidth, defaultHeight, "", nullptr, nullptr);
+        _window = glfwCreateWindow(_DefaultWidth, _DefaultHeight, "", nullptr, nullptr);
 
-        glfwSetWindowUserPointer(_window, new WindowUserData());
+        glfwSetWindowUserPointer(_window, new UserData());
         MakeContextCurrent();
 
         InitializeCallbacks();
@@ -227,8 +204,8 @@ namespace Storyteller
         settings->StartSaveGroup("Window");
         settings->SaveUInt("Width", width);
         settings->SaveUInt("Height", height);
-        settings->SaveUInt("WindowedWidth", userData ? userData->windowedWidth : defaultWidth);
-        settings->SaveUInt("WindowedHeight", userData ? userData->windowedHeight : defaultHeight);
+        settings->SaveUInt("WindowedWidth", userData ? userData->windowedWidth : _DefaultWidth);
+        settings->SaveUInt("WindowedHeight", userData ? userData->windowedHeight : _DefaultHeight);
         settings->SaveInt("ScreenMode", GetScreenMode());
         settings->SaveBool("VSync", IsVSync());
         settings->SaveBool("UpdateContinuously", userData ? userData->updateContinuously : true);
@@ -239,10 +216,10 @@ namespace Storyteller
     void WindowGlfw::LoadSettings(Ptr<Settings> settings)
     {
         settings->StartLoadGroup("Window");
-        const auto width = settings->GetUInt("Width", defaultWidth);
-        const auto height = settings->GetUInt("Height", defaultHeight);
-        const auto windowedWidth = settings->GetUInt("WindowedWidth", defaultWidth);
-        const auto windowedHeight = settings->GetUInt("WindowedHeight", defaultHeight);
+        const auto width = settings->GetUInt("Width", _DefaultWidth);
+        const auto height = settings->GetUInt("Height", _DefaultHeight);
+        const auto windowedWidth = settings->GetUInt("WindowedWidth", _DefaultWidth);
+        const auto windowedHeight = settings->GetUInt("WindowedHeight", _DefaultHeight);
         const auto screenMode = Window::Mode(settings->GetInt("ScreenMode", WindowedMode));
         const auto vSync = settings->GetBool("VSync", true);
         const auto updateContinuously = settings->GetBool("UpdateContinuously", true);
@@ -264,6 +241,12 @@ namespace Storyteller
         }
 
         settings->EndLoadGroup();
+    }
+    //--------------------------------------------------------------------------
+
+    WindowGlfw::UserData* WindowGlfw::GetUserPointer(GLFWwindow* window)
+    {
+        return reinterpret_cast<UserData*>(glfwGetWindowUserPointer(window));
     }
     //--------------------------------------------------------------------------
 

@@ -6,7 +6,6 @@
 
 #include <string>
 #include <functional>
-#include <iostream>
 
 namespace Storyteller
 {

@@ -42,6 +42,25 @@ namespace Storyteller
         void LoadSettings(Ptr<Settings> settings) override;
 
     private:
+        constexpr static auto _DefaultWidth = 1920;
+        constexpr static auto _DefaultHeight = 1080;
+
+        struct UserData
+        {
+            bool updateContinuously = true;
+            Mode screenMode = WindowedMode;
+            int width = _DefaultWidth;
+            int height = _DefaultHeight;
+            int windowedWidth = width;
+            int windowedHeight = height;
+            bool vSync = true;
+            bool blocked = false;
+            EventCallbackFn eventCallback;
+        };
+
+        static UserData* GetUserPointer(GLFWwindow* window);
+
+    private:
         void InitializeHints() const;
         void InitializeCallbacks() const;
 
