@@ -7,6 +7,7 @@
 #include "Storyteller/localization_manager.h"
 #include "Storyteller/pointers.h"
 #include "Storyteller/window_event.h"
+#include "Storyteller/key_event.h"
 
 namespace Storyteller
 {
@@ -28,6 +29,7 @@ namespace Storyteller
         bool ReadyToClose() const;
         bool OnWindowCloseEvent(WindowCloseEvent& event);
         bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event);
+        bool OnKeyPressEvent(KeyPressEvent& event);
 
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);

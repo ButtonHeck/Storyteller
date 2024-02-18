@@ -50,6 +50,49 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool EditorUiCompositor::OnKeyPressEvent(KeyPressEvent& event)
+    {
+        const auto keyCode = event.GetKeyCode();
+        const auto mods = event.GetMods();
+
+        if (event.IsRepeat())
+        {
+            return true;
+        }
+
+        if (keyCode == Key::Q && mods == Mode::Ctrl)
+        {
+            Exit();
+        }
+        else if (keyCode == Key::N && mods == Mode::Ctrl)
+        {
+            NewDocument();
+        }
+        else if (keyCode == Key::O && mods == Mode::Ctrl)
+        {
+            OpenDocument();
+        }
+        else if (keyCode == Key::S && mods == Mode::Ctrl)
+        {
+            SaveDocument();
+        }
+        else if (keyCode == Key::S && mods == (Mode::Ctrl | Mode::Shift))
+        {
+            SaveAsDocument();
+        }
+        else if (keyCode == Key::L && mods == Mode::Ctrl)
+        {
+            SwitchLogWindowVisibility();
+        }
+        else if (keyCode == Key::Enter && mods == Mode::Alt)
+        {
+            SwitchFullscreen();
+        }
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUiCompositor::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUiCompositor");
@@ -130,56 +173,18 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemNew()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "New").c_str()))
+        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "New").c_str(), "Ctrl+N"))
         {
-            if (_gameDocumentManager->GetDocument()->IsDirty())
-            {
-                const auto sureNew = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?").c_str(),
-                    _localizationManager->Translate("StorytellerEditor", "New").c_str(), _window);
-
-                if (sureNew)
-                {
-                    _gameDocumentManager->NewDocument();
-                }
-            }
-            else
-            {
-                _gameDocumentManager->NewDocument();
-            }
+            NewDocument();
         }
     }
     //--------------------------------------------------------------------------
 
     void EditorUiCompositor::ComposeMenuItemOpen()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Open").c_str()))
+        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Open").c_str(), "Ctrl+O"))
         {
-            if (_gameDocumentManager->GetDocument()->IsDirty())
-            {
-                const auto sureOpen = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str(),
-                    _localizationManager->Translate("StorytellerEditor", "Open").c_str(), _window);
-
-                if (sureOpen)
-                {
-                    const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
-                    if (!filepath.empty())
-                    {
-                        _recentList.remove(filepath);
-                        _recentList.push_front(filepath);
-                        _gameDocumentManager->OpenDocument(filepath);
-                    }
-                }
-            }
-            else
-            {
-                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
-                if (!filepath.empty())
-                {
-                    _recentList.remove(filepath);
-                    _recentList.push_front(filepath);
-                    _gameDocumentManager->OpenDocument(filepath);
-                }
-            }
+            OpenDocument();
         }
     }
     //--------------------------------------------------------------------------
@@ -248,28 +253,27 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemSave()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Save").c_str()))
+        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Save").c_str(), "Ctrl+S"))
         {
-            _gameDocumentManager->Save();
+            SaveDocument();
         }
     }
     //--------------------------------------------------------------------------
 
     void EditorUiCompositor::ComposeMenuItemSaveAs()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Save as...").c_str()))
+        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Save as...").c_str(), "Ctrl+Shift+S"))
         {
-            const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window);
-            _gameDocumentManager->Save(filepath);
+            SaveAsDocument();
         }
     }
     //--------------------------------------------------------------------------
 
     void EditorUiCompositor::ComposeMenuItemQuit()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Quit").c_str()))
+        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Quit").c_str(), "Ctrl+Q"))
         {
-            _window->SetShouldClose(ReadyToClose());
+            Exit();
         }
     }
     //--------------------------------------------------------------------------
@@ -282,7 +286,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemLog()
     {
-        ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Log").c_str(), nullptr, &_state.logPanel);
+        ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Log").c_str(), "Ctrl+L", &_state.logPanel);
     }
     //--------------------------------------------------------------------------
 
@@ -290,7 +294,7 @@ namespace Storyteller
     {
         const auto screenMode = _window->GetScreenMode();
         auto isFullscreen = screenMode == Window::WindowedFullscreenMode;
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Fullscreen").c_str(), nullptr, &isFullscreen))
+        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Fullscreen").c_str(), "Alt+Enter", &isFullscreen))
         {
             _window->SetScreenMode(isFullscreen ? Window::WindowedFullscreenMode : Window::WindowedMode);
         }        
@@ -836,6 +840,97 @@ namespace Storyteller
         }
 
         ImGui::End();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::NewDocument()
+    {
+        if (_gameDocumentManager->GetDocument()->IsDirty())
+        {
+            const auto sureNew = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?").c_str(),
+                _localizationManager->Translate("StorytellerEditor", "New").c_str(), _window);
+
+            if (sureNew)
+            {
+                _gameDocumentManager->NewDocument();
+            }
+        }
+        else
+        {
+            _gameDocumentManager->NewDocument();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::Exit()
+    {
+        _window->SetShouldClose(ReadyToClose());
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::OpenDocument()
+    {
+        if (_gameDocumentManager->GetDocument()->IsDirty())
+        {
+            const auto sureOpen = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str(),
+                _localizationManager->Translate("StorytellerEditor", "Open").c_str(), _window);
+
+            if (sureOpen)
+            {
+                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+                if (!filepath.empty())
+                {
+                    _recentList.remove(filepath);
+                    _recentList.push_front(filepath);
+                    _gameDocumentManager->OpenDocument(filepath);
+                }
+            }
+        }
+        else
+        {
+            const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+            if (!filepath.empty())
+            {
+                _recentList.remove(filepath);
+                _recentList.push_front(filepath);
+                _gameDocumentManager->OpenDocument(filepath);
+            }
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::SaveDocument()
+    {
+        if (!_gameDocumentManager->GetDocument()->GetPathString().empty())
+        {
+            _gameDocumentManager->Save();
+        }
+        else
+        {
+            SaveAsDocument();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::SaveAsDocument()
+    {
+        const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window);
+        _gameDocumentManager->Save(filepath);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::SwitchLogWindowVisibility()
+    {
+        _state.logPanel = !_state.logPanel;
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::SwitchFullscreen()
+    {
+        const auto screenMode = _window->GetScreenMode();
+        auto isFullscreen = screenMode == Window::WindowedFullscreenMode;
+
+        _window->SetScreenMode(!isFullscreen ? Window::WindowedFullscreenMode : Window::WindowedMode);
     }
     //--------------------------------------------------------------------------
 }

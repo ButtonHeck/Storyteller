@@ -1,5 +1,5 @@
 -) set window icon
--) menu shortcuts
++) menu shortcuts
 -) imgui percentage-based window splitting
 +) fix cyrillic paths in log output
 -) add console log output

@@ -165,7 +165,7 @@ namespace Storyteller
 
     bool EditorApplication::OnKeyPressEvent(KeyPressEvent& event)
     {
-        return true;
+        return _ui->OnKeyPressEvent(event);
     }
     //--------------------------------------------------------------------------
 

@@ -5,6 +5,7 @@
 #include "Storyteller/localization_manager.h"
 #include "Storyteller/settings.h"
 #include "Storyteller/pointers.h"
+#include "Storyteller/key_event.h"
 
 #include <list>
 
@@ -18,6 +19,7 @@ namespace Storyteller
         void Compose();
 
         bool ReadyToClose() const;
+        bool OnKeyPressEvent(KeyPressEvent& event);
 
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);
@@ -64,6 +66,15 @@ namespace Storyteller
         void ComposePropertiesPanelActionObject(Ptr<BasicObject> selectedObject);
 
         void ComposeLogPanel();
+
+    private:
+        void NewDocument();
+        void Exit();
+        void OpenDocument();
+        void SaveDocument();
+        void SaveAsDocument();
+        void SwitchLogWindowVisibility();
+        void SwitchFullscreen();
 
     private:
         Ptr<Window> _window;

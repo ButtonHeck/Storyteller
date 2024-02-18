@@ -141,6 +141,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool EditorUi::OnKeyPressEvent(KeyPressEvent& event)
+    {
+        return _compositor->OnKeyPressEvent(event);
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUi::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUi");

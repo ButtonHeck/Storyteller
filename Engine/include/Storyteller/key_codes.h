@@ -3,6 +3,20 @@
 namespace Storyteller
 {
     using KeyCode = uint16_t;
+    using KeyMode = uint16_t;
+
+    namespace Mode
+    {
+        enum : KeyMode
+        {
+            Shift = 0x0001,
+            Ctrl = 0x0002,
+            Alt = 0x0004,
+            Super = 0x0008,
+            CapsLock = 0x0010,
+            NumLock = 0x0020
+        };
+    }
 
     namespace Key
     {
