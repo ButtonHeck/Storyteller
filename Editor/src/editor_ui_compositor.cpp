@@ -798,6 +798,17 @@ namespace Storyteller
         ImGui::SameLine();
         const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
         ImGui::Text(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _localizationManager->Translate("StorytellerEditor", "Not set or does not exist").c_str());
+
+
+        ImGui::SameLine();
+        {
+            UiUtils::DisableGuard guard(!(targetObject.get() && targetObject->GetUuid() != UUID::InvalidUuid));
+            if (ImGui::Button(ICON_FK_SEARCH))
+            {
+                proxy->Select(targetObject->GetUuid());
+            }
+        }
+        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Find object").c_str());
     }
     //--------------------------------------------------------------------------
 
