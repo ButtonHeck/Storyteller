@@ -8,7 +8,10 @@ namespace Storyteller
 {
     struct KeyEvent : public Event
     {
-        EVENT_CLASS_TRAITS(KeyboardEventTrait | InputEventTrait)
+        int GetTraits() const override
+        {
+            return KeyboardEventTrait | InputEventTrait;
+        }
 
         KeyCode GetKeyCode() const
         {

@@ -9,7 +9,11 @@ namespace Storyteller
     struct MouseMoveEvent : public Event
     {
         EVENT_CLASS_TYPE(MouseMoveEventType)
-        EVENT_CLASS_TRAITS(MouseEventTrait | InputEventTrait)
+
+        int GetTraits() const override
+        {
+            return MouseEventTrait | InputEventTrait;
+        }
 
         MouseMoveEvent(float x, float y)
             : _x(x)
@@ -41,7 +45,11 @@ namespace Storyteller
     struct MouseScrollEvent : public Event
     {
         EVENT_CLASS_TYPE(MouseScrollEventType)
-        EVENT_CLASS_TRAITS(MouseEventTrait | InputEventTrait)
+
+        int GetTraits() const override
+        {
+            return MouseEventTrait | InputEventTrait;
+        }
 
         MouseScrollEvent(float xOffset, float yOffset)
             : _xOffset(xOffset)
@@ -72,7 +80,10 @@ namespace Storyteller
 
     struct MouseButtonEvent : public Event
     {
-        EVENT_CLASS_TRAITS(MouseEventTrait | InputEventTrait | MouseButtonEventTrait)
+        int GetTraits() const override
+        {
+            return MouseEventTrait | InputEventTrait | MouseButtonEventTrait;
+        }
 
         MouseCode GetMouseButton() const
         {

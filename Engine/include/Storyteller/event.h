@@ -44,9 +44,6 @@ namespace Storyteller
     virtual EventType GetType() const override { return GetStaticType(); } \
     virtual const char* GetName() const override { return #eventType; }
 
-#define EVENT_CLASS_TRAITS(traits) \
-    virtual int GetTraits() const override { return traits; }
-
 #define BIND_EVENT_FUNCTION(func) [this](auto&& ... args) { return this->func(std::forward<decltype(args)>(args)...); }
 
 

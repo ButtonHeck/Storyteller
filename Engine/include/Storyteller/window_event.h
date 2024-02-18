@@ -7,7 +7,10 @@ namespace Storyteller
 {
     struct WindowEvent : public Event
     {
-        EVENT_CLASS_TRAITS(WindowEventTrait)
+        int GetTraits() const override
+        {
+            return WindowEventTrait;
+        }
 
     protected:
         WindowEvent() = default;
