@@ -426,7 +426,7 @@ namespace Storyteller
 
         if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects").c_str(), 4, objectsTableFlags))
         {
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort);
+            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
@@ -671,7 +671,7 @@ namespace Storyteller
             | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_ScrollY;
         if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 4, actionsTableFlags))
         {
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
