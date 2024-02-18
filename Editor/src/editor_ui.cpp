@@ -116,6 +116,31 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool EditorUi::OnWindowCloseEvent(WindowCloseEvent& event)
+    {
+        if (!ReadyToClose())
+        {
+            _window->SetShouldClose(false);
+        }
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool EditorUi::OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event)
+    {
+        NewFrame();
+        Stylize();
+        BeginDockspace();
+        Compose();
+        EndDockspace();
+        Render();
+        EndFrame();
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUi::SaveSettings(Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUi");

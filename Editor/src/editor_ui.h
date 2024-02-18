@@ -6,6 +6,7 @@
 #include "Storyteller/window.h"
 #include "Storyteller/localization_manager.h"
 #include "Storyteller/pointers.h"
+#include "Storyteller/window_event.h"
 
 namespace Storyteller
 {
@@ -25,6 +26,8 @@ namespace Storyteller
         void Shutdown();
 
         bool ReadyToClose() const;
+        bool OnWindowCloseEvent(WindowCloseEvent& event);
+        bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event);
 
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);
