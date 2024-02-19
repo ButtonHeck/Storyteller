@@ -391,8 +391,6 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelFilters()
     {
-        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Filters").c_str());
-
         ComposeGameDocumentPanelFilterCheckbox(ObjectType::QuestObjectType, _state.questObjectFilter);
         ImGui::SameLine();
         ComposeGameDocumentPanelFilterCheckbox(ObjectType::ActionObjectType, _state.actionObjectFilter);
@@ -417,8 +415,6 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelObjectsTable()
     {
-        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Objects").c_str());
-
         const auto proxy = _gameDocumentManager->GetProxy();
 
         const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable

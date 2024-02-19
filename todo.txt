@@ -23,7 +23,7 @@
 -) DLL for Engine (Windows)
 -) name/text based filter (editor)
 -) hideable UUID column (Editor)
--) "Find" button for action's target in Properties pane
++) "Find" button for action's target in Properties pane
 -) Font settings (Editor)
 +) reduce disabled items alpha (Editor)
 -) application metrics (CPU, MemUsage, etc.) (Engine)
