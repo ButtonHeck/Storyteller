@@ -19,6 +19,7 @@ namespace Storyteller
         void AddMessagesPath(const std::string& path);
         void AddMessagesDomain(const std::string& domain);
         std::string Translate(const std::string& domain, const std::string& message, bool noCache = false);
+        std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count);
         bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const;
 
     private:

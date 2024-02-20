@@ -69,6 +69,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    std::string LocalizationManager::Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count)
+    {
+        // todo: think about caching
+        return (boost::locale::format(boost::locale::translate(messageSingular, messagePlural, count)) % count).str();
+    }
+    //--------------------------------------------------------------------------
+
     bool LocalizationManager::CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), path.generic_string());

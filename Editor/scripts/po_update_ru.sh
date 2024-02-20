@@ -11,5 +11,7 @@ else
 	touch $po_file
 fi
 
-xgettext -j -C -n -kTranslate -o $po_file $filelist
-sed -i 's/charset=CHARSET/charset=UTF-8/g' $po_file
+xgettext -j -C -n -kTranslate:1,1t -kTranslate:1,2,3t -o $po_file $filelist
+sed -i 's|charset=CHARSET|charset=UTF-8|g' $po_file
+sed -i 's|nplurals=INTEGER|nplurals=3|g' $po_file
+sed -i 's|plural=EXPRESSION|plural=n%10==1 \&\& n%100!=11 ? 0 : n%10>=2 \&\& n%10<=4 \&\& (n%100<10 \|\| n%100>=20) ? 1 : 2|g' $po_file
