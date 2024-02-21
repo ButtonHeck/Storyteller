@@ -35,6 +35,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_event.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/image.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/platform.h"
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal/settings_json_impl.h"

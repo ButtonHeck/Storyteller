@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Storyteller/platform.h"
 #include "Storyteller/application.h"
 #include "Storyteller/console_manager.h"
 #include "Storyteller/dialogs.h"
@@ -11,6 +12,7 @@
 #include "Storyteller/game_document_manager.h"
 #include "Storyteller/game_document_serializer.h"
 #include "Storyteller/game_document_sort_filter_proxy_view.h"
+#include "Storyteller/image.h"
 #include "Storyteller/key_codes.h"
 #include "Storyteller/key_event.h"
 #include "Storyteller/localization_manager.h"

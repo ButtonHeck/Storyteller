@@ -1,3 +1,4 @@
+#include "platform.h"
 #include "game_document_serializer.h"
 #include "log.h"
 #include "entities.h"

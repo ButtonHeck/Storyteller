@@ -1,12 +1,9 @@
 #pragma once
 
+#include "platform.h"
 #include "pointers.h"
 
-#ifdef _WIN32
-#define NOGDI
-#include <Windows.h>
 #pragma warning(disable : 4996)
-#endif
 #include <spdlog/spdlog.h>
 
 #include <sstream>

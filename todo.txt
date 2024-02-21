@@ -19,7 +19,7 @@
 -) EditorUi impl abtraction (now hardcoded OpenGL/GLFW is used)
 -) setup CMake installation
 -) explore possibility to create statusbar im ImGui (Editor)
--) OS header with platform definitions (_declspec etc.)
++-) OS header with platform definitions (_declspec etc.)
 -) DLL for Engine (Windows)
 -) name/text based filter (editor)
 -) hideable UUID column (Editor)
