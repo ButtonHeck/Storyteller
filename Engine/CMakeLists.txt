@@ -34,6 +34,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_codes.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_event.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/utils.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/image.h"
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal/settings_json_impl.h"
@@ -61,12 +62,16 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/image.cpp"
 )
+
+aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)
 
 add_library(${PROJECT_NAME}
 	${HEADER_FILES}
     ${INTERNAL_HEADER_FILES}
     ${SOURCE_FILES}
+    ${STB_IMAGE_SRC}
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -77,6 +82,7 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller"
 	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal"
     PRIVATE "${VENDOR_DIR}/rapidjson/include"
+    PRIVATE "${VENDOR_DIR}/stb_image"
 )
 
 option(STORYTELLER_USE_WINDOW_BACKEND_GLFW "Use GLFW for window management" ON)
@@ -90,6 +96,8 @@ if(Boost_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
 endif()
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC "STRTLR_ASSETS_PATH=\"${PROJECT_SOURCE_DIR}/assets\"")
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE glfw

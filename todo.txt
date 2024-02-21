@@ -1,4 +1,4 @@
--) set window icon
++) set window icon
 +) menu shortcuts
 -) imgui percentage-based window splitting
 +) fix cyrillic paths in log output
@@ -12,7 +12,7 @@
 -) Add consistency categories (engine)
 -) Add consistency category viewer (editor)
 +) fix dangling action target after target has been deleted
--) Create engine icon
++) Create engine icon
 -) editor stylization
 -) add "condition"-like object to engine
 -) improving locale usage (plurals, formatting)

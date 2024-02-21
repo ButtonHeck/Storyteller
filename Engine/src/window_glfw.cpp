@@ -3,6 +3,8 @@
 #include "window_event.h"
 #include "key_event.h"
 #include "mouse_event.h"
+#include "image.h"
+#include "filesystem_utils.h"
 
 #include <GLFW/glfw3.h>
 
@@ -34,6 +36,7 @@ namespace Storyteller
         glfwSetWindowUserPointer(_window, new UserData());
         MakeContextCurrent();
 
+        SetIcon(Filesystem::GetFilePathString(STRTLR_ASSETS_PATH, "icons/strtlr64.png"));
         InitializeCallbacks();
 
         return true;
@@ -43,6 +46,22 @@ namespace Storyteller
     void WindowGlfw::SetTitle(const std::string& title)
     {
         glfwSetWindowTitle(_window, title.c_str());
+    }
+    //--------------------------------------------------------------------------
+
+    void WindowGlfw::SetIcon(const std::string& path)
+    {
+        Image img(path, Image::RGBAlpha);
+        GLFWimage icon{ img.GetWidth(), img.GetHeight(), img.GetPixels() };
+
+        if (icon.pixels)
+        {
+            glfwSetWindowIcon(_window, 1, &icon);
+        }
+        else
+        {
+            STRTLR_CORE_LOG_WARN("WindowGlfw: cannot set window icon");
+        }
     }
     //--------------------------------------------------------------------------
 

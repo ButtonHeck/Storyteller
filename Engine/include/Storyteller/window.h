@@ -29,6 +29,7 @@ namespace Storyteller
         virtual bool Initialize() = 0;
 
         virtual void SetTitle(const std::string& title) = 0;
+        virtual void SetIcon(const std::string& path) = 0;
 
         virtual void SetShouldClose(bool close) = 0;
         virtual bool ShouldClose() const = 0;

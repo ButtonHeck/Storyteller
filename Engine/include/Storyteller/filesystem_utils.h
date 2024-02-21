@@ -14,5 +14,8 @@ namespace Storyteller
 
         std::string PathUnicode(const std::filesystem::path& path);
         //--------------------------------------------------------------------------
+
+        std::string GetFilePathString(const char* dir, const char* filename);
+        //--------------------------------------------------------------------------
     }
 }

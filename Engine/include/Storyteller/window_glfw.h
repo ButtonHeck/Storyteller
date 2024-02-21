@@ -19,6 +19,7 @@ namespace Storyteller
         bool Initialize() override;
 
         void SetTitle(const std::string& title) override;
+        void SetIcon(const std::string& path) override;
 
         void SetShouldClose(bool close) override;
         bool ShouldClose() const override;

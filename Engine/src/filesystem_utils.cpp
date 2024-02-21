@@ -42,5 +42,11 @@ namespace Storyteller
             return path.generic_u8string();
         }
         //--------------------------------------------------------------------------
+
+        std::string GetFilePathString(const char* dir, const char* filename)
+        {
+            return std::filesystem::path(dir).append(filename).string();
+        }
+        //--------------------------------------------------------------------------
     }
 }
