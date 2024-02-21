@@ -141,7 +141,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    Ptr<BasicObject> GameDocument::GetBasicObject(const UUID& uuid) const
+    Ptr<BasicObject> GameDocument::GetObject(const UUID& uuid) const
     {
         const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetUuid() == uuid; });
         if (it != _objects.cend())
@@ -153,7 +153,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    Ptr<BasicObject> GameDocument::GetBasicObject(const std::string& name) const
+    Ptr<BasicObject> GameDocument::GetObject(const std::string& name) const
     {
         const auto it = std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> obj) { return obj->GetName() == name; });
         if (it != _objects.cend())
@@ -205,7 +205,7 @@ namespace Storyteller
 
     Ptr<BasicObject> GameDocument::GetEntryPoint() const
     {
-        return GetBasicObject(_entryPointUuid);
+        return GetObject(_entryPointUuid);
     }
     //--------------------------------------------------------------------------
 
@@ -217,7 +217,7 @@ namespace Storyteller
             return false;
         }
 
-        const auto object = GetBasicObject(uuid);
+        const auto object = GetObject(uuid);
         if (!object)
         {
             STRTLR_CORE_LOG_WARN("GameDocument: cannot find object ({})", uuid);
@@ -232,7 +232,7 @@ namespace Storyteller
     bool GameDocument::CheckConsistency() const
     {
         return std::find_if(_objects.cbegin(), _objects.cend(), [&](const Ptr<BasicObject> ptr) { return !ptr->IsConsistent(); }) != _objects.cend()
-            && GetBasicObject(_entryPointUuid) != nullptr;
+            && GetObject(_entryPointUuid) != nullptr;
     }
     //--------------------------------------------------------------------------
 }

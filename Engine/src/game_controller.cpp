@@ -109,7 +109,7 @@ namespace Storyteller
                 actionIndex = std::stoi(input) - 1;
                 if (actionIndex >= 0 && actionIndex < questActions.size())
                 {
-                    currentObject = _gameDocument->GetBasicObject(questActions.at(actionIndex));
+                    currentObject = _gameDocument->GetObject(questActions.at(actionIndex));
                     if (!CheckObject(currentObject, ObjectType::QuestObjectType))
                     {
                         return false;
@@ -142,7 +142,7 @@ namespace Storyteller
 
         for (auto i = 0; i < questActions.size(); i++)
         {
-            const auto object = _gameDocument->GetBasicObject(questActions.at(i));
+            const auto object = _gameDocument->GetObject(questActions.at(i));
             if (!CheckObject(object, ObjectType::ActionObjectType))
             {
                 return false;

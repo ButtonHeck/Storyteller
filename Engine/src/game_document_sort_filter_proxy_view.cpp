@@ -116,15 +116,15 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetBasicObject(const UUID& uuid) const
+    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetObject(const UUID& uuid) const
     {
-        return _document->GetBasicObject(uuid);
+        return _document->GetObject(uuid);
     }
     //--------------------------------------------------------------------------
 
-    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetBasicObject(const std::string& name) const
+    Ptr<BasicObject> GameDocumentSortFilterProxyView::GetObject(const std::string& name) const
     {
-        return _document->GetBasicObject(name);
+        return _document->GetObject(name);
     }
     //--------------------------------------------------------------------------
 

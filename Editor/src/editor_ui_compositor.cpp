@@ -474,7 +474,7 @@ namespace Storyteller
                     if (object->GetObjectType() == ObjectType::ActionObjectType)
                     {
                         const auto actionObject = dynamic_cast<ActionObject*>(object.get());
-                        const auto actionHasValidTarget = actionObject && actionObject->GetTargetUuid() != UUID::InvalidUuid && proxy->GetBasicObject(actionObject->GetTargetUuid());
+                        const auto actionHasValidTarget = actionObject && actionObject->GetTargetUuid() != UUID::InvalidUuid && proxy->GetObject(actionObject->GetTargetUuid());
                         ImGui::SameLine();
 
                         {
@@ -676,7 +676,7 @@ namespace Storyteller
 
             for (auto row = 0; row < questObjectActions.size(); row++)
             {
-                const auto object = proxy->GetBasicObject(questObjectActions[row]);
+                const auto object = proxy->GetObject(questObjectActions[row]);
                 if (!object)
                 {
                     continue;
@@ -792,7 +792,7 @@ namespace Storyteller
 
         ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Current target name: ").c_str());
         ImGui::SameLine();
-        const auto targetObject = proxy->GetBasicObject(selectedActionObject->GetTargetUuid());
+        const auto targetObject = proxy->GetObject(selectedActionObject->GetTargetUuid());
         ImGui::Text(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _localizationManager->Translate("StorytellerEditor", "Not set or does not exist").c_str());
 
 
