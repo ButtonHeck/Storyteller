@@ -39,6 +39,8 @@ namespace Storyteller
         };
 
     private:
+        void ComposeDefaultPanelsLayout();
+
         void ComposeMenu();
         void ComposeMenuFile();
         void ComposeMenuView();

@@ -1,5 +1,6 @@
 #include "editor_ui.h"
 #include "icons_font.h"
+#include "ui_utils.h"
 
 #include <imgui.h>
 
@@ -63,11 +64,14 @@ namespace Storyteller
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("Dockspace", nullptr, windowFlags);
-        ImGui::PopStyleVar(3);
+        {
+            UiUtils::StyleVarGuard guard({ 
+                {ImGuiStyleVar_WindowRounding, 0.0f}, 
+                {ImGuiStyleVar_WindowBorderSize, 0.0f}, 
+                {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)} 
+            });
+            ImGui::Begin("Dockspace", nullptr, windowFlags);
+        }
 
         const auto& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)

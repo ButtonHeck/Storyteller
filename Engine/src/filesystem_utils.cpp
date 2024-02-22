@@ -4,6 +4,12 @@ namespace Storyteller
 {
     namespace Filesystem
     {
+        bool PathExists(const std::filesystem::path& path)
+        {
+            return std::filesystem::exists(path);
+        }
+        //--------------------------------------------------------------------------
+
         bool PathIsValid(const std::filesystem::path& path)
         {
             return !path.empty() && path.has_filename() && path.has_extension();

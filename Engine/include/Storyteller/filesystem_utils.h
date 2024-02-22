@@ -6,6 +6,9 @@ namespace Storyteller
 {
     namespace Filesystem
     {
+        bool PathExists(const std::filesystem::path& path);
+        //--------------------------------------------------------------------------
+
         bool PathIsValid(const std::filesystem::path& path);
         //--------------------------------------------------------------------------
 

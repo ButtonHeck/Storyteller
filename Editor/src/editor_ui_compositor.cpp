@@ -20,6 +20,11 @@ namespace Storyteller
 
     void EditorUiCompositor::Compose()
     {
+        if (!Filesystem::PathExists(std::filesystem::current_path().append(ImGui::GetIO().IniFilename)))
+        {
+            ComposeDefaultPanelsLayout();
+        }
+
         ComposeMenu();
         ComposeGameDocumentPanel();
         ComposePropertiesPanel();
@@ -124,6 +129,29 @@ namespace Storyteller
         }
         settings->EndLoadArray();
         settings->EndLoadGroup();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ComposeDefaultPanelsLayout()
+    {
+        STRTLR_CLIENT_LOG_INFO("EditorUiCompositor: composing default UI layout for the first time...");
+
+        auto dockspaceId = ImGui::GetID("EditorDockspace");
+        ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetWindowSize());
+
+        ImGuiID bottom;
+        ImGuiID top = ImGui::DockBuilderSplitNode(dockspaceId, ImGuiDir_Up, 0.75f, &dockspaceId, &bottom);
+
+        ImGuiID topRight;
+        ImGuiID topLeft;
+        ImGui::DockBuilderSplitNode(top, ImGuiDir_Left, 0.5f, &topLeft, &topRight);
+
+        ImGui::DockBuilderDockWindow("###GamePanel", topLeft);
+        ImGui::DockBuilderDockWindow("Properties", topRight);
+        ImGui::DockBuilderDockWindow("Log", bottom);
+        ImGui::DockBuilderFinish(dockspaceId);
+
+        ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
     }
     //--------------------------------------------------------------------------
 
@@ -307,7 +335,7 @@ namespace Storyteller
         const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
         const auto pathUnicode = Filesystem::PathUnicode(document->GetPath());
         auto windowTitle = pathUnicode.empty() ? _localizationManager->Translate("StorytellerEditor", "Untitled document") : pathUnicode;
-        windowTitle.append("###").append("GamePanel");
+        windowTitle.append("###GamePanel");
 
         if (ImGui::Begin(windowTitle.c_str(), nullptr, mainFlags))
         {
