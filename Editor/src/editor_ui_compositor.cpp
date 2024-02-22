@@ -341,7 +341,8 @@ namespace Storyteller
         {
             ComposeGameDocumentPanelGame();
             ComposeGameDocumentPanelObjectsManagement();
-            ComposeGameDocumentPanelFilters();
+
+            ImGui::SameLine();
             ComposeGameDocumentPanelObjectsTable();
 
             ImGui::End();
@@ -379,39 +380,47 @@ namespace Storyteller
 
         const auto proxy = _gameDocumentManager->GetProxy();
 
-        if (ImGui::Button(ICON_FK_PLUS))
         {
-            ImGui::OpenPopup("AddObjectPopup");
-        }
-        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
+            UiUtils::GroupGuard groupGuard;
 
-        if (ImGui::BeginPopup("AddObjectPopup"))
-        {
+            if (ImGui::Button(ICON_FK_PLUS))
+            {
+                ImGui::OpenPopup("AddObjectPopup");
+            }
+            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
+
             std::string typeItems[] = {
                 _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::QuestObjectType)),
                 _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::ActionObjectType)),
             };
 
-            for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
+            if (ImGui::BeginPopup("AddObjectPopup"))
             {
-                if (ImGui::Selectable(typeItems[typeIndex].c_str()))
+                for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
                 {
-                    proxy->AddObject(ObjectType(typeIndex));
+                    if (ImGui::Selectable(typeItems[typeIndex].c_str()))
+                    {
+                        proxy->AddObject(ObjectType(typeIndex));
+                    }
                 }
+
+                ImGui::EndPopup();
             }
 
-            ImGui::EndPopup();
+            if (ImGui::Button(ICON_FK_EYE))
+            {
+                ImGui::OpenPopup("ObjectFilterPopup");
+            }
+            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Visibility filters").c_str());
+
+            if (ImGui::BeginPopup("ObjectFilterPopup"))
+            {
+                ComposeGameDocumentPanelFilterCheckbox(ObjectType::QuestObjectType, _state.questObjectFilter);
+                ComposeGameDocumentPanelFilterCheckbox(ObjectType::ActionObjectType, _state.actionObjectFilter);
+
+                ImGui::EndPopup();
+            }
         }
-    }
-    //--------------------------------------------------------------------------
-
-    void EditorUiCompositor::ComposeGameDocumentPanelFilters()
-    {
-        ImGui::SameLine();
-        ComposeGameDocumentPanelFilterCheckbox(ObjectType::QuestObjectType, _state.questObjectFilter);
-
-        ImGui::SameLine();
-        ComposeGameDocumentPanelFilterCheckbox(ObjectType::ActionObjectType, _state.actionObjectFilter);
     }
     //--------------------------------------------------------------------------
 
