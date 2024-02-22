@@ -381,45 +381,35 @@ namespace Storyteller
 
         if (ImGui::Button(ICON_FK_PLUS))
         {
-            proxy->AddObject(ObjectType(_state.selectedTypeIndex));
+            ImGui::OpenPopup("AddObjectPopup");
         }
         UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
 
-        ImGui::SameLine();
-
-        std::string typeItems[] = {
-            _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::QuestObjectType)),
-            _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::ActionObjectType)),
-        };
-
+        if (ImGui::BeginPopup("AddObjectPopup"))
         {
-            const auto title = _localizationManager->Translate("StorytellerEditor", "Type");
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
-            if (ImGui::BeginCombo(title.c_str(), typeItems[_state.selectedTypeIndex].c_str()))
+            std::string typeItems[] = {
+                _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::QuestObjectType)),
+                _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::ActionObjectType)),
+            };
+
+            for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
             {
-                for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
+                if (ImGui::Selectable(typeItems[typeIndex].c_str()))
                 {
-                    const auto selected = _state.selectedTypeIndex == typeIndex;
-                    if (ImGui::Selectable(typeItems[typeIndex].c_str(), selected))
-                    {
-                        _state.selectedTypeIndex = typeIndex;
-                    }
-
-                    if (selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
+                    proxy->AddObject(ObjectType(typeIndex));
                 }
-
-                ImGui::EndCombo();
             }
+
+            ImGui::EndPopup();
         }
     }
     //--------------------------------------------------------------------------
 
     void EditorUiCompositor::ComposeGameDocumentPanelFilters()
     {
+        ImGui::SameLine();
         ComposeGameDocumentPanelFilterCheckbox(ObjectType::QuestObjectType, _state.questObjectFilter);
+
         ImGui::SameLine();
         ComposeGameDocumentPanelFilterCheckbox(ObjectType::ActionObjectType, _state.actionObjectFilter);
     }

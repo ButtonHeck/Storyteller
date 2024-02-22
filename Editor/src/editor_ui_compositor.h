@@ -28,7 +28,6 @@ namespace Storyteller
         struct UiComponentsState
         {
             bool demoWindow = false;
-            int selectedTypeIndex = 0;
             bool questObjectFilter = true;
             bool actionObjectFilter = true;
             int selectedChildActionIndex = 0;
