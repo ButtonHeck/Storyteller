@@ -6,6 +6,7 @@
 #include "Storyteller/settings.h"
 #include "Storyteller/pointers.h"
 #include "Storyteller/key_event.h"
+#include "Storyteller/window_event.h"
 
 #include <list>
 
@@ -18,8 +19,8 @@ namespace Storyteller
 
         void Compose();
 
-        bool ReadyToClose() const;
         bool OnKeyPressEvent(KeyPressEvent& event);
+        bool OnWindowCloseEvent(WindowCloseEvent& event);
 
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);
@@ -35,6 +36,11 @@ namespace Storyteller
             int selectedQuestIndex = 0;
             bool logPanel = true;
             bool logAutoscroll = false;
+
+            bool popupNewDocument = false;
+            bool popupQuit = false;
+            bool popupObjectNameWarning = false;
+            bool popupOpenDocument = false;
         };
 
     private:
@@ -67,10 +73,14 @@ namespace Storyteller
 
         void ComposeLogPanel();
 
+        void ComposePopups();
+
     private:
-        void NewDocument();
-        void Exit();
-        void OpenDocument();
+        void NewDocumentPopup();
+        void QuitPopup();
+        void ObjectNameWarningPopup();
+        void OpenDocumentPopup();
+
         void SaveDocument();
         void SaveAsDocument();
         void SwitchLogWindowVisibility();

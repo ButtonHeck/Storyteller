@@ -38,20 +38,8 @@ namespace Storyteller
         {
             ImGui::ShowDemoWindow();
         }
-    }
-    //--------------------------------------------------------------------------
 
-    bool EditorUiCompositor::ReadyToClose() const
-    {
-        if (!_gameDocumentManager->GetDocument()->IsDirty())
-        {
-            return true;
-        }
-
-        const auto sureQuit = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, quit anyway?").c_str(),
-            _localizationManager->Translate("StorytellerEditor", "Quit").c_str(), _window);
-
-        return sureQuit;
+        ComposePopups();
     }
     //--------------------------------------------------------------------------
 
@@ -67,15 +55,15 @@ namespace Storyteller
 
         if (keyCode == Key::Q && mods == Mode::Ctrl)
         {
-            Exit();
+            _state.popupQuit = true;
         }
         else if (keyCode == Key::N && mods == Mode::Ctrl)
         {
-            NewDocument();
+            _state.popupNewDocument = true;
         }
         else if (keyCode == Key::O && mods == Mode::Ctrl)
         {
-            OpenDocument();
+            _state.popupOpenDocument = true;
         }
         else if (keyCode == Key::S && mods == Mode::Ctrl)
         {
@@ -94,6 +82,14 @@ namespace Storyteller
             SwitchFullscreen();
         }
 
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool EditorUiCompositor::OnWindowCloseEvent(WindowCloseEvent& event)
+    {
+        _state.popupQuit = true;
+        _window->SetShouldClose(false);
         return true;
     }
     //--------------------------------------------------------------------------
@@ -203,7 +199,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "New").c_str(), "Ctrl+N"))
         {
-            NewDocument();
+            _state.popupNewDocument = true;
         }
     }
     //--------------------------------------------------------------------------
@@ -212,7 +208,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Open").c_str(), "Ctrl+O"))
         {
-            OpenDocument();
+            _state.popupOpenDocument = true;
         }
     }
     //--------------------------------------------------------------------------
@@ -301,7 +297,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Quit").c_str(), "Ctrl+Q"))
         {
-            Exit();
+            _state.popupQuit = true;
         }
     }
     //--------------------------------------------------------------------------
@@ -585,8 +581,7 @@ namespace Storyteller
         {
             if (oldObjectName != objectName && !_gameDocumentManager->GetProxy()->SetObjectName(selectedObject->GetUuid(), objectName))
             {
-                Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "Object name already exists").c_str(), 
-                    _localizationManager->Translate("StorytellerEditor", "Warning").c_str(), _window, Dialogs::OkButtons);
+                _state.popupObjectNameWarning = true;
             }
         }
     }
@@ -877,47 +872,167 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::NewDocument()
+    void EditorUiCompositor::ComposePopups()
+    {
+        if (_state.popupNewDocument)
+        {
+            NewDocumentPopup();
+        }
+        else if (_state.popupQuit)
+        {
+            QuitPopup();
+        }
+        else if (_state.popupObjectNameWarning)
+        {
+            ObjectNameWarningPopup();
+        }
+        else if (_state.popupOpenDocument)
+        {
+            OpenDocumentPopup();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::NewDocumentPopup()
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
-            const auto sureNew = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?").c_str(),
-                _localizationManager->Translate("StorytellerEditor", "New").c_str(), _window);
+            ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "New Document").c_str());
+            const auto center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-            if (sureNew)
+            if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "New Document").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                _gameDocumentManager->NewDocument();
+                ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?").c_str());
+                ImGui::Separator();
+
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
+                {
+                    _gameDocumentManager->NewDocument();
+                    _state.popupNewDocument = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SetItemDefaultFocus();
+
+                ImGui::SameLine();
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
+                {
+                    _state.popupNewDocument = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
             }
         }
         else
         {
             _gameDocumentManager->NewDocument();
+            _state.popupNewDocument = false;
+            ImGui::CloseCurrentPopup();
         }
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::Exit()
-    {
-        _window->SetShouldClose(ReadyToClose());
-    }
-    //--------------------------------------------------------------------------
-
-    void EditorUiCompositor::OpenDocument()
+    void EditorUiCompositor::QuitPopup()
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
-            const auto sureOpen = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str(),
-                _localizationManager->Translate("StorytellerEditor", "Open").c_str(), _window);
+            ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Quit").c_str());
+            const auto center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-            if (sureOpen)
+            if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Quit").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
-                if (!filepath.empty())
+                ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, quit anyway?").c_str());
+                ImGui::Separator();
+
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
                 {
-                    _recentList.remove(filepath);
-                    _recentList.push_front(filepath);
-                    _gameDocumentManager->OpenDocument(filepath);
+                    _window->SetShouldClose(true);
+                    _state.popupQuit = false;
+                    ImGui::CloseCurrentPopup();
                 }
+                ImGui::SetItemDefaultFocus();
+
+                ImGui::SameLine();
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
+                {
+                    _window->SetShouldClose(false);
+                    _state.popupQuit = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+        }
+        else
+        {
+            _window->SetShouldClose(true);
+            _state.popupQuit = false;
+            ImGui::CloseCurrentPopup();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::ObjectNameWarningPopup()
+    {
+        ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Warning").c_str());
+        const auto center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Warning").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Object name already exists!").c_str());
+            ImGui::Separator();
+
+            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
+            {
+                _state.popupObjectNameWarning = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SetItemDefaultFocus();
+
+            ImGui::EndPopup();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::OpenDocumentPopup()
+    {
+        if (_gameDocumentManager->GetDocument()->IsDirty())
+        {
+            ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Open").c_str());
+            const auto center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Open").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str());
+                ImGui::Separator();
+
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
+                {
+                    const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+                    if (!filepath.empty())
+                    {
+                        _recentList.remove(filepath);
+                        _recentList.push_front(filepath);
+                        _gameDocumentManager->OpenDocument(filepath);
+                    }
+
+                    _state.popupOpenDocument = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SetItemDefaultFocus();
+
+                ImGui::SameLine();
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
+                {
+                    _state.popupOpenDocument = false;
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
             }
         }
         else
@@ -929,6 +1044,9 @@ namespace Storyteller
                 _recentList.push_front(filepath);
                 _gameDocumentManager->OpenDocument(filepath);
             }
+
+            _state.popupOpenDocument = false;
+            ImGui::CloseCurrentPopup();
         }
     }
     //--------------------------------------------------------------------------

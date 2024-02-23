@@ -26,7 +26,6 @@ namespace Storyteller
         void EndFrame();
         void Shutdown();
 
-        bool ReadyToClose() const;
         bool OnWindowCloseEvent(WindowCloseEvent& event);
         bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event);
         bool OnKeyPressEvent(KeyPressEvent& event);

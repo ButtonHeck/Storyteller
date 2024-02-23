@@ -114,20 +114,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool EditorUi::ReadyToClose() const
-    {
-        return _compositor->ReadyToClose();
-    }
-    //--------------------------------------------------------------------------
-
     bool EditorUi::OnWindowCloseEvent(WindowCloseEvent& event)
     {
-        if (!ReadyToClose())
-        {
-            _window->SetShouldClose(false);
-        }
-
-        return true;
+        return _compositor->OnWindowCloseEvent(event);
     }
     //--------------------------------------------------------------------------
 
