@@ -41,6 +41,8 @@ namespace Storyteller
             bool popupQuit = false;
             bool popupObjectNameWarning = false;
             bool popupOpenDocument = false;
+            std::string popupOpenDocumentFile = "";
+            bool popupOpenDocumentError = false;
         };
 
     private:
@@ -80,9 +82,11 @@ namespace Storyteller
         void QuitPopup();
         void ObjectNameWarningPopup();
         void OpenDocumentPopup();
+        void OpenDocumentErrorPopup();
 
         void SaveDocument();
         void SaveAsDocument();
+        void OpenDocument(const std::string& filename);
         void SwitchLogWindowVisibility();
         void SwitchFullscreen();
 

@@ -218,45 +218,13 @@ namespace Storyteller
         UiUtils::DisableGuard guard(_recentList.empty());
         if (ImGui::BeginMenu(_localizationManager->Translate("StorytellerEditor", "Open recent").c_str()))
         {
-            auto recentDirty = false;
-            for (const auto recentCopy : _recentList)
+            for (const auto& recentFile : _recentList)
             {
-                const auto recentUnicode = Filesystem::PathUnicode(recentCopy);
-                if (ImGui::MenuItem(recentUnicode.empty() ? recentCopy.c_str() : recentUnicode.c_str()))
+                const auto recentUnicode = Filesystem::PathUnicode(recentFile);
+                if (ImGui::MenuItem(recentUnicode.empty() ? recentFile.c_str() : recentUnicode.c_str()))
                 {
-                    if (_gameDocumentManager->GetDocument()->IsDirty())
-                    {
-                        const auto sureOpen = Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str(),
-                            _localizationManager->Translate("StorytellerEditor", "Open").c_str(), _window);
-
-                        if (sureOpen)
-                        {
-                            const auto success = _gameDocumentManager->OpenDocument(recentCopy);
-                            if (!success)
-                            {
-                                Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "The selected file is missing or damaged").c_str(),
-                                    _localizationManager->Translate("StorytellerEditor", "Warning").c_str(), _window, Dialogs::OkButtons);
-                                recentDirty = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        const auto success = _gameDocumentManager->OpenDocument(recentCopy);
-                        if (!success)
-                        {
-                            Dialogs::Message(_localizationManager->Translate("StorytellerEditor", "The selected file is missing or damaged").c_str(),
-                                _localizationManager->Translate("StorytellerEditor", "Warning").c_str(), _window, Dialogs::OkButtons);
-                            recentDirty = true;
-                        }
-                    }
-
-                    _recentList.remove(recentCopy);
-                    if (!recentDirty)
-                    {
-                        _recentList.push_front(recentCopy);
-                    }
-
+                    _state.popupOpenDocument = true;
+                    _state.popupOpenDocumentFile = recentFile;
                     break;
                 }
             }
@@ -878,17 +846,21 @@ namespace Storyteller
         {
             NewDocumentPopup();
         }
-        else if (_state.popupQuit)
+        if (_state.popupQuit)
         {
             QuitPopup();
         }
-        else if (_state.popupObjectNameWarning)
+        if (_state.popupObjectNameWarning)
         {
             ObjectNameWarningPopup();
         }
-        else if (_state.popupOpenDocument)
+        if (_state.popupOpenDocument)
         {
             OpenDocumentPopup();
+        }
+        if (_state.popupOpenDocumentError)
+        {
+            OpenDocumentErrorPopup();
         }
     }
     //--------------------------------------------------------------------------
@@ -1012,15 +984,21 @@ namespace Storyteller
 
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
                 {
-                    const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
-                    if (!filepath.empty())
+                    if (_state.popupOpenDocumentFile.empty())
                     {
-                        _recentList.remove(filepath);
-                        _recentList.push_front(filepath);
-                        _gameDocumentManager->OpenDocument(filepath);
+                        const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+                        if (!filepath.empty())
+                        {
+                            OpenDocument(filepath);
+                        }
+                    }
+                    else
+                    {
+                        OpenDocument(_state.popupOpenDocumentFile);
                     }
 
                     _state.popupOpenDocument = false;
+                    _state.popupOpenDocumentFile = "";
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SetItemDefaultFocus();
@@ -1029,6 +1007,7 @@ namespace Storyteller
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
                 {
                     _state.popupOpenDocument = false;
+                    _state.popupOpenDocumentFile = "";
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -1037,16 +1016,45 @@ namespace Storyteller
         }
         else
         {
-            const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
-            if (!filepath.empty())
+            if (_state.popupOpenDocumentFile.empty())
             {
-                _recentList.remove(filepath);
-                _recentList.push_front(filepath);
-                _gameDocumentManager->OpenDocument(filepath);
+                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+                if (!filepath.empty())
+                {
+                    OpenDocument(filepath);
+                }
+            }
+            else
+            {
+                OpenDocument(_state.popupOpenDocumentFile);
             }
 
             _state.popupOpenDocument = false;
+            _state.popupOpenDocumentFile = "";
             ImGui::CloseCurrentPopup();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::OpenDocumentErrorPopup()
+    {
+        ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Error").c_str());
+        const auto center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Error").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text(_localizationManager->Translate("StorytellerEditor", "The selected file is missing or damaged").c_str());
+            ImGui::Separator();
+
+            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
+            {
+                _state.popupOpenDocumentError = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SetItemDefaultFocus();
+
+            ImGui::EndPopup();
         }
     }
     //--------------------------------------------------------------------------
@@ -1068,6 +1076,22 @@ namespace Storyteller
     {
         const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window);
         _gameDocumentManager->Save(filepath);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::OpenDocument(const std::string& filename)
+    {
+        const auto success = _gameDocumentManager->OpenDocument(filename);
+        _recentList.remove(filename);
+
+        if (success)
+        {
+            _recentList.push_front(filename);
+        }
+        else
+        {
+            _state.popupOpenDocumentError = true;
+        }
     }
     //--------------------------------------------------------------------------
 
