@@ -453,7 +453,7 @@ namespace Storyteller
                     {
                         if (object->GetObjectType() == ObjectType::QuestObjectType)
                         {
-                            const auto actionObjects = _gameDocumentManager->GetProxy()->GetObjects<ActionObject>(false);
+                            const auto actionObjects = _gameDocumentManager->GetProxy()->GetObjects<ActionObject>();
                             for (const auto actionObject : actionObjects)
                             {
                                 if (actionObject->GetTargetUuid() == object->GetUuid())
@@ -600,7 +600,7 @@ namespace Storyteller
         const auto selectedUuid = selectedObject->GetUuid();
 
         auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
-        const auto namedActionObjects = proxy->GetObjects(ObjectType::ActionObjectType, true);
+        const auto allActionObjects = proxy->GetObjects(ObjectType::ActionObjectType);
 
         const auto entryPointObject = proxy->GetEntryPoint();
         auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedUuid) : false;
@@ -610,7 +610,7 @@ namespace Storyteller
             proxy->SetEntryPoint(selectedUuid);
         }
 
-        if (_state.selectedActionIndex >= namedActionObjects.size())
+        if (_state.selectedActionIndex >= allActionObjects.size())
         {
             _state.selectedActionIndex = 0;
         }
@@ -623,10 +623,10 @@ namespace Storyteller
         }
 
         {
-            UiUtils::DisableGuard guard(namedActionObjects.empty());
+            UiUtils::DisableGuard guard(allActionObjects.empty());
             if (ImGui::Button(ICON_FK_PLUS))
             {
-                selectedQuestObject->AddAction(namedActionObjects.at(_state.selectedActionIndex)->GetUuid());
+                selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
             }
         }
         UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add action to object").c_str());
@@ -636,13 +636,13 @@ namespace Storyteller
         {
             const auto title = _localizationManager->Translate("StorytellerEditor", "Action name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
-            UiUtils::DisableGuard disableGuard(namedActionObjects.empty());
-            if (ImGui::BeginCombo(title.c_str(), namedActionObjects.empty() ? "" : namedActionObjects[_state.selectedActionIndex]->GetName().c_str()))
+            UiUtils::DisableGuard disableGuard(allActionObjects.empty());
+            if (ImGui::BeginCombo(title.c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
             {
-                for (auto actionIndex = 0; actionIndex < namedActionObjects.size(); actionIndex++)
+                for (auto actionIndex = 0; actionIndex < allActionObjects.size(); actionIndex++)
                 {
                     const auto selected = _state.selectedActionIndex == actionIndex;
-                    if (ImGui::Selectable(namedActionObjects.at(actionIndex)->GetName().c_str(), selected))
+                    if (ImGui::Selectable(allActionObjects.at(actionIndex)->GetName().c_str(), selected))
                     {
                         _state.selectedActionIndex = actionIndex;
                     }
@@ -749,7 +749,7 @@ namespace Storyteller
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
-        const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType, true);
+        const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType);
 
         if (_state.selectedQuestIndex >= allQuestObjects.size())
         {

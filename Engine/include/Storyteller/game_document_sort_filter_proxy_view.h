@@ -53,11 +53,11 @@ namespace Storyteller
         Ptr<BasicObject> GetObject(const std::string& name) const;
 
         const std::vector<Ptr<BasicObject>>& GetObjects() const;
-        std::vector<Ptr<BasicObject>> GetObjects(ObjectType type, bool noEmptyName) const;
+        std::vector<Ptr<BasicObject>> GetObjects(ObjectType type) const;
         template<typename T>
-        std::vector<Ptr<T>> GetObjects(bool noEmptyName) const
+        std::vector<Ptr<T>> GetObjects() const
         {
-            return _document->GetObjects<T>(noEmptyName);
+            return _document->GetObjects<T>();
         }
 
         void SetEntryPoint(const UUID& uuid);

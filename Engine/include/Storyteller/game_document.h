@@ -35,9 +35,9 @@ namespace Storyteller
         Ptr<BasicObject> GetObject(const std::string& name) const;
 
         const std::vector<Ptr<BasicObject>>& GetObjects() const;
-        std::vector<Ptr<BasicObject>> GetObjects(ObjectType type, bool noEmptyName) const;
+        std::vector<Ptr<BasicObject>> GetObjects(ObjectType type) const;
         template<typename T>
-        std::vector<Ptr<T>> GetObjects(bool noEmptyName) const;
+        std::vector<Ptr<T>> GetObjects() const;
 
         void SetEntryPoint(const UUID& uuid);
         Ptr<BasicObject> GetEntryPoint() const;
@@ -55,9 +55,9 @@ namespace Storyteller
     //--------------------------------------------------------------------------
 
     template<>
-    inline std::vector<Ptr<QuestObject>> Storyteller::GameDocument::GetObjects(bool noEmptyName) const
+    inline std::vector<Ptr<QuestObject>> Storyteller::GameDocument::GetObjects() const
     {
-        const auto basicObjects = GetObjects(ObjectType::QuestObjectType, noEmptyName);
+        const auto basicObjects = GetObjects(ObjectType::QuestObjectType);
         std::vector<Ptr<QuestObject>> result;
         std::for_each(basicObjects.cbegin(), basicObjects.cend(), [&](const Ptr<BasicObject>& object) {
             const auto typedObject = std::dynamic_pointer_cast<QuestObject>(object);
@@ -73,9 +73,9 @@ namespace Storyteller
     //--------------------------------------------------------------------------
 
     template<>
-    inline std::vector<Ptr<ActionObject>> Storyteller::GameDocument::GetObjects(bool noEmptyName) const
+    inline std::vector<Ptr<ActionObject>> Storyteller::GameDocument::GetObjects() const
     {
-        const auto basicObjects = GetObjects(ObjectType::ActionObjectType, noEmptyName);
+        const auto basicObjects = GetObjects(ObjectType::ActionObjectType);
         std::vector<Ptr<ActionObject>> result;
         std::for_each(basicObjects.cbegin(), basicObjects.cend(), [&](const Ptr<BasicObject>& object) {
             const auto typedObject = std::dynamic_pointer_cast<ActionObject>(object);

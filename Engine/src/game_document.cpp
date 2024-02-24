@@ -91,7 +91,7 @@ namespace Storyteller
         {
         case ObjectType::QuestObjectType:
         {
-            const auto questObjects = GetObjects<QuestObject>(false);
+            const auto questObjects = GetObjects<QuestObject>();
             auto nameIndex = 1;
             auto name = std::string(ObjectTypeToString(ObjectType::QuestObjectType).append(std::to_string(nameIndex)));
             while (std::find_if(questObjects.cbegin(), questObjects.cend(), [&](const Ptr<QuestObject> obj) { return obj->GetName() == name; }) != questObjects.cend())
@@ -110,7 +110,7 @@ namespace Storyteller
 
         case ObjectType::ActionObjectType:
         {
-            const auto actionObjects = GetObjects<ActionObject>(false);
+            const auto actionObjects = GetObjects<ActionObject>();
             auto nameIndex = 1;
             auto name = std::string(ObjectTypeToString(ObjectType::ActionObjectType).append(std::to_string(nameIndex)));
             while (std::find_if(actionObjects.cbegin(), actionObjects.cend(), [&](const Ptr<ActionObject> obj) { return obj->GetName() == name; }) != actionObjects.cend())
@@ -199,22 +199,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::vector<Ptr<BasicObject>> GameDocument::GetObjects(ObjectType type, bool noEmptyName) const
+    std::vector<Ptr<BasicObject>> GameDocument::GetObjects(ObjectType type) const
     {
         std::vector<Ptr<BasicObject>> result;
-        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type, noEmptyName](const Ptr<BasicObject>& object) 
-            { 
-                if (object->GetObjectType() != type)
-                {
-                    return false;
-                }
-
-                if (noEmptyName)
-                {
-                    return !object->GetName().empty();
-                }
-                
-                return true;
+        std::copy_if(_objects.cbegin(), _objects.cend(), std::back_inserter(result), [type](const Ptr<BasicObject>& object) 
+            {
+                return object->GetObjectType() == type;
             }
         );
 
