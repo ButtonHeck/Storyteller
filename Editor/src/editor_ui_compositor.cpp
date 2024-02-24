@@ -553,9 +553,15 @@ namespace Storyteller
         const auto oldObjectName = objectName;
         if (ImGui::InputText(std::string("##ObjectName").append(uuidString).c_str(), &objectName, ImGuiInputTextFlags_EnterReturnsTrue))
         {
+            if (objectName.empty())
+            {
+                _state.popupObjectNameEmptyWarning = true;
+                return;
+            }
+
             if (oldObjectName != objectName && !_gameDocumentManager->GetProxy()->SetObjectName(selectedObject->GetUuid(), objectName))
             {
-                _state.popupObjectNameWarning = true;
+                _state.popupObjectNameExistingWarning = true;
             }
         }
     }
@@ -857,28 +863,32 @@ namespace Storyteller
     {
         if (_state.popupNewDocument)
         {
-            NewDocumentPopup();
+            PopupNewDocument();
         }
         if (_state.popupQuit)
         {
-            QuitPopup();
+            PopupQuit();
         }
-        if (_state.popupObjectNameWarning)
+        if (_state.popupObjectNameExistingWarning)
         {
-            ObjectNameWarningPopup();
+            PopupObjectNameExistingWarning();
+        }
+        if (_state.popupObjectNameEmptyWarning)
+        {
+            PopupObjectNameEmptyWarning();
         }
         if (_state.popupOpenDocument)
         {
-            OpenDocumentPopup();
+            PopupOpenDocument();
         }
         if (_state.popupOpenDocumentError)
         {
-            OpenDocumentErrorPopup();
+            PopupOpenDocumentError();
         }
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::NewDocumentPopup()
+    void EditorUiCompositor::PopupNewDocument()
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
@@ -918,7 +928,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::QuitPopup()
+    void EditorUiCompositor::PopupQuit()
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
@@ -959,7 +969,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::ObjectNameWarningPopup()
+    void EditorUiCompositor::PopupObjectNameExistingWarning()
     {
         ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Warning").c_str());
         const auto center = ImGui::GetMainViewport()->GetCenter();
@@ -972,7 +982,7 @@ namespace Storyteller
 
             if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
             {
-                _state.popupObjectNameWarning = false;
+                _state.popupObjectNameExistingWarning = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SetItemDefaultFocus();
@@ -982,7 +992,30 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::OpenDocumentPopup()
+    void EditorUiCompositor::PopupObjectNameEmptyWarning()
+    {
+        ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Warning").c_str());
+        const auto center = ImGui::GetMainViewport()->GetCenter();
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+        if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Warning").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Object name cannot be empty!").c_str());
+            ImGui::Separator();
+
+            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
+            {
+                _state.popupObjectNameEmptyWarning = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SetItemDefaultFocus();
+
+            ImGui::EndPopup();
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUiCompositor::PopupOpenDocument()
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
@@ -1049,7 +1082,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::OpenDocumentErrorPopup()
+    void EditorUiCompositor::PopupOpenDocumentError()
     {
         ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Error").c_str());
         const auto center = ImGui::GetMainViewport()->GetCenter();

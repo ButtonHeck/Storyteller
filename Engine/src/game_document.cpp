@@ -90,14 +90,42 @@ namespace Storyteller
         switch (type)
         {
         case ObjectType::QuestObjectType:
-            _objects.push_back(CreatePtr<QuestObject>(uuid, [this]() { SetDirty(true); }));
+        {
+            const auto questObjects = GetObjects<QuestObject>(false);
+            auto nameIndex = 1;
+            auto name = std::string(ObjectTypeToString(ObjectType::QuestObjectType).append(std::to_string(nameIndex)));
+            while (std::find_if(questObjects.cbegin(), questObjects.cend(), [&](const Ptr<QuestObject> obj) { return obj->GetName() == name; }) != questObjects.cend())
+            {
+                ++nameIndex;
+                name = std::string(ObjectTypeToString(ObjectType::QuestObjectType).append(std::to_string(nameIndex)));
+            }
+
+            auto newObject = CreatePtr<QuestObject>(uuid, [this]() { SetDirty(true); });
+            newObject->SetName(name);
+
+            _objects.push_back(newObject);
             SetDirty(true);
             return true;
+        }
 
         case ObjectType::ActionObjectType:
-            _objects.push_back(CreatePtr<ActionObject>(uuid, [this]() { SetDirty(true); }));
+        {
+            const auto actionObjects = GetObjects<ActionObject>(false);
+            auto nameIndex = 1;
+            auto name = std::string(ObjectTypeToString(ObjectType::ActionObjectType).append(std::to_string(nameIndex)));
+            while (std::find_if(actionObjects.cbegin(), actionObjects.cend(), [&](const Ptr<ActionObject> obj) { return obj->GetName() == name; }) != actionObjects.cend())
+            {
+                ++nameIndex;
+                name = std::string(ObjectTypeToString(ObjectType::ActionObjectType).append(std::to_string(nameIndex)));
+            }
+
+            auto newObject = CreatePtr<ActionObject>(uuid, [this]() { SetDirty(true); });
+            newObject->SetName(name);
+
+            _objects.push_back(newObject);
             SetDirty(true);
             return true;
+        }
 
         default:
             break;

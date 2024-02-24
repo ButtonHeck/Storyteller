@@ -39,7 +39,8 @@ namespace Storyteller
 
             bool popupNewDocument = false;
             bool popupQuit = false;
-            bool popupObjectNameWarning = false;
+            bool popupObjectNameExistingWarning = false;
+            bool popupObjectNameEmptyWarning = false;
             bool popupOpenDocument = false;
             std::string popupOpenDocumentFile = "";
             bool popupOpenDocumentError = false;
@@ -78,11 +79,12 @@ namespace Storyteller
         void ComposePopups();
 
     private:
-        void NewDocumentPopup();
-        void QuitPopup();
-        void ObjectNameWarningPopup();
-        void OpenDocumentPopup();
-        void OpenDocumentErrorPopup();
+        void PopupNewDocument();
+        void PopupQuit();
+        void PopupObjectNameExistingWarning();
+        void PopupObjectNameEmptyWarning();
+        void PopupOpenDocument();
+        void PopupOpenDocumentError();
 
         void SaveDocument();
         void SaveAsDocument();
