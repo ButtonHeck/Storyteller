@@ -36,14 +36,18 @@ namespace Storyteller
             int selectedQuestIndex = 0;
             bool logPanel = true;
             bool logAutoscroll = false;
+        };
 
-            bool popupNewDocument = false;
-            bool popupQuit = false;
-            bool popupObjectNameExistingWarning = false;
-            bool popupObjectNameEmptyWarning = false;
-            bool popupOpenDocument = false;
-            std::string popupOpenDocumentFile = "";
-            bool popupOpenDocumentError = false;
+        struct UiPopupsState
+        {
+            bool newDocument = false;
+            bool quit = false;
+
+            bool warningMessage = false;
+            std::string warningMessageText = "";
+
+            bool openDocument = false;
+            std::string openDocumentFile = "";
         };
 
     private:
@@ -81,10 +85,8 @@ namespace Storyteller
     private:
         void PopupNewDocument();
         void PopupQuit();
-        void PopupObjectNameExistingWarning();
-        void PopupObjectNameEmptyWarning();
+        void PopupWarningMessage();
         void PopupOpenDocument();
-        void PopupOpenDocumentError();
 
         void SaveDocument();
         void SaveAsDocument();
@@ -97,6 +99,7 @@ namespace Storyteller
         Ptr<LocalizationManager> _localizationManager;
         Ptr<GameDocumentManager> _gameDocumentManager;
         UiComponentsState _state;
+        UiPopupsState _popups;
         std::list<std::string> _recentList;
     };
     //--------------------------------------------------------------------------

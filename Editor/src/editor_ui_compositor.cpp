@@ -55,15 +55,15 @@ namespace Storyteller
 
         if (keyCode == Key::Q && mods == Mode::Ctrl)
         {
-            _state.popupQuit = true;
+            _popups.quit = true;
         }
         else if (keyCode == Key::N && mods == Mode::Ctrl)
         {
-            _state.popupNewDocument = true;
+            _popups.newDocument = true;
         }
         else if (keyCode == Key::O && mods == Mode::Ctrl)
         {
-            _state.popupOpenDocument = true;
+            _popups.openDocument = true;
         }
         else if (keyCode == Key::S && mods == Mode::Ctrl)
         {
@@ -88,7 +88,7 @@ namespace Storyteller
 
     bool EditorUiCompositor::OnWindowCloseEvent(WindowCloseEvent& event)
     {
-        _state.popupQuit = true;
+        _popups.quit = true;
         _window->SetShouldClose(false);
         return true;
     }
@@ -199,7 +199,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "New").c_str(), "Ctrl+N"))
         {
-            _state.popupNewDocument = true;
+            _popups.newDocument = true;
         }
     }
     //--------------------------------------------------------------------------
@@ -208,7 +208,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Open").c_str(), "Ctrl+O"))
         {
-            _state.popupOpenDocument = true;
+            _popups.openDocument = true;
         }
     }
     //--------------------------------------------------------------------------
@@ -223,8 +223,8 @@ namespace Storyteller
                 const auto recentUnicode = Filesystem::PathUnicode(recentFile);
                 if (ImGui::MenuItem(recentUnicode.empty() ? recentFile.c_str() : recentUnicode.c_str()))
                 {
-                    _state.popupOpenDocument = true;
-                    _state.popupOpenDocumentFile = recentFile;
+                    _popups.openDocument = true;
+                    _popups.openDocumentFile = recentFile;
                     break;
                 }
             }
@@ -265,7 +265,7 @@ namespace Storyteller
     {
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Quit").c_str(), "Ctrl+Q"))
         {
-            _state.popupQuit = true;
+            _popups.quit = true;
         }
     }
     //--------------------------------------------------------------------------
@@ -555,13 +555,15 @@ namespace Storyteller
         {
             if (objectName.empty())
             {
-                _state.popupObjectNameEmptyWarning = true;
+                _popups.warningMessage = true;
+                _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "Object name cannot be empty!");
                 return;
             }
 
             if (oldObjectName != objectName && !_gameDocumentManager->GetProxy()->SetObjectName(selectedObject->GetUuid(), objectName))
             {
-                _state.popupObjectNameExistingWarning = true;
+                _popups.warningMessage = true;
+                _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "Object name already exists!");
             }
         }
     }
@@ -861,29 +863,21 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePopups()
     {
-        if (_state.popupNewDocument)
+        if (_popups.newDocument)
         {
             PopupNewDocument();
         }
-        if (_state.popupQuit)
+        if (_popups.quit)
         {
             PopupQuit();
         }
-        if (_state.popupObjectNameExistingWarning)
+        if (_popups.warningMessage)
         {
-            PopupObjectNameExistingWarning();
+            PopupWarningMessage();
         }
-        if (_state.popupObjectNameEmptyWarning)
-        {
-            PopupObjectNameEmptyWarning();
-        }
-        if (_state.popupOpenDocument)
+        if (_popups.openDocument)
         {
             PopupOpenDocument();
-        }
-        if (_state.popupOpenDocumentError)
-        {
-            PopupOpenDocumentError();
         }
     }
     //--------------------------------------------------------------------------
@@ -904,7 +898,7 @@ namespace Storyteller
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
                 {
                     _gameDocumentManager->NewDocument();
-                    _state.popupNewDocument = false;
+                    _popups.newDocument = false;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SetItemDefaultFocus();
@@ -912,7 +906,7 @@ namespace Storyteller
                 ImGui::SameLine();
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
                 {
-                    _state.popupNewDocument = false;
+                    _popups.newDocument = false;
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -922,8 +916,7 @@ namespace Storyteller
         else
         {
             _gameDocumentManager->NewDocument();
-            _state.popupNewDocument = false;
-            ImGui::CloseCurrentPopup();
+            _popups.newDocument = false;
         }
     }
     //--------------------------------------------------------------------------
@@ -944,7 +937,7 @@ namespace Storyteller
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
                 {
                     _window->SetShouldClose(true);
-                    _state.popupQuit = false;
+                    _popups.quit = false;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SetItemDefaultFocus();
@@ -953,7 +946,7 @@ namespace Storyteller
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
                 {
                     _window->SetShouldClose(false);
-                    _state.popupQuit = false;
+                    _popups.quit = false;
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -963,13 +956,12 @@ namespace Storyteller
         else
         {
             _window->SetShouldClose(true);
-            _state.popupQuit = false;
-            ImGui::CloseCurrentPopup();
+            _popups.quit = false;
         }
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::PopupObjectNameExistingWarning()
+    void EditorUiCompositor::PopupWarningMessage()
     {
         ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Warning").c_str());
         const auto center = ImGui::GetMainViewport()->GetCenter();
@@ -977,35 +969,12 @@ namespace Storyteller
 
         if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Warning").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Object name already exists!").c_str());
+            ImGui::Text(_popups.warningMessageText.c_str());
             ImGui::Separator();
 
             if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
             {
-                _state.popupObjectNameExistingWarning = false;
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::SetItemDefaultFocus();
-
-            ImGui::EndPopup();
-        }
-    }
-    //--------------------------------------------------------------------------
-
-    void EditorUiCompositor::PopupObjectNameEmptyWarning()
-    {
-        ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Warning").c_str());
-        const auto center = ImGui::GetMainViewport()->GetCenter();
-        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-        if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Warning").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Object name cannot be empty!").c_str());
-            ImGui::Separator();
-
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
-            {
-                _state.popupObjectNameEmptyWarning = false;
+                _popups.warningMessage = false;
                 ImGui::CloseCurrentPopup();
             }
             ImGui::SetItemDefaultFocus();
@@ -1030,7 +999,7 @@ namespace Storyteller
 
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
                 {
-                    if (_state.popupOpenDocumentFile.empty())
+                    if (_popups.openDocumentFile.empty())
                     {
                         const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                         if (!filepath.empty())
@@ -1040,11 +1009,11 @@ namespace Storyteller
                     }
                     else
                     {
-                        OpenDocument(_state.popupOpenDocumentFile);
+                        OpenDocument(_popups.openDocumentFile);
                     }
 
-                    _state.popupOpenDocument = false;
-                    _state.popupOpenDocumentFile = "";
+                    _popups.openDocument = false;
+                    _popups.openDocumentFile = "";
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SetItemDefaultFocus();
@@ -1052,8 +1021,8 @@ namespace Storyteller
                 ImGui::SameLine();
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
                 {
-                    _state.popupOpenDocument = false;
-                    _state.popupOpenDocumentFile = "";
+                    _popups.openDocument = false;
+                    _popups.openDocumentFile = "";
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -1062,7 +1031,7 @@ namespace Storyteller
         }
         else
         {
-            if (_state.popupOpenDocumentFile.empty())
+            if (_popups.openDocumentFile.empty())
             {
                 const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
                 if (!filepath.empty())
@@ -1072,35 +1041,11 @@ namespace Storyteller
             }
             else
             {
-                OpenDocument(_state.popupOpenDocumentFile);
+                OpenDocument(_popups.openDocumentFile);
             }
 
-            _state.popupOpenDocument = false;
-            _state.popupOpenDocumentFile = "";
-            ImGui::CloseCurrentPopup();
-        }
-    }
-    //--------------------------------------------------------------------------
-
-    void EditorUiCompositor::PopupOpenDocumentError()
-    {
-        ImGui::OpenPopup(_localizationManager->Translate("StorytellerEditor", "Error").c_str());
-        const auto center = ImGui::GetMainViewport()->GetCenter();
-        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-        if (ImGui::BeginPopupModal(_localizationManager->Translate("StorytellerEditor", "Error").c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-        {
-            ImGui::Text(_localizationManager->Translate("StorytellerEditor", "The selected file is missing or damaged").c_str());
-            ImGui::Separator();
-
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
-            {
-                _state.popupOpenDocumentError = false;
-                ImGui::CloseCurrentPopup();
-            }
-            ImGui::SetItemDefaultFocus();
-
-            ImGui::EndPopup();
+            _popups.openDocument = false;
+            _popups.openDocumentFile = "";
         }
     }
     //--------------------------------------------------------------------------
@@ -1136,7 +1081,8 @@ namespace Storyteller
         }
         else
         {
-            _state.popupOpenDocumentError = true;
+            _popups.warningMessage = true;
+            _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "The selected file is missing or damaged");
         }
     }
     //--------------------------------------------------------------------------
