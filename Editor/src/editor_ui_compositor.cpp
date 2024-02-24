@@ -64,6 +64,7 @@ namespace Storyteller
         else if (keyCode == Key::O && mods == Mode::Ctrl)
         {
             _popups.openDocument = true;
+            _popups.openDocumentFile = "";
         }
         else if (keyCode == Key::S && mods == Mode::Ctrl)
         {
@@ -209,6 +210,7 @@ namespace Storyteller
         if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Open").c_str(), "Ctrl+O"))
         {
             _popups.openDocument = true;
+            _popups.openDocumentFile = "";
         }
     }
     //--------------------------------------------------------------------------
@@ -324,9 +326,21 @@ namespace Storyteller
             const auto title = _localizationManager->Translate("StorytellerEditor", "Name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
             auto gameName = document->GetGameName();
+            const auto oldGameName = gameName;
             if (ImGui::InputText(title.c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
             {
-                document->SetGameName(gameName);
+                if (oldGameName != gameName)
+                {
+                    if (gameName.empty())
+                    {
+                        _popups.warningMessage = true;
+                        _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "Game name cannot be empty!");
+                    }
+                    else
+                    {
+                        document->SetGameName(gameName);
+                    }
+                }
             }
         }
 
@@ -1013,7 +1027,6 @@ namespace Storyteller
                     }
 
                     _popups.openDocument = false;
-                    _popups.openDocumentFile = "";
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SetItemDefaultFocus();
@@ -1022,7 +1035,6 @@ namespace Storyteller
                 if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
                 {
                     _popups.openDocument = false;
-                    _popups.openDocumentFile = "";
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -1045,7 +1057,6 @@ namespace Storyteller
             }
 
             _popups.openDocument = false;
-            _popups.openDocumentFile = "";
         }
     }
     //--------------------------------------------------------------------------
