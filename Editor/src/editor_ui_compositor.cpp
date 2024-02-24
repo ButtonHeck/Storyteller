@@ -411,6 +411,12 @@ namespace Storyteller
         const auto objectsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable
             | ImGuiTableFlags_ScrollY | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_Sortable;
 
+        UiUtils::StyleColorGuard titleColorGuard({
+            {ImGuiCol_Header, ImColor(170, 150, 120, 100)},
+            {ImGuiCol_HeaderHovered, ImColor(180, 160, 130, 140)},
+            {ImGuiCol_HeaderActive, ImColor(180, 160, 130, 180)}
+        });
+
         if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects").c_str(), 4, objectsTableFlags))
         {
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 65.0f);
@@ -483,7 +489,7 @@ namespace Storyteller
                 }
 
                 {
-                    UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)} });
+                    UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                     ImGui::TableNextColumn();
                     ImGui::Selectable(_localizationManager->Translate("Storyteller", ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
@@ -655,6 +661,13 @@ namespace Storyteller
 
         const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable 
             | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_ScrollY;
+
+        UiUtils::StyleColorGuard titleColorGuard({
+            {ImGuiCol_Header, ImColor(170, 150, 120, 100)},
+            {ImGuiCol_HeaderHovered, ImColor(180, 160, 130, 140)},
+            {ImGuiCol_HeaderActive, ImColor(180, 160, 130, 180)}
+        });
+
         if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 4, actionsTableFlags))
         {
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 65.0f);
@@ -701,7 +714,7 @@ namespace Storyteller
                     UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Find action object").c_str());
                 }
 
-                UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, actionObject->IsConsistent() ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
+                UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, actionObject->IsConsistent() ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                 ImGui::TableNextColumn();
                 ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
@@ -818,7 +831,7 @@ namespace Storyteller
         ImGui::SameLine();
 
         {
-            UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0)} });
+            UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
             auto logDataStr = std::string(Log::StringLogOutput());
             const char* logViewName = "##LogView";
             ImGui::InputTextMultiline(logViewName, &logDataStr, ImVec2(ImGui::GetContentRegionAvail().x, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
