@@ -860,12 +860,20 @@ namespace Storyteller
     {
         ImGui::Begin(_localizationManager->Translate("StorytellerEditor", "Log").c_str(), nullptr);
 
+        auto singleScrollToEnd = false;
+
         {
             UiUtils::GroupGuard groupGuard;
 
+            if (ImGui::Button(ICON_FK_ANGLE_DOWN))
+            {
+                singleScrollToEnd = true;
+            }
+            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Scroll to end").c_str());
+
             {
                 UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_Border, _state.logAutoscroll ? ImVec4(1, 1, 1, 1) : ImGui::GetStyleColorVec4(ImGuiCol_Border)} });
-                if (ImGui::Button(ICON_FK_ARROW_DOWN))
+                if (ImGui::Button(ICON_FK_ANGLE_DOUBLE_DOWN))
                 {
                     _state.logAutoscroll = !_state.logAutoscroll;
                 }
@@ -881,7 +889,7 @@ namespace Storyteller
             const char* logViewName = "##LogView";
             ImGui::InputTextMultiline(logViewName, &logDataStr, ImVec2(ImGui::GetContentRegionAvail().x, -FLT_MIN), ImGuiInputTextFlags_ReadOnly);
 
-            if (_state.logAutoscroll)
+            if (_state.logAutoscroll || singleScrollToEnd)
             {
                 const auto& imguiContext = *GImGui;
                 const char* windowName = nullptr;
