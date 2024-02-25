@@ -690,6 +690,33 @@ namespace Storyteller
             {ImGuiCol_HeaderActive, ImColor(180, 160, 130, 180)}
         });
 
+        {
+            UiUtils::GroupGuard groupGuard;
+
+            const auto selectedActionObject = questObjectActions.empty() ? UUID::InvalidUuid : questObjectActions[_state.selectedChildActionIndex];
+
+            {
+                UiUtils::DisableGuard disableGuard(questObjectActions.empty() || _state.selectedChildActionIndex == 0);
+                if (ImGui::Button(ICON_FK_ARROW_UP))
+                {
+                    selectedQuestObject->MoveActionUp(selectedActionObject);
+                    _state.selectedChildActionIndex--;
+                }
+            }
+            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Move action up").c_str());
+
+            {
+                UiUtils::DisableGuard disableGuard(questObjectActions.empty() || _state.selectedChildActionIndex >= (questObjectActions.size() - 1));
+                if (ImGui::Button(ICON_FK_ARROW_DOWN))
+                {
+                    selectedQuestObject->MoveActionDown(selectedActionObject);
+                    _state.selectedChildActionIndex++;
+                }
+            }
+            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Move action down").c_str());
+        }
+
+        ImGui::SameLine();
         if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 4, actionsTableFlags))
         {
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 65.0f);

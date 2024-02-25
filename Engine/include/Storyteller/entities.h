@@ -72,7 +72,10 @@ namespace Storyteller
         const std::vector<UUID>& GetActions() const;
         bool AddAction(const UUID& actionUuid);
         bool RemoveAction(const UUID& actionUuid);
+        bool MoveActionUp(const UUID& actionUuid);
+        bool MoveActionDown(const UUID& actionUuid);
         bool ContainsAction(const UUID& actionUuid) const;
+        int IndexOfAction(const UUID& actionUuid) const;
         void SetFinal(bool isFinal);
         bool IsFinal() const;
 

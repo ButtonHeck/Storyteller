@@ -195,9 +195,53 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    bool QuestObject::MoveActionUp(const UUID& actionUuid)
+    {
+        const auto actionIndex = IndexOfAction(actionUuid);
+        if (actionUuid == UUID::InvalidUuid || (actionIndex <= 0) || (actionIndex >= _actions.size()))
+        {
+            return false;
+        }
+
+        std::swap(_actions[actionIndex], _actions[actionIndex - 1]);
+
+        if (_changeCallback)
+        {
+            _changeCallback();
+        }
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool QuestObject::MoveActionDown(const UUID& actionUuid)
+    {
+        const auto actionIndex = IndexOfAction(actionUuid);
+        if (actionUuid == UUID::InvalidUuid || (actionIndex >= _actions.size() - 1))
+        {
+            return false;
+        }
+
+        std::swap(_actions[actionIndex], _actions[actionIndex + 1]);
+
+        if (_changeCallback)
+        {
+            _changeCallback();
+        }
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
     bool QuestObject::ContainsAction(const UUID& actionUuid) const
     {
         return std::find(_actions.cbegin(), _actions.cend(), actionUuid) != _actions.cend();
+    }
+    //--------------------------------------------------------------------------
+
+    int QuestObject::IndexOfAction(const UUID& actionUuid) const
+    {
+        return std::find(_actions.cbegin(), _actions.cend(), actionUuid) - _actions.cbegin();
     }
     //--------------------------------------------------------------------------
 
