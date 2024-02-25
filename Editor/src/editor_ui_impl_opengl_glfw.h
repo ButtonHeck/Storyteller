@@ -1,21 +1,19 @@
 #pragma once
 
+#include "editor_ui_impl.h"
 #include "Storyteller/window.h"
 
 namespace Storyteller
 {
-    class EditorUiImplOpenglGLFW
+    class EditorUiImplOpenglGLFW : public EditorUiImpl
     {
     public:
         explicit EditorUiImplOpenglGLFW(Ptr<Window> window);
 
-        void Initialize();
-        void NewFrame();
-        void Render();
-        void Shutdown();
-
-    private:
-        Ptr<Window> _window;
+        void Initialize() override;
+        void NewFrame() override;
+        void Render() override;
+        void Shutdown() override;
     };
     //--------------------------------------------------------------------------
 }

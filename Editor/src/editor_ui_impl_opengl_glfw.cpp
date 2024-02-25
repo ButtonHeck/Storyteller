@@ -8,7 +8,7 @@
 namespace Storyteller
 {
     EditorUiImplOpenglGLFW::EditorUiImplOpenglGLFW(Ptr<Window> window)
-        : _window(window)
+        : EditorUiImpl(window)
     {}
     //--------------------------------------------------------------------------
 

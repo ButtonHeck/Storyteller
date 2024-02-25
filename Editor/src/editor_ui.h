@@ -1,7 +1,7 @@
 #pragma once
 
 #include "editor_ui_compositor.h"
-#include "editor_ui_impl_opengl_glfw.h"
+#include "editor_ui_impl.h"
 #include "Storyteller/settings.h"
 #include "Storyteller/window.h"
 #include "Storyteller/localization_manager.h"
@@ -39,7 +39,7 @@ namespace Storyteller
 
     private:
         Ptr<Window> _window;
-        Ptr<EditorUiImplOpenglGLFW> _uiImpl;
+        Ptr<EditorUiImpl> _uiImpl;
         Ptr<EditorUiCompositor> _compositor;
     };
     //--------------------------------------------------------------------------

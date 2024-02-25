@@ -8,7 +8,7 @@ namespace Storyteller
 {
     EditorUi::EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
         : _window(window)
-        , _uiImpl(new EditorUiImplOpenglGLFW(_window))
+        , _uiImpl(EditorUiImpl::CreateImpl(_window))
         , _compositor(new EditorUiCompositor(_window, localizationManager))
     {}
     //--------------------------------------------------------------------------

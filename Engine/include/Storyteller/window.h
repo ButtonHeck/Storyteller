@@ -12,6 +12,9 @@ namespace Storyteller
     class Window
     {
     public:
+        static Window* CreateWindow();
+
+    public:
         using EventCallbackFn = std::function<void(Event&)>;
 
     public:
@@ -21,8 +24,6 @@ namespace Storyteller
             WindowedFullscreenMode,
             WindowedMode
         };
-
-        static Window* CreateWindow();
 
         virtual ~Window() = default;
 

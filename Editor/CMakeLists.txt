@@ -12,6 +12,8 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/icons_font.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_impl.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_impl.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_impl_opengl_glfw.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_impl_opengl_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor_ui_compositor.h"

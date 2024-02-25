@@ -16,7 +16,7 @@
 +) editor stylization
 -) add "condition"-like object to engine
 -) improving locale usage (plurals, formatting)
--) EditorUi impl abtraction (now hardcoded OpenGL/GLFW is used)
++) EditorUi impl abtraction (now hardcoded OpenGL/GLFW is used)
 -) setup CMake installation
 -) explore possibility to create statusbar im ImGui (Editor)
 +-) OS header with platform definitions (_declspec etc.)

@@ -88,9 +88,16 @@ target_include_directories(${PROJECT_NAME}
 
 option(STORYTELLER_USE_WINDOW_BACKEND_GLFW "Use GLFW for window management" ON)
 if(${STORYTELLER_USE_WINDOW_BACKEND_GLFW})
-    target_compile_definitions(${PROJECT_NAME} PRIVATE STRTLR_WINDOW_BACKEND_GLFW)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC STRTLR_WINDOW_BACKEND_GLFW)
 else()
     message(ERROR "No window backend is chosen")
+endif()
+
+option(STORYTELLER_USE_GRAPHICS_BACKEND_OPENGL "Use OpenGL for graphics" ON)
+if (${STORYTELLER_USE_GRAPHICS_BACKEND_OPENGL})
+    target_compile_definitions(${PROJECT_NAME} PUBLIC STRTLR_GRAPHICS_BACKEND_OPENGL)
+else()
+    message(ERROR "No graphics backend is chosen")
 endif()
 
 if(Boost_FOUND)
