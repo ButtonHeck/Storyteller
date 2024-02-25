@@ -717,10 +717,9 @@ namespace Storyteller
         }
 
         ImGui::SameLine();
-        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 4, actionsTableFlags))
+        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 3, actionsTableFlags))
         {
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 65.0f);
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
             ImGui::TableSetupScrollFreeze(0, 1);
@@ -766,14 +765,11 @@ namespace Storyteller
                 UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, actionObject->IsConsistent() ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                 ImGui::TableNextColumn();
-                ImGui::Selectable(std::to_string(actionObject->GetUuid()).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                ImGui::Selectable(object->GetName().c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
                 if (ImGui::IsItemClicked(0))
                 {
                     _state.selectedChildActionIndex = row;
                 }
-
-                ImGui::TableNextColumn();
-                ImGui::Text(object->GetName().c_str());
 
                 ImGui::TableNextColumn();
                 ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText()).c_str());
