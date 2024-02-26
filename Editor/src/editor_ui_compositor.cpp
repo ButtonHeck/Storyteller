@@ -346,8 +346,11 @@ namespace Storyteller
 
         if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Create translations file...").c_str()))
         {
-            const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window);
-            _localizationManager->CreateTranslations(document, filepath);
+            const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window, document->GetGameName().c_str());
+            if (!filepath.empty())
+            {
+                _localizationManager->CreateTranslations(document, filepath);
+            }
         }
     }
     //--------------------------------------------------------------------------
@@ -1107,8 +1110,11 @@ namespace Storyteller
 
     void EditorUiCompositor::SaveAsDocument()
     {
-        const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window);
-        _gameDocumentManager->Save(filepath);
+        const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window, _gameDocumentManager->GetDocument()->GetGameName().c_str());
+        if (!filepath.empty())
+        {
+            _gameDocumentManager->Save(filepath);
+        }
     }
     //--------------------------------------------------------------------------
 

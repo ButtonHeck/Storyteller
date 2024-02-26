@@ -50,7 +50,7 @@ namespace Storyteller
 		}
 		//--------------------------------------------------------------------------
 
-		std::string SaveFile(const char* filter, Ptr<Window> window)
+		std::string SaveFile(const char* filter, Ptr<Window> window, const char* defaultName)
 		{
 			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
 			if (!implWindow)
@@ -62,6 +62,7 @@ namespace Storyteller
 
 			OPENFILENAMEA ofn;
 			CHAR szFile[260] = { 0 };
+			std::strcpy(szFile, defaultName);
 			CHAR currentDir[256] = { 0 };
 			ZeroMemory(&ofn, sizeof(OPENFILENAME));
 			ofn.lStructSize = sizeof(OPENFILENAME);
@@ -91,6 +92,7 @@ namespace Storyteller
 		}
 		//--------------------------------------------------------------------------
 
+		/*
 		bool Message(const char* text, const char* caption, Ptr<Window> window, MessageButtons buttons)
 		{
 			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
@@ -111,5 +113,6 @@ namespace Storyteller
 			return result == IDYES || result == IDOK;
 		}
 		//--------------------------------------------------------------------------
+		*/
 	}
 }
