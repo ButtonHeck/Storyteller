@@ -301,8 +301,12 @@ namespace Storyteller
 
     void ActionObject::SetTargetUuid(const UUID& targetUuid)
     {
-        STRTLR_CORE_LOG_DEBUG("ActionObject: ({}) set target '{}'", _uuid, targetUuid);
+        if (_targetUuid == targetUuid)
+        {
+            return;
+        }
 
+        STRTLR_CORE_LOG_DEBUG("ActionObject: ({}) set target '{}'", _uuid, targetUuid);
         _targetUuid = targetUuid;
         if (_changeCallback)
         {
