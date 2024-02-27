@@ -53,32 +53,35 @@ namespace Storyteller
             return true;
         }
 
-        if (keyCode == Key::Q && mods == Mode::Ctrl)
+        if (keyCode == Key::Q && mods & Mode::Ctrl)
         {
             _popups.quit = true;
         }
-        else if (keyCode == Key::N && mods == Mode::Ctrl)
+        else if (keyCode == Key::N && mods & Mode::Ctrl)
         {
             _popups.newDocument = true;
         }
-        else if (keyCode == Key::O && mods == Mode::Ctrl)
+        else if (keyCode == Key::O && mods & Mode::Ctrl)
         {
             _popups.openDocument = true;
             _popups.openDocumentFile = "";
         }
-        else if (keyCode == Key::S && mods == Mode::Ctrl)
+        else if (keyCode == Key::S && mods & Mode::Ctrl)
         {
-            SaveDocument();
+            if (mods & Mode::Shift)
+            {
+                SaveAsDocument();
+            }
+            else
+            {
+                SaveDocument();
+            }
         }
-        else if (keyCode == Key::S && mods == (Mode::Ctrl | Mode::Shift))
-        {
-            SaveAsDocument();
-        }
-        else if (keyCode == Key::L && mods == Mode::Ctrl)
+        else if (keyCode == Key::L && mods & Mode::Ctrl)
         {
             SwitchLogWindowVisibility();
         }
-        else if (keyCode == Key::Enter && mods == Mode::Alt)
+        else if (keyCode == Key::Enter && mods & Mode::Alt)
         {
             SwitchFullscreen();
         }
