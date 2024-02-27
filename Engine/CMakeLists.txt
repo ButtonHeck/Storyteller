@@ -84,6 +84,7 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal"
     PRIVATE "${VENDOR_DIR}/rapidjson/include"
     PRIVATE "${VENDOR_DIR}/stb_image"
+	PRIVATE "${VENDOR_DIR}/pfd"
 )
 
 option(STORYTELLER_USE_WINDOW_BACKEND_GLFW "Use GLFW for window management" ON)

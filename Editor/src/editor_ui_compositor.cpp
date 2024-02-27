@@ -346,7 +346,7 @@ namespace Storyteller
 
         if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Create translations file...").c_str()))
         {
-            const auto filepath = Dialogs::SaveFile("Text Files (*.txt)\0*.txt\0", _window, document->GetGameName().c_str());
+            const auto filepath = Dialogs::SaveFile(_localizationManager->Translate("StorytellerEditor", "Save translations"), { "Text Files", "*.txt" });
             if (!filepath.empty())
             {
                 _localizationManager->CreateTranslations(document, filepath);
@@ -1049,7 +1049,7 @@ namespace Storyteller
                 {
                     if (_popups.openDocumentFile.empty())
                     {
-                        const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+                        const auto filepath = Dialogs::OpenFile(_localizationManager->Translate("StorytellerEditor", "Open document"), { "JSON Files", "*.json" });
                         if (!filepath.empty())
                         {
                             OpenDocument(filepath);
@@ -1079,7 +1079,7 @@ namespace Storyteller
         {
             if (_popups.openDocumentFile.empty())
             {
-                const auto filepath = Dialogs::OpenFile("JSON Files (*.json)\0*.json\0", _window);
+                const auto filepath = Dialogs::OpenFile(_localizationManager->Translate("StorytellerEditor", "Open document"), { "JSON Files", "*.json" });
                 if (!filepath.empty())
                 {
                     OpenDocument(filepath);
@@ -1110,7 +1110,7 @@ namespace Storyteller
 
     void EditorUiCompositor::SaveAsDocument()
     {
-        const auto filepath = Dialogs::SaveFile("JSON Files (*.json)\0*.json\0", _window, _gameDocumentManager->GetDocument()->GetGameName().c_str());
+        const auto filepath = Dialogs::SaveFile(_localizationManager->Translate("StorytellerEditor", "Save document"), { "JSON Files", "*.json" });
         if (!filepath.empty())
         {
             _gameDocumentManager->Save(filepath);

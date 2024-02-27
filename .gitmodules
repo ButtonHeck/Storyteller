@@ -11,3 +11,6 @@
 [submodule "vendor/rapidjson"]
 	path = vendor/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "vendor/pfd"]
+	path = vendor/pfd
+	url = https://github.com/samhocevar/portable-file-dialogs.git

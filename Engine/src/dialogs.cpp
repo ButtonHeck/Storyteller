@@ -1,94 +1,31 @@
 #include "dialogs.h"
 
-#include <Windows.h>
-#include <commdlg.h>
-#include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
+#include <portable-file-dialogs.h>
+#include <filesystem>
 
 namespace Storyteller
 {
 	namespace Dialogs
 	{
-		std::string OpenFile(const char* filter, Ptr<Window> window)
+		std::string OpenFile(const std::string& title, const std::vector<std::string>& filters)
 		{
-			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
-			if (!implWindow)
+			pfd::open_file opener(title, std::filesystem::current_path().generic_u8string(), filters, pfd::opt::none);
+
+			const auto files = opener.result();
+			if (files.empty())
 			{
 				return std::string();
 			}
 
-			window->BeginBlock();
-
-			OPENFILENAMEA ofn;
-			CHAR szFile[260] = { 0 };
-			CHAR currentDir[256] = { 0 };
-			ZeroMemory(&ofn, sizeof(OPENFILENAME));
-			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.hwndOwner = glfwGetWin32Window(implWindow);
-			ofn.lpstrFile = szFile;
-			ofn.nMaxFile = sizeof(szFile);
-			if (GetCurrentDirectoryA(256, currentDir))
-			{
-				ofn.lpstrInitialDir = currentDir;
-			}
-
-			ofn.lpstrFilter = filter;
-			ofn.nFilterIndex = 1;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-			if (GetOpenFileNameA(&ofn) == TRUE)
-			{
-				window->EndBlock();
-
-				return ofn.lpstrFile;
-			}
-
-			window->EndBlock();
-
-			return std::string();
+			return files.front();
 		}
 		//--------------------------------------------------------------------------
 
-		std::string SaveFile(const char* filter, Ptr<Window> window, const char* defaultName)
+		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters, const std::string& defaultFilename)
 		{
-			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
-			if (!implWindow)
-			{
-				return std::string();
-			}
+			pfd::save_file saver(title, std::filesystem::current_path().generic_u8string(), filters, true);
 
-			window->BeginBlock();
-
-			OPENFILENAMEA ofn;
-			CHAR szFile[260] = { 0 };
-			std::strcpy(szFile, defaultName);
-			CHAR currentDir[256] = { 0 };
-			ZeroMemory(&ofn, sizeof(OPENFILENAME));
-			ofn.lStructSize = sizeof(OPENFILENAME);
-			ofn.hwndOwner = glfwGetWin32Window(implWindow);
-			ofn.lpstrFile = szFile;
-			ofn.nMaxFile = sizeof(szFile);
-			if (GetCurrentDirectoryA(256, currentDir))
-			{
-				ofn.lpstrInitialDir = currentDir;
-			}
-
-			ofn.lpstrFilter = filter;
-			ofn.nFilterIndex = 1;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
-			ofn.lpstrDefExt = strchr(filter, '\0') + 1;
-
-			if (GetSaveFileNameA(&ofn) == TRUE)
-			{
-				window->EndBlock();
-
-				return ofn.lpstrFile;
-			}
-
-			window->EndBlock();
-
-			return std::string();
+			return saver.result();
 		}
 		//--------------------------------------------------------------------------
 
