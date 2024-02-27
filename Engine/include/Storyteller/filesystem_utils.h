@@ -9,10 +9,13 @@ namespace Storyteller
         bool PathExists(const std::filesystem::path& path);
         //--------------------------------------------------------------------------
 
-        bool PathIsValid(const std::filesystem::path& path);
+        bool FilePathIsValid(const std::filesystem::path& path);
         //--------------------------------------------------------------------------
 
         bool CreatePathTree(const std::filesystem::path& path);
+        //--------------------------------------------------------------------------
+
+        std::filesystem::path GetCurrentPath();
         //--------------------------------------------------------------------------
 
         std::string PathUnicode(const std::filesystem::path& path);

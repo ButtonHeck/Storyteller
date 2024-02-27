@@ -20,7 +20,7 @@ namespace Storyteller
 
     void EditorUiCompositor::Compose()
     {
-        if (!Filesystem::PathExists(std::filesystem::current_path().append(ImGui::GetIO().IniFilename)))
+        if (!Filesystem::PathExists(Filesystem::GetCurrentPath().append(ImGui::GetIO().IniFilename)))
         {
             ComposeDefaultPanelsLayout();
         }

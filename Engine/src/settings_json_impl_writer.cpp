@@ -3,13 +3,12 @@
 #include "log.h"
 
 #include <fstream>
-#include <filesystem>
 
 namespace Storyteller
 {
     SettingsJsonWriter::SettingsJsonWriter(const std::string& name)
         : _name(name)
-        , _filename(std::filesystem::current_path().append(name + ".json").generic_string())
+        , _filename(Filesystem::GetCurrentPath().append(name + ".json").generic_string())
         , _stringBuffer()
         , _writer(_stringBuffer)
     {}

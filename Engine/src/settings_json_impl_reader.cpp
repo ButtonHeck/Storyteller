@@ -1,5 +1,6 @@
 #include "settings_json_impl_reader.h"
 #include "log.h"
+#include "filesystem_utils.h"
 
 #include <rapidjson/pointer.h>
 #include <rapidjson/istreamwrapper.h>
@@ -8,13 +9,12 @@
 #include <algorithm>
 #include <numeric>
 #include <fstream>
-#include <filesystem>
 
 namespace Storyteller
 {
     SettingsJsonReader::SettingsJsonReader(const std::string& name)
         : _name(name)
-        , _filename(std::filesystem::current_path().append(name + ".json").generic_string())
+        , _filename(Filesystem::GetCurrentPath().append(name + ".json").generic_string())
         , _document()
         , _scope()
         , _scopeString("")
@@ -26,7 +26,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("SettingsReader: loading from '{}'", _filename);
 
-        if (!std::filesystem::exists(_filename))
+        if (!Filesystem::PathExists(_filename))
         {
             STRTLR_CORE_LOG_WARN("SettingsReader: insufficient path");
             return false;

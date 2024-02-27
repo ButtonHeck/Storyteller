@@ -32,8 +32,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("GameDocumentSerializer: load from '{}'", Filesystem::PathUnicode(path));
 
-        if (path.empty() || !std::filesystem::exists(path)
-            || !path.has_filename() || !path.has_extension())
+        if (!Filesystem::PathExists(path) || !Filesystem::FilePathIsValid(path))
         {
             STRTLR_CORE_LOG_WARN("GameDocumentSerializer: insufficient path");
             return false;

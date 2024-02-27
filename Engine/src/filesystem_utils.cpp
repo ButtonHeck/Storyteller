@@ -10,7 +10,7 @@ namespace Storyteller
         }
         //--------------------------------------------------------------------------
 
-        bool PathIsValid(const std::filesystem::path& path)
+        bool FilePathIsValid(const std::filesystem::path& path)
         {
             return !path.empty() && path.has_filename() && path.has_extension();
         }
@@ -18,7 +18,7 @@ namespace Storyteller
 
         bool CreatePathTree(const std::filesystem::path& path)
         {
-            if (!PathIsValid(path))
+            if (!FilePathIsValid(path))
             {
                 return false;
             }
@@ -38,9 +38,15 @@ namespace Storyteller
         }
         //--------------------------------------------------------------------------
 
+        std::filesystem::path GetCurrentPath()
+        {
+            return std::filesystem::current_path();
+        }
+        //--------------------------------------------------------------------------
+
         std::string PathUnicode(const std::filesystem::path& path)
         {
-            if (!PathIsValid(path))
+            if (!FilePathIsValid(path))
             {
                 return std::string();
             }
