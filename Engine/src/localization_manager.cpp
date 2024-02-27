@@ -97,12 +97,12 @@ namespace Storyteller
         const auto documentObjects = document->GetObjects();
 
         std::stringstream ss;
-        ss << "Translate(\"" << gameName << "\", \"" << gameName << "\");\n";
+        ss << "Translate(\"" << gameName << "\");\n";
         for (size_t i = 0; i < documentObjects.size(); i++)
         {
             const auto object = documentObjects.at(i);
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            ss << object->GetName() << ", Translate(\"" << gameName << "\", \"" << textObject->GetText() << "\");\n";
+            ss << object->GetName() << ", Translate(\"" << textObject->GetText() << "\");\n";
         }
 
         outputStream << ss.str();

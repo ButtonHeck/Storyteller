@@ -347,9 +347,19 @@ namespace Storyteller
             }
         }
 
-        if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Create translations file...").c_str()))
+        if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Create translations file").c_str()))
         {
-            const auto filepath = Dialogs::SaveFile(_localizationManager->Translate("StorytellerEditor", "Save translations"), { "Text Files", "*.txt" });
+            const auto documentPath = document->GetPath();
+            std::string filepath;
+            if (Filesystem::PathExists(documentPath) && Filesystem::FilePathIsValid(documentPath))
+            {
+                filepath = documentPath.parent_path().append(document->GetGameName()).generic_u8string().append(".txt");
+            }
+            else
+            {
+                filepath = Dialogs::SaveFile(_localizationManager->Translate("StorytellerEditor", "Save translations"), { "Text Files", "*.txt" });
+            }
+
             if (!filepath.empty())
             {
                 _localizationManager->CreateTranslations(document, filepath);
