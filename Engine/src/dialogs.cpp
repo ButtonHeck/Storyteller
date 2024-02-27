@@ -21,7 +21,21 @@ namespace Storyteller
 		}
 		//--------------------------------------------------------------------------
 
-		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters, const std::string& defaultFilename)
+		std::vector<std::string> OpenFiles(const std::string& title, const std::vector<std::string>& filters)
+		{
+			pfd::open_file opener(title, std::filesystem::current_path().generic_u8string(), filters, pfd::opt::multiselect);
+
+			const auto files = opener.result();
+			if (files.empty())
+			{
+				return std::vector<std::string>();
+			}
+
+			return files;
+		}
+		//--------------------------------------------------------------------------
+
+		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters)
 		{
 			pfd::save_file saver(title, std::filesystem::current_path().generic_u8string(), filters, true);
 

@@ -3,14 +3,18 @@
 #include <string>
 #include <vector>
 
-struct GLFWwindow;
-
 namespace Storyteller
 {
 	namespace Dialogs
 	{
 		std::string OpenFile(const std::string& title, const std::vector<std::string>& filters);
-		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters, const std::string& defaultFilename = "");
+		//--------------------------------------------------------------------------
+
+		std::vector<std::string> OpenFiles(const std::string& title, const std::vector<std::string>& filters);
+		//--------------------------------------------------------------------------
+
+		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters);
+		//--------------------------------------------------------------------------
 
 		/* Use ImGui messages instead
 		enum MessageButtons
