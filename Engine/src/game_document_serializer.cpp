@@ -22,6 +22,7 @@ namespace Storyteller
 #define JSON_KEY_TEXT "Text"
 #define JSON_KEY_ACTIONS "Actions"
 #define JSON_KEY_TARGET "Target"
+#define JSON_KEY_FINAL "Final"
 
     GameDocumentSerializer::GameDocumentSerializer(Ptr<GameDocument> document)
         : _document(document)
@@ -134,6 +135,9 @@ namespace Storyteller
                 }
 
                 success &= writer.EndArray();
+
+                success &= writer.Key(JSON_KEY_FINAL);
+                success &= writer.Bool(questObject->IsFinal());
                 break;
             }
 
@@ -270,6 +274,13 @@ namespace Storyteller
 
                     questObject->AddAction(UUID(questObjectActions[i].GetUint64()));
                 }
+
+                if (!jsonObject.HasMember(JSON_KEY_FINAL) || !jsonObject[JSON_KEY_FINAL].IsBool())
+                {
+                    STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading bool '{}'", JSON_KEY_FINAL);
+                    return false;
+                }
+                questObject->SetFinal(jsonObject[JSON_KEY_FINAL].GetBool());
 
                 _document->AddObject(questObject);
 
