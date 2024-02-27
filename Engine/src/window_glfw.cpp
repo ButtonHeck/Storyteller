@@ -193,26 +193,6 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::BeginBlock()
-    {
-        const auto userData = GetUserPointer(_window);
-        if (userData)
-        {
-            userData->blocked = true;
-        }
-    }
-    //--------------------------------------------------------------------------
-
-    void WindowGlfw::EndBlock()
-    {
-        const auto userData = GetUserPointer(_window);
-        if (userData)
-        {
-            userData->blocked = false;
-        }
-    }
-    //--------------------------------------------------------------------------
-
     void WindowGlfw::SaveSettings(Ptr<Settings> settings) const
     {
         int width;
@@ -348,11 +328,6 @@ namespace Storyteller
             const auto userData = GetUserPointer(window);
             if (userData)
             {
-                if (userData->blocked)
-                {
-                    return;
-                }
-
                 if (userData->eventCallback)
                 {
                     WindowFramebufferRefreshEvent event;

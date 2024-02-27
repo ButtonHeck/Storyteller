@@ -47,9 +47,6 @@ namespace Storyteller
         virtual void* GetImplPointer() const = 0;
         virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 
-        virtual void BeginBlock() = 0;
-        virtual void EndBlock() = 0;
-
         virtual void SaveSettings(Ptr<Settings> settings) const = 0;
         virtual void LoadSettings(Ptr<Settings> settings) = 0;
     };

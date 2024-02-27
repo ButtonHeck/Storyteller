@@ -36,9 +36,6 @@ namespace Storyteller
         void* GetImplPointer() const override;
         void SetEventCallback(const EventCallbackFn& callback) override;
 
-        void BeginBlock() override;
-        void EndBlock() override;
-
         void SaveSettings(Ptr<Settings> settings) const override;
         void LoadSettings(Ptr<Settings> settings) override;
 
@@ -55,7 +52,6 @@ namespace Storyteller
             int windowedWidth = width;
             int windowedHeight = height;
             bool vSync = true;
-            bool blocked = false;
             EventCallbackFn eventCallback;
         };
 
