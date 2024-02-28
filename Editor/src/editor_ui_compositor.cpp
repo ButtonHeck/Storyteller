@@ -788,7 +788,7 @@ namespace Storyteller
                 }
 
                 ImGui::TableNextColumn();
-                ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText()).c_str());
+                ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText(), true).c_str());
             }
 
             ImGui::EndTable();
