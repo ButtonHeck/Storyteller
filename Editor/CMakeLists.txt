@@ -53,4 +53,8 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE StorytellerEngine
 )
 
+if(MSVC)
+    target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:RELWITHDEBINFO>:/PROFILE>)
+endif()
+
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Storyteller")
