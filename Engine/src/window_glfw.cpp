@@ -4,7 +4,7 @@
 #include "key_event.h"
 #include "mouse_event.h"
 #include "image.h"
-#include "filesystem_utils.h"
+#include "filesystem.h"
 
 #include <GLFW/glfw3.h>
 
@@ -36,7 +36,7 @@ namespace Storyteller
         glfwSetWindowUserPointer(_window, new UserData());
         MakeContextCurrent();
 
-        SetIcon(Filesystem::GetFilePathString(STRTLR_ASSETS_PATH, "icons/strtlr64.png"));
+        SetIcon(Filesystem::ToU8String(std::filesystem::path(STRTLR_ASSETS_PATH).append("icons/strtlr64.png")));
         InitializeCallbacks();
 
         return true;

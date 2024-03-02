@@ -1,6 +1,6 @@
 #include "settings_json_impl_reader.h"
 #include "log.h"
-#include "filesystem_utils.h"
+#include "filesystem.h"
 
 #include <rapidjson/pointer.h>
 #include <rapidjson/istreamwrapper.h>
@@ -12,9 +12,8 @@
 
 namespace Storyteller
 {
-    SettingsJsonReader::SettingsJsonReader(const std::string& name)
-        : _name(name)
-        , _filename(Filesystem::GetCurrentPath().append(name + ".json").generic_string())
+    SettingsJsonReader::SettingsJsonReader(const std::string& filename)
+        : _filename(filename)
         , _document()
         , _scope()
         , _scopeString("")

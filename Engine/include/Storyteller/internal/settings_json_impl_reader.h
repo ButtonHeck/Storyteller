@@ -10,7 +10,7 @@ namespace Storyteller
     class SettingsJsonReader
     {
     public:
-        explicit SettingsJsonReader(const std::string& name);
+        explicit SettingsJsonReader(const std::string& filename);
 
         bool StartLoad();
         bool EndLoad();
@@ -41,8 +41,8 @@ namespace Storyteller
         bool ValidToGetFromArray(int index) const;
 
     private:
-        const std::string _name;
         const std::string _filename;
+
         rapidjson::Document _document;
         std::vector<std::string> _scope;
         std::string _scopeString;

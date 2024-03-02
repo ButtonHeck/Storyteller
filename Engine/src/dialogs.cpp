@@ -1,5 +1,5 @@
 #include "dialogs.h"
-#include "filesystem_utils.h"
+#include "filesystem.h"
 
 #include <portable-file-dialogs.h>
 
@@ -9,7 +9,7 @@ namespace Storyteller
 	{
 		std::string OpenFile(const std::string& title, const std::vector<std::string>& filters)
 		{
-			pfd::open_file opener(title, Filesystem::GetCurrentPath().generic_u8string(), filters, pfd::opt::none);
+			pfd::open_file opener(title, Filesystem::ToU8String(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::none);
 
 			const auto files = opener.result();
 			if (files.empty())
@@ -23,7 +23,7 @@ namespace Storyteller
 
 		std::vector<std::string> OpenFiles(const std::string& title, const std::vector<std::string>& filters)
 		{
-			pfd::open_file opener(title, Filesystem::GetCurrentPath().generic_u8string(), filters, pfd::opt::multiselect);
+			pfd::open_file opener(title, Filesystem::ToU8String(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::multiselect);
 
 			const auto files = opener.result();
 			if (files.empty())
@@ -37,7 +37,7 @@ namespace Storyteller
 
 		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters)
 		{
-			pfd::save_file saver(title, Filesystem::GetCurrentPath().generic_u8string(), filters, true);
+			pfd::save_file saver(title, Filesystem::ToU8String(Filesystem::GetCurrentPathCRef()), filters, true);
 
 			return saver.result();
 		}

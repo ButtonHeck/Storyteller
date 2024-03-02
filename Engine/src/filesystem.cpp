@@ -1,4 +1,4 @@
-#include "filesystem_utils.h"
+#include "filesystem.h"
 
 namespace Storyteller
 {
@@ -7,6 +7,18 @@ namespace Storyteller
     void Filesystem::Initialize()
     {
         _currentPath = std::filesystem::current_path();
+    }
+    //--------------------------------------------------------------------------
+
+    std::filesystem::path Filesystem::GetCurrentPath()
+    {
+        return _currentPath;
+    }
+    //--------------------------------------------------------------------------
+
+    const std::filesystem::path& Filesystem::GetCurrentPathCRef()
+    {
+        return _currentPath;
     }
     //--------------------------------------------------------------------------
 
@@ -44,26 +56,15 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::filesystem::path Filesystem::GetCurrentPath()
+    std::string Filesystem::ToU8String(const std::filesystem::path& path)
     {
-        return _currentPath;
-    }
-    //--------------------------------------------------------------------------
-
-    std::string Filesystem::PathUnicode(const std::filesystem::path& path)
-    {
-        if (!FilePathIsValid(path))
-        {
-            return std::string();
-        }
-
         return path.generic_u8string();
     }
     //--------------------------------------------------------------------------
 
-    std::string Filesystem::GetFilePathString(const char* dir, const char* filename)
+    std::string Filesystem::ToString(const std::filesystem::path& path)
     {
-        return std::filesystem::path(dir).append(filename).string();
+        return path.generic_string();
     }
     //--------------------------------------------------------------------------
 }

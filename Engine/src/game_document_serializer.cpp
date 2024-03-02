@@ -2,7 +2,7 @@
 #include "game_document_serializer.h"
 #include "log.h"
 #include "entities.h"
-#include "filesystem_utils.h"
+#include "filesystem.h"
 
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
@@ -31,7 +31,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Load(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: load from '{}'", Filesystem::PathUnicode(path));
+        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: load from '{}'", Filesystem::ToU8String(path));
 
         if (!Filesystem::PathExists(path) || !Filesystem::FilePathIsValid(path))
         {
@@ -61,7 +61,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Save(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", Filesystem::PathUnicode(path));
+        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", Filesystem::ToU8String(path));
 
         if (!Filesystem::CreatePathTree(path))
         {

@@ -6,7 +6,7 @@
 #include "Storyteller/dialogs.h"
 #include "Storyteller/entities.h"
 #include "Storyteller/event.h"
-#include "Storyteller/filesystem_utils.h"
+#include "Storyteller/filesystem.h"
 #include "Storyteller/game_controller.h"
 #include "Storyteller/game_document.h"
 #include "Storyteller/game_document_manager.h"

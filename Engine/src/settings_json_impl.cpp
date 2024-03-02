@@ -1,10 +1,12 @@
 #include "settings_json_impl.h"
+#include "filesystem.h"
 
 namespace Storyteller
 {
     SettingsJson::SettingsJson(const std::string& name)
-        : _reader(new SettingsJsonReader(name))
-        , _writer(new SettingsJsonWriter(name))
+        : _filename(Filesystem::ToU8String(Filesystem::GetCurrentPath().append(name + ".json")))
+        , _reader(new SettingsJsonReader(_filename))
+        , _writer(new SettingsJsonWriter(_filename))
     {}
     //--------------------------------------------------------------------------
 

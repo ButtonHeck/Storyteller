@@ -63,6 +63,7 @@ namespace Storyteller
         std::string GetString(const std::string& name, const std::string& defaultValue = "");
 
     private:
+        const std::string _filename;
         Ptr<SettingsJsonReader> _reader;
         Ptr<SettingsJsonWriter> _writer;
     };

@@ -1,14 +1,13 @@
 #include "settings_json_impl_writer.h"
-#include "filesystem_utils.h"
+#include "filesystem.h"
 #include "log.h"
 
 #include <fstream>
 
 namespace Storyteller
 {
-    SettingsJsonWriter::SettingsJsonWriter(const std::string& name)
-        : _name(name)
-        , _filename(Filesystem::GetCurrentPath().append(name + ".json").generic_string())
+    SettingsJsonWriter::SettingsJsonWriter(const std::string& filename)
+        : _filename(filename)
         , _stringBuffer()
         , _writer(_stringBuffer)
     {}

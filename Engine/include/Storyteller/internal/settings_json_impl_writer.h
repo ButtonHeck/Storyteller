@@ -10,7 +10,7 @@ namespace Storyteller
     class SettingsJsonWriter
     {
     public:
-        explicit SettingsJsonWriter(const std::string& name);
+        explicit SettingsJsonWriter(const std::string& filename);
 
         bool StartSave();
         bool EndSave();
@@ -37,7 +37,6 @@ namespace Storyteller
         bool SaveString(const std::string& name, const std::string& value);
 
     private:
-        const std::string _name;
         const std::string _filename;
 
         rapidjson::StringBuffer _stringBuffer;

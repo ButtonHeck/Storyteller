@@ -1,5 +1,5 @@
 #include "localization_manager.h"
-#include "filesystem_utils.h"
+#include "filesystem.h"
 #include "log.h"
 
 #include <iostream>
@@ -58,7 +58,7 @@ namespace Storyteller
 
     bool LocalizationManager::CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const
     {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), path.generic_string());
+        STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), Filesystem::ToU8String(path));
 
         if (!Filesystem::CreatePathTree(path))
         {

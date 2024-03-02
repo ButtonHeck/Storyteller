@@ -3,7 +3,7 @@
 #include "icons_font.h"
 #include "Storyteller/log.h"
 #include "Storyteller/dialogs.h"
-#include "Storyteller/filesystem_utils.h"
+#include "Storyteller/filesystem.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -225,7 +225,7 @@ namespace Storyteller
         {
             for (const auto& recentFile : _recentList)
             {
-                const auto recentUnicode = Filesystem::PathUnicode(recentFile);
+                const auto recentUnicode = Filesystem::ToU8String(recentFile);
                 if (ImGui::MenuItem(recentUnicode.empty() ? recentFile.c_str() : recentUnicode.c_str()))
                 {
                     _popups.openDocument = true;
@@ -302,7 +302,7 @@ namespace Storyteller
     {
         const auto document = _gameDocumentManager->GetDocument();
         const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
-        const auto pathUnicode = Filesystem::PathUnicode(document->GetPath());
+        const auto pathUnicode = Filesystem::ToU8String(document->GetPath());
         auto windowTitle = pathUnicode.empty() ? _localizationManager->Translate("StorytellerEditor", "Untitled document") : pathUnicode;
         windowTitle.append("###GamePanel");
 
@@ -353,7 +353,7 @@ namespace Storyteller
             std::string filepath;
             if (Filesystem::PathExists(documentPath) && Filesystem::FilePathIsValid(documentPath))
             {
-                filepath = documentPath.parent_path().append(document->GetGameName()).generic_u8string().append(".txt");
+                filepath = Filesystem::ToU8String(documentPath.parent_path().append(document->GetGameName())).append(".txt");
             }
             else
             {
