@@ -28,7 +28,7 @@ namespace Storyteller
 
         UUID GetUuid() const;
 
-        std::string GetName() const;
+        const std::string& GetName() const;
         void SetName(const std::string& name);
 
         void SetChangeCallback(std::function<void()> changeCallback);
@@ -49,7 +49,7 @@ namespace Storyteller
     public:
         explicit TextObject(const UUID& uuid = UUID(), const std::function<void()>& changeCallback = nullptr);
 
-        std::string GetText() const;
+        const std::string& GetText() const;
         void SetText(const std::string& text);
 
         virtual bool IsConsistent() const override;

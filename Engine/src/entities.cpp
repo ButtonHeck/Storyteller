@@ -53,7 +53,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string BasicObject::GetName() const
+    const std::string& BasicObject::GetName() const
     {
         return _name;
     }
@@ -87,7 +87,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string TextObject::GetText() const
+    const std::string& TextObject::GetText() const
     {
         return _text;
     }

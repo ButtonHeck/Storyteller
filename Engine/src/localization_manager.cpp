@@ -9,7 +9,6 @@ namespace Storyteller
 {
     LocalizationManager::LocalizationManager(const std::string& defaultPath)
         : _localeGenerator()
-        , _localeString("")
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
 
@@ -24,8 +23,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: set locale '{}'", localeString);
 
-        _localeString = localeString;
-        std::locale::global(_localeGenerator(_localeString));
+        std::locale::global(_localeGenerator(localeString));
         std::cout.imbue(std::locale());
     }
     //--------------------------------------------------------------------------
@@ -46,32 +44,14 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message, bool noCache)
+    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message)
     {
-        if (_messagesCache.contains(domain))
-        {
-            const auto& domainTranslations = _messagesCache[domain];
-            if (domainTranslations.contains(message))
-            {
-                return domainTranslations.at(message);
-            }
-        }
-
-        const auto translation = boost::locale::translate(message).str(domain);
-        if (translation == message && noCache)
-        {
-            return "No translation";
-        }
-
-        _messagesCache[domain][message] = translation;
-
-        return translation;
+        return boost::locale::translate(message).str(domain);
     }
     //--------------------------------------------------------------------------
 
     std::string LocalizationManager::Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count)
     {
-        // todo: think about caching
         return (boost::locale::format(boost::locale::translate(messageSingular, messagePlural, count)) % count).str();
     }
     //--------------------------------------------------------------------------

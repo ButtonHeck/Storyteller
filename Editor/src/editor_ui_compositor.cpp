@@ -617,7 +617,7 @@ namespace Storyteller
 
         ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Translation").c_str());
 
-        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), sourceText, true) : std::string();
+        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), selectedTextObject->GetText()) : std::string();
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_ReadOnly);
     }
     //--------------------------------------------------------------------------
@@ -788,7 +788,7 @@ namespace Storyteller
                 }
 
                 ImGui::TableNextColumn();
-                ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText(), true).c_str());
+                ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText()).c_str());
             }
 
             ImGui::EndTable();
