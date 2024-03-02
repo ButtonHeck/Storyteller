@@ -1,5 +1,6 @@
 #include "application.h"
 #include "log.h"
+#include "filesystem_utils.h"
 
 namespace Storyteller
 {
@@ -11,6 +12,7 @@ namespace Storyteller
 
     bool Application::Initialize()
     {
+        Filesystem::Initialize();
         Log::Initialize();
 
         _localizationManager.reset(new LocalizationManager());

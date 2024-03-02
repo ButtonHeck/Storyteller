@@ -4,24 +4,20 @@
 
 namespace Storyteller
 {
-    namespace Filesystem
+    class Filesystem
     {
-        bool PathExists(const std::filesystem::path& path);
-        //--------------------------------------------------------------------------
+    public:
+        static void Initialize();
 
-        bool FilePathIsValid(const std::filesystem::path& path);
-        //--------------------------------------------------------------------------
+        static bool PathExists(const std::filesystem::path& path);
+        static bool FilePathIsValid(const std::filesystem::path& path);
+        static bool CreatePathTree(const std::filesystem::path& path);
+        static std::filesystem::path GetCurrentPath();
+        static std::string PathUnicode(const std::filesystem::path& path);
+        static std::string GetFilePathString(const char* dir, const char* filename);
 
-        bool CreatePathTree(const std::filesystem::path& path);
-        //--------------------------------------------------------------------------
-
-        std::filesystem::path GetCurrentPath();
-        //--------------------------------------------------------------------------
-
-        std::string PathUnicode(const std::filesystem::path& path);
-        //--------------------------------------------------------------------------
-
-        std::string GetFilePathString(const char* dir, const char* filename);
-        //--------------------------------------------------------------------------
-    }
+    private:
+        static std::filesystem::path _currentPath;
+    };
+    //--------------------------------------------------------------------------
 }
