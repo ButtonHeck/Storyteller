@@ -137,6 +137,8 @@ namespace Storyteller
         STRTLR_CLIENT_LOG_INFO("EditorUiCompositor: composing default UI layout for the first time...");
 
         auto dockspaceId = ImGui::GetID("EditorDockspace");
+        ImGui::DockBuilderRemoveNode(dockspaceId);
+        ImGui::DockBuilderAddNode(dockspaceId);
         ImGui::DockBuilderSetNodeSize(dockspaceId, ImGui::GetWindowSize());
 
         ImGuiID bottom;
