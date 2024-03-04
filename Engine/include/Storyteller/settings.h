@@ -6,7 +6,8 @@
 
 namespace Storyteller
 {
-    class SettingsJson;
+    class JsonReader;
+    class JsonWriter;
 
     class Settings
     {
@@ -63,7 +64,9 @@ namespace Storyteller
         std::string GetString(const std::string& name, const std::string& defaultValue = "");
 
     private:
-        Ptr<SettingsJson> _impl;
+        const std::string _filename;
+        Ptr<JsonReader> _reader;
+        Ptr<JsonWriter> _writer;
     };
     //--------------------------------------------------------------------------
 }

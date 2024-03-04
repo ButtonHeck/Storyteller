@@ -1,250 +1,254 @@
 #include "settings.h"
-#include "settings_json_impl.h"
+#include "json_reader.h"
+#include "json_writer.h"
+#include "filesystem.h"
 
 namespace Storyteller
 {
     Settings::Settings(const std::string& name)
-        : _impl(new SettingsJson(name))
+        : _filename(Filesystem::ToU8String(Filesystem::GetCurrentPath().append(name + ".json")))
+        , _reader(new JsonReader(_filename))
+        , _writer(new JsonWriter(_filename))
     {}
     //--------------------------------------------------------------------------
 
     bool Settings::StartSave()
     {
-        return _impl->StartSave();
+        return _writer->StartSave();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndSave()
     {
-        return _impl->EndSave();
+        return _writer->EndSave();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartSaveGroup(const std::string& groupName)
     {
-        return _impl->StartSaveGroup(groupName);
+        return _writer->StartSaveGroup(groupName);
     }
     //--------------------------------------------------------------------------    
 
     bool Settings::EndSaveGroup()
     {
-        return _impl->EndSaveGroup();
+        return _writer->EndSaveGroup();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartSaveArray(const std::string& arrayName)
     {
-        return _impl->StartSaveArray(arrayName);
+        return _writer->StartSaveArray(arrayName);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndSaveArray()
     {
-        return _impl->EndSaveArray();
+        return _writer->EndSaveArray();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveBool(bool value)
     {
-        return _impl->SaveBool(value);
+        return _writer->SaveBool(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveBool(const std::string& name, bool value)
     {
-        return _impl->SaveBool(name, value);
+        return _writer->SaveBool(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveInt(int value)
     {
-        return _impl->SaveInt(value);
+        return _writer->SaveInt(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveInt(const std::string& name, int value)
     {
-        return _impl->SaveInt(name, value);
+        return _writer->SaveInt(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveUInt(unsigned int value)
     {
-        return _impl->SaveUInt(value);
+        return _writer->SaveUInt(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveUInt(const std::string& name, unsigned int value)
     {
-        return _impl->SaveUInt(name, value);
+        return _writer->SaveUInt(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveInt64(int64_t value)
     {
-        return _impl->SaveInt64(value);
+        return _writer->SaveInt64(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveInt64(const std::string& name, int64_t value)
     {
-        return _impl->SaveInt64(name, value);
+        return _writer->SaveInt64(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveUInt64(uint64_t value)
     {
-        return _impl->SaveUInt64(value);
+        return _writer->SaveUInt64(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveUInt64(const std::string& name, uint64_t value)
     {
-        return _impl->SaveUInt64(name, value);
+        return _writer->SaveUInt64(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveDouble(double value)
     {
-        return _impl->SaveDouble(value);
+        return _writer->SaveDouble(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveDouble(const std::string& name, double value)
     {
-        return _impl->SaveDouble(name, value);
+        return _writer->SaveDouble(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveString(const std::string& value)
     {
-        return _impl->SaveString(value);
+        return _writer->SaveString(value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::SaveString(const std::string& name, const std::string& value)
     {
-        return _impl->SaveString(name, value);
+        return _writer->SaveString(name, value);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartLoad()
     {
-        return _impl->StartLoad();
+        return _reader->StartLoad();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndLoad()
     {
-        return _impl->EndLoad();
+        return _reader->EndLoad();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartLoadGroup(const std::string& groupName)
     {
-        return _impl->StartLoadGroup(groupName);
+        return _reader->StartLoadGroup(groupName);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndLoadGroup()
     {
-        return _impl->EndLoadGroup();
+        return _reader->EndLoadGroup();
     }
     //--------------------------------------------------------------------------
 
     int Settings::StartLoadArray(const std::string& arrayName)
     {
-        return _impl->StartLoadArray(arrayName);
+        return _reader->StartLoadArray(arrayName);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndLoadArray()
     {
-        return _impl->EndLoadArray();
+        return _reader->EndLoadArray();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::GetBool(int index, bool defaultValue)
     {
-        return _impl->GetBool(index, defaultValue);
+        return _reader->GetBool(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::GetBool(const std::string& name, bool defaultValue)
     {
-        return _impl->GetBool(name, defaultValue);
+        return _reader->GetBool(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     int Settings::GetInt(int index, int defaultValue)
     {
-        return _impl->GetInt(index, defaultValue);
+        return _reader->GetInt(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     int Settings::GetInt(const std::string& name, int defaultValue)
     {
-        return _impl->GetInt(name, defaultValue);
+        return _reader->GetInt(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     unsigned int Settings::GetUInt(int index, unsigned int defaultValue)
     {
-        return _impl->GetUInt(index, defaultValue);
+        return _reader->GetUInt(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     unsigned int Settings::GetUInt(const std::string& name, unsigned int defaultValue)
     {
-        return _impl->GetUInt(name, defaultValue);
+        return _reader->GetUInt(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     int64_t Settings::GetInt64(int index, int64_t defaultValue)
     {
-        return _impl->GetInt64(index, defaultValue);
+        return _reader->GetInt64(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     int64_t Settings::GetInt64(const std::string& name, int64_t defaultValue)
     {
-        return _impl->GetInt64(name, defaultValue);
+        return _reader->GetInt64(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     uint64_t Settings::GetUInt64(int index, uint64_t defaultValue)
     {
-        return _impl->GetUInt64(index, defaultValue);
+        return _reader->GetUInt64(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     uint64_t Settings::GetUInt64(const std::string& name, uint64_t defaultValue)
     {
-        return _impl->GetUInt64(name, defaultValue);
+        return _reader->GetUInt64(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     double Settings::GetDouble(int index, double defaultValue)
     {
-        return _impl->GetDouble(index, defaultValue);
+        return _reader->GetDouble(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     double Settings::GetDouble(const std::string& name, double defaultValue)
     {
-        return _impl->GetDouble(name, defaultValue);
+        return _reader->GetDouble(name, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     std::string Settings::GetString(int index, const std::string& defaultValue)
     {
-        return _impl->GetString(index, defaultValue);
+        return _reader->GetString(index, defaultValue);
     }
     //--------------------------------------------------------------------------
 
     std::string Settings::GetString(const std::string& name, const std::string& defaultValue)
     {
-        return _impl->GetString(name, defaultValue);
+        return _reader->GetString(name, defaultValue);
     }
     //--------------------------------------------------------------------------     
 }

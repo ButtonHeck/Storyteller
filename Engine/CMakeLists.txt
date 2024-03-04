@@ -39,9 +39,6 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/image.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/platform.h"
 )
-set(INTERNAL_HEADER_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal/settings_json_impl.h"
-)
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/entities.cpp"
@@ -59,7 +56,6 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
@@ -70,7 +66,6 @@ aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)
 
 add_library(${PROJECT_NAME}
 	${HEADER_FILES}
-    ${INTERNAL_HEADER_FILES}
     ${SOURCE_FILES}
     ${STB_IMAGE_SRC}
 )
