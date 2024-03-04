@@ -1,4 +1,4 @@
-#include "settings_json_impl_reader.h"
+#include "json_reader.h"
 #include "log.h"
 #include "filesystem.h"
 
@@ -12,7 +12,7 @@
 
 namespace Storyteller
 {
-    SettingsJsonReader::SettingsJsonReader(const std::string& filename)
+    JsonReader::JsonReader(const std::string& filename)
         : _filename(filename)
         , _document()
         , _scope()
@@ -21,13 +21,13 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::StartLoad()
+    bool JsonReader::StartLoad()
     {
-        STRTLR_CORE_LOG_INFO("SettingsReader: loading from '{}'", _filename);
+        STRTLR_CORE_LOG_INFO("JsonReader: loading from '{}'", _filename);
 
         if (!Filesystem::PathExists(_filename))
         {
-            STRTLR_CORE_LOG_WARN("SettingsReader: insufficient path");
+            STRTLR_CORE_LOG_WARN("JsonReader: insufficient path");
             return false;
         }
 
@@ -43,7 +43,7 @@ namespace Storyteller
 
         if (_document.HasParseError())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: JSON parsing error '{}'", rapidjson::GetParseError_En(_document.GetParseError()));
+            STRTLR_CORE_LOG_ERROR("JsonReader: JSON parsing error '{}'", rapidjson::GetParseError_En(_document.GetParseError()));
             return false;
         }
 
@@ -53,13 +53,50 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::EndLoad()
+    bool JsonReader::EndLoad()
     {
         return true;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::StartLoadGroup(const std::string& groupName)
+    bool JsonReader::StartLoadArrayObject(int index)
+    {
+        if (!ValidToGetFromArray(index))
+        {
+            return false;
+        }
+
+        if (!(*_currentObject)[index].IsObject())
+        {
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not an array object", _scopeString, index);
+            return false;
+        }
+
+        _scope.push_back(std::to_string(index));
+        _scopeString = GetCurrentScopeString();
+        _currentObject = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+
+    bool JsonReader::EndLoadArrayObject()
+    {
+        if (!_scope.empty())
+        {
+            _scope.pop_back();
+            _scopeString = GetCurrentScopeString();
+            _currentObject = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
+
+            return true;
+        }
+
+        STRTLR_CORE_LOG_ERROR("JsonReader: cannot end load array object, already at the root");
+        return false;
+    }
+    //--------------------------------------------------------------------------
+
+    bool JsonReader::StartLoadGroup(const std::string& groupName)
     {
         if (!_currentObject)
         {
@@ -68,20 +105,20 @@ namespace Storyteller
 
         if (groupName.empty())
         {
-            STRTLR_CORE_LOG_WARN("SettingsReader: group name should not be empty!");
+            STRTLR_CORE_LOG_WARN("JsonReader: group name should not be empty!");
             return false;
         }
 
         _currentObject = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
         if (!_currentObject)
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", _scopeString);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot fetch object pointer for '{}'", _scopeString);
             return false;
         }
 
         if (!_currentObject->HasMember(groupName.c_str()) || !(*_currentObject)[groupName.c_str()].IsObject())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find member '{}', or the member is not an object type", groupName);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find member '{}', or the member is not an object type", groupName);
             return false;
         }
 
@@ -93,7 +130,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::EndLoadGroup()
+    bool JsonReader::EndLoadGroup()
     {
         if (!_scope.empty())
         {
@@ -104,12 +141,12 @@ namespace Storyteller
             return true;
         }
 
-        STRTLR_CORE_LOG_ERROR("SettingsReader: cannot end load group, already at the root");
+        STRTLR_CORE_LOG_ERROR("JsonReader: cannot end load group, already at the root");
         return false;
     }
     //--------------------------------------------------------------------------
 
-    int SettingsJsonReader::StartLoadArray(const std::string& arrayName)
+    int JsonReader::StartLoadArray(const std::string& arrayName)
     {
         if (!_currentObject)
         {
@@ -118,20 +155,20 @@ namespace Storyteller
 
         if (arrayName.empty())
         {
-            STRTLR_CORE_LOG_WARN("SettingsReader: array name should not be empty!");
+            STRTLR_CORE_LOG_WARN("JsonReader: array name should not be empty!");
             return 0;
         }
 
         _currentObject = rapidjson::Pointer(_scopeString.c_str()).Get(_document);
         if (!_currentObject)
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot fetch object pointer for '{}'", _scopeString);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot fetch object pointer for '{}'", _scopeString);
             return 0;
         }
 
         if (!_currentObject->HasMember(arrayName.c_str()) || !(*_currentObject)[arrayName.c_str()].IsArray())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find member '{}', or the member is not an array type", arrayName);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find member '{}', or the member is not an array type", arrayName);
             return 0;
         }
 
@@ -143,13 +180,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::EndLoadArray()
+    bool JsonReader::EndLoadArray()
     {
         return EndLoadGroup();
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::GetBool(int index, bool defaultValue)
+    bool JsonReader::GetBool(int index, bool defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -158,7 +195,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsBool())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not a bool", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not a bool", _scopeString, index);
             return defaultValue;
         }
 
@@ -166,7 +203,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::GetBool(const std::string& name, bool defaultValue)
+    bool JsonReader::GetBool(const std::string& name, bool defaultValue)
     {
         if (!_currentObject)
         {
@@ -175,7 +212,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsBool())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find bool for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find bool for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -183,7 +220,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    int SettingsJsonReader::GetInt(int index, int defaultValue)
+    int JsonReader::GetInt(int index, int defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -192,7 +229,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsInt())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not an int", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not an int", _scopeString, index);
             return defaultValue;
         }
 
@@ -200,7 +237,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    int SettingsJsonReader::GetInt(const std::string& name, int defaultValue)
+    int JsonReader::GetInt(const std::string& name, int defaultValue)
     {
         if (!_currentObject)
         {
@@ -209,7 +246,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsInt())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find int for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find int for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -217,7 +254,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    unsigned int SettingsJsonReader::GetUInt(int index, unsigned int defaultValue)
+    unsigned int JsonReader::GetUInt(int index, unsigned int defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -226,7 +263,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsUint())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not an uint", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not an uint", _scopeString, index);
             return defaultValue;
         }
 
@@ -234,7 +271,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    unsigned int SettingsJsonReader::GetUInt(const std::string& name, unsigned int defaultValue)
+    unsigned int JsonReader::GetUInt(const std::string& name, unsigned int defaultValue)
     {
         if (!_currentObject)
         {
@@ -243,7 +280,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsUint())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find uint for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find uint for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -251,7 +288,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    int64_t SettingsJsonReader::GetInt64(int index, int64_t defaultValue)
+    int64_t JsonReader::GetInt64(int index, int64_t defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -260,7 +297,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsInt64())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not an int64", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not an int64", _scopeString, index);
             return defaultValue;
         }
 
@@ -268,7 +305,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    int64_t SettingsJsonReader::GetInt64(const std::string& name, int64_t defaultValue)
+    int64_t JsonReader::GetInt64(const std::string& name, int64_t defaultValue)
     {
         if (!_currentObject)
         {
@@ -277,7 +314,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsInt64())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find int64 for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find int64 for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -285,7 +322,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    uint64_t SettingsJsonReader::GetUInt64(int index, uint64_t defaultValue)
+    uint64_t JsonReader::GetUInt64(int index, uint64_t defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -294,7 +331,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsUint64())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not an uint64", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not an uint64", _scopeString, index);
             return defaultValue;
         }
 
@@ -302,7 +339,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    uint64_t SettingsJsonReader::GetUInt64(const std::string& name, uint64_t defaultValue)
+    uint64_t JsonReader::GetUInt64(const std::string& name, uint64_t defaultValue)
     {
         if (!_currentObject)
         {
@@ -311,7 +348,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsUint64())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find uint64 for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find uint64 for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -319,7 +356,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    double SettingsJsonReader::GetDouble(int index, double defaultValue)
+    double JsonReader::GetDouble(int index, double defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -328,7 +365,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsDouble())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not a double", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not a double", _scopeString, index);
             return defaultValue;
         }
 
@@ -336,7 +373,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    double SettingsJsonReader::GetDouble(const std::string& name, double defaultValue)
+    double JsonReader::GetDouble(const std::string& name, double defaultValue)
     {
         if (!_currentObject)
         {
@@ -345,7 +382,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsDouble())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find double for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find double for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -353,7 +390,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string SettingsJsonReader::GetString(int index, const std::string& defaultValue)
+    std::string JsonReader::GetString(int index, const std::string& defaultValue)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -362,7 +399,7 @@ namespace Storyteller
 
         if (!(*_currentObject)[index].IsString())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: '{}[{}]' is not a string", _scopeString, index);
+            STRTLR_CORE_LOG_ERROR("JsonReader: '{}[{}]' is not a string", _scopeString, index);
             return defaultValue;
         }
 
@@ -370,7 +407,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string SettingsJsonReader::GetString(const std::string& name, const std::string& defaultValue)
+    std::string JsonReader::GetString(const std::string& name, const std::string& defaultValue)
     {
         if (!_currentObject)
         {
@@ -379,7 +416,7 @@ namespace Storyteller
 
         if (!_currentObject->HasMember(name.c_str()) || !(*_currentObject)[name.c_str()].IsString())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: cannot find string for '{}/{}'", _scopeString, name);
+            STRTLR_CORE_LOG_ERROR("JsonReader: cannot find string for '{}/{}'", _scopeString, name);
             return defaultValue;
         }
 
@@ -387,7 +424,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string SettingsJsonReader::GetCurrentScopeString() const
+    std::string JsonReader::GetCurrentScopeString() const
     {
         return _scope.empty()
             ? ""
@@ -398,7 +435,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonReader::ValidToGetFromArray(int index) const
+    bool JsonReader::ValidToGetFromArray(int index) const
     {
         if (!_currentObject)
         {
@@ -407,13 +444,13 @@ namespace Storyteller
 
         if (!_currentObject->IsArray())
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: current object '{}' is not an array", _scopeString);
+            STRTLR_CORE_LOG_ERROR("JsonReader: current object '{}' is not an array", _scopeString);
             return false;
         }
 
         if (index >= _currentObject->Size() || index < 0)
         {
-            STRTLR_CORE_LOG_ERROR("SettingsReader: invalid index [{}] for '{}'", index, _scopeString);
+            STRTLR_CORE_LOG_ERROR("JsonReader: invalid index [{}] for '{}'", index, _scopeString);
             return false;
         }
 

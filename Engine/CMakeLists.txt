@@ -16,6 +16,8 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_serializer.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_sort_filter_proxy_view.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_controller.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_reader.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_writer.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/localization_manager.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/console_manager.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/filesystem.h"
@@ -39,8 +41,6 @@ set(HEADER_FILES
 )
 set(INTERNAL_HEADER_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal/settings_json_impl.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal/settings_json_impl_reader.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal/settings_json_impl_writer.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -50,6 +50,8 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/game_document_serializer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/game_document_sort_filter_proxy_view.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/game_controller.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/json_reader.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/json_writer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/localization_manager.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/console_manager.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/filesystem.cpp"
@@ -58,8 +60,6 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_application.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_reader.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/settings_json_impl_writer.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
@@ -79,10 +79,10 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
     PUBLIC "${VENDOR_DIR}/glfw/include"
     PUBLIC "${VENDOR_DIR}/spdlog/include"
+    PUBLIC "${VENDOR_DIR}/rapidjson/include"
 
 	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller"
 	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal"
-    PRIVATE "${VENDOR_DIR}/rapidjson/include"
     PRIVATE "${VENDOR_DIR}/stb_image"
 	PRIVATE "${VENDOR_DIR}/pfd"
 )

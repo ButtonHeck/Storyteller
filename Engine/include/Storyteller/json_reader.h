@@ -7,13 +7,16 @@
 
 namespace Storyteller
 {
-    class SettingsJsonReader
+    class JsonReader
     {
     public:
-        explicit SettingsJsonReader(const std::string& filename);
+        explicit JsonReader(const std::string& filename);
 
         bool StartLoad();
         bool EndLoad();
+
+        bool StartLoadArrayObject(int index);
+        bool EndLoadArrayObject();
 
         bool StartLoadGroup(const std::string& groupName);
         bool EndLoadGroup();

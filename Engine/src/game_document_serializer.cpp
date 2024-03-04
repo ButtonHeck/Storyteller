@@ -3,11 +3,8 @@
 #include "log.h"
 #include "entities.h"
 #include "filesystem.h"
-
-#include <rapidjson/document.h>
-#include <rapidjson/prettywriter.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/istreamwrapper.h>
+#include "json_reader.h"
+#include "json_writer.h"
 
 #include <fstream>
 
@@ -39,8 +36,8 @@ namespace Storyteller
             return false;
         }
 
-        const auto success = Deserialize(path);
-        if (!success)
+        const auto ok = Deserialize(path);
+        if (!ok)
         {
             STRTLR_CORE_LOG_WARN("GameDocumentSerializer: deserialization failed");
             return false;
@@ -69,8 +66,8 @@ namespace Storyteller
             return false;
         }
 
-        const auto success = Serialize(path);
-        if (!success)
+        const auto ok = Serialize(path);
+        if (!ok)
         {
             STRTLR_CORE_LOG_WARN("GameDocumentSerializer: serialization failed");
             return false;
@@ -85,41 +82,32 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Serialize(const std::filesystem::path& path)
     {
-        rapidjson::StringBuffer stringBuffer;
-        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(stringBuffer);
-        auto success = true;
+        JsonWriter writer(Filesystem::ToU8String(path));
+        auto ok = true;
 
-        success &= writer.StartObject();
+        ok &= writer.StartSave();
 
-        success &= writer.Key(JSON_KEY_GAME_NAME);
-        success &= writer.String(_document->GetGameName().c_str());
+        ok &= writer.SaveString(JSON_KEY_GAME_NAME, _document->GetGameName().c_str());
 
-        success &= writer.Key(JSON_KEY_ENTRY_POINT_UUID);
         const auto entryPoint = _document->GetEntryPoint();
-        success &= writer.Uint64(entryPoint ? entryPoint->GetUuid() : UUID::InvalidUuid);
+        ok &= writer.SaveUInt64(JSON_KEY_ENTRY_POINT_UUID, entryPoint ? entryPoint->GetUuid() : UUID::InvalidUuid);
 
-        success &= writer.Key(JSON_KEY_OBJECTS);
-        success &= writer.StartArray();
-
+        ok &= writer.StartSaveArray(JSON_KEY_OBJECTS);
         const auto objects = _document->GetObjects();
+
         for (auto i = 0; i < objects.size(); i++)
         {
             const auto object = objects.at(i);
-            success &= writer.StartObject();
+            ok &= writer.StartSaveObject();
 
-            success &= writer.Key(JSON_KEY_UUID);
-            success &= writer.Uint64(object->GetUuid());
-
-            success &= writer.Key(JSON_KEY_NAME);
-            success &= writer.String(object->GetName().c_str());
+            ok &= writer.SaveUInt64(JSON_KEY_UUID, object->GetUuid());
+            ok &= writer.SaveString(JSON_KEY_NAME, object->GetName().c_str());
 
             const auto objectType = object->GetObjectType();
-            success &= writer.Key(JSON_KEY_OBJECT_TYPE);
-            success &= writer.String(ObjectTypeToString(objectType).c_str());
+            ok &= writer.SaveString(JSON_KEY_OBJECT_TYPE, ObjectTypeToString(objectType).c_str());
 
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            success &= writer.Key(JSON_KEY_TEXT);
-            success &= writer.String(textObject->GetText().c_str());
+            ok &= writer.SaveString(JSON_KEY_TEXT, textObject->GetText().c_str());
 
             switch (objectType)
             {
@@ -127,25 +115,22 @@ namespace Storyteller
             {
                 const auto questObject = dynamic_cast<const QuestObject*>(textObject);
                 const auto actions = questObject->GetActions();
-                success &= writer.Key(JSON_KEY_ACTIONS);
-                success &= writer.StartArray();
+
+                ok &= writer.StartSaveArray(JSON_KEY_ACTIONS);
                 for (auto action = 0; action < actions.size(); action++)
                 {
-                    success &= writer.Uint64(actions.at(action));
+                    ok &= writer.SaveUInt64(actions.at(action));
                 }
+                ok &= writer.EndSaveArray();
 
-                success &= writer.EndArray();
-
-                success &= writer.Key(JSON_KEY_FINAL);
-                success &= writer.Bool(questObject->IsFinal());
+                ok &= writer.SaveBool(JSON_KEY_FINAL, questObject->IsFinal());
                 break;
             }
 
             case ObjectType::ActionObjectType:
             {
                 const auto actionObject = dynamic_cast<const ActionObject*>(textObject);
-                success &= writer.Key(JSON_KEY_TARGET);
-                success &= writer.Uint64(actionObject->GetTargetUuid());
+                ok &= writer.SaveUInt64(JSON_KEY_TARGET, actionObject->GetTargetUuid());
                 break;
             }
 
@@ -153,149 +138,64 @@ namespace Storyteller
                 break;
             }
 
-            success &= writer.EndObject();
+            ok &= writer.EndSaveObject();
         }
 
-        success &= writer.EndArray();
-        success &= writer.EndObject();
+        ok &= writer.EndSaveArray();
+        ok &= writer.EndSave();
 
-        if (!success)
-        {
-            return false;
-        }
-
-        std::ofstream outputStream(path.string(), std::ios::out | std::ios::trunc);
-        if (!outputStream.is_open() || !outputStream.good())
-        {
-            return false;
-        }
-
-        outputStream << stringBuffer.GetString();
-        outputStream.close();
-
-        return true;
+        return ok;
     }
     //--------------------------------------------------------------------------
 
     bool GameDocumentSerializer::Deserialize(const std::filesystem::path& path)
     {
-        std::ifstream inputStream(path.string());
-        if (!inputStream.is_open() || !inputStream.good())
+        JsonReader reader(Filesystem::ToU8String(path));
+
+        if (!reader.StartLoad())
         {
             return false;
         }
 
-        rapidjson::IStreamWrapper jsonStream(inputStream);
-        rapidjson::Document jsonDocument;
-        jsonDocument.ParseStream(jsonStream);
-        inputStream.close();
+        _document->SetGameName(reader.GetString(JSON_KEY_GAME_NAME, "Untitled"));
+        _document->SetEntryPoint(reader.GetUInt64(JSON_KEY_ENTRY_POINT_UUID, UUID::InvalidUuid));
+        const auto objectsArraySize = reader.StartLoadArray(JSON_KEY_OBJECTS);
 
-        if (jsonDocument.HasParseError())
+        for (auto i = 0; i < objectsArraySize; i++)
         {
-            STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON parsing error '{}'", jsonDocument.GetParseError());
-            return false;
-        }
+            reader.StartLoadArrayObject(i);
 
-        if (!jsonDocument.HasMember(JSON_KEY_GAME_NAME) || !jsonDocument[JSON_KEY_GAME_NAME].IsString())
-        {
-            STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading string '{}'", JSON_KEY_GAME_NAME);
-            return false;
-        }
-        _document->SetGameName(jsonDocument[JSON_KEY_GAME_NAME].GetString());
-
-        if (!jsonDocument.HasMember(JSON_KEY_ENTRY_POINT_UUID) || !jsonDocument[JSON_KEY_ENTRY_POINT_UUID].IsUint64())
-        {
-            STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading UUID '{}'", JSON_KEY_ENTRY_POINT_UUID);
-            return false;
-        }
-        _document->SetEntryPoint(jsonDocument[JSON_KEY_ENTRY_POINT_UUID].GetUint64());
-
-        if (!jsonDocument.HasMember(JSON_KEY_OBJECTS) || !jsonDocument[JSON_KEY_OBJECTS].IsArray())
-        {
-            STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading array '{}'", JSON_KEY_OBJECTS);
-            return false;
-        }
-        const auto& objectsArray = jsonDocument[JSON_KEY_OBJECTS].GetArray();
-
-        for (rapidjson::SizeType i = 0; i < objectsArray.Size(); i++)
-        {
-            const auto jsonObject = objectsArray[i].GetObject();
-
-            if (!jsonObject.HasMember(JSON_KEY_UUID) || !jsonObject[JSON_KEY_UUID].IsUint64())
-            {
-                STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading UUID '{}'", JSON_KEY_UUID);
-                return false;
-            }
-            const auto objectUuid = UUID(jsonObject[JSON_KEY_UUID].GetUint64());
-
-            if (!jsonObject.HasMember(JSON_KEY_NAME) || !jsonObject[JSON_KEY_NAME].IsString())
-            {
-                STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading string '{}'", JSON_KEY_NAME);
-                return false;
-            }
-            const auto objectName = std::string(jsonObject[JSON_KEY_NAME].GetString());
-
-            if (!jsonObject.HasMember(JSON_KEY_OBJECT_TYPE) || !jsonObject[JSON_KEY_OBJECT_TYPE].IsString())
-            {
-                STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading string '{}'", JSON_KEY_OBJECT_TYPE);
-                return false;
-            }
-            const auto objectType = StringToObjectType(jsonObject[JSON_KEY_OBJECT_TYPE].GetString());
-
-            if (!jsonObject.HasMember(JSON_KEY_TEXT) || !jsonObject[JSON_KEY_TEXT].IsString())
-            {
-                STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading string '{}'", JSON_KEY_TEXT);
-                return false;
-            }
-            const auto objectText = std::string(jsonObject[JSON_KEY_TEXT].GetString());
+            const auto objectUuid = UUID(reader.GetUInt64(JSON_KEY_UUID));
+            const auto objectName = reader.GetString(JSON_KEY_NAME);
+            const auto objectType = StringToObjectType(reader.GetString(JSON_KEY_OBJECT_TYPE));
+            const auto objectText = reader.GetString(JSON_KEY_TEXT);
 
             switch (objectType)
             {
             case ObjectType::QuestObjectType:
             {
-                if (!jsonObject.HasMember(JSON_KEY_ACTIONS) || !jsonObject[JSON_KEY_ACTIONS].IsArray())
-                {
-                    STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading array '{}'", JSON_KEY_ACTIONS);
-                    return false;
-                }
-
                 auto questObject = CreatePtr<QuestObject>(objectUuid, [this]() { _document->SetDirty(true); });
                 questObject->SetText(objectText);
                 questObject->SetName(objectName);
 
-                const auto questObjectActions = jsonObject[JSON_KEY_ACTIONS].GetArray();
-                for (rapidjson::SizeType i = 0; i < questObjectActions.Size(); i++)
+                const auto questObjectActionsSize = reader.StartLoadArray(JSON_KEY_ACTIONS);
+                for (auto a = 0; a < questObjectActionsSize; a++)
                 {
-                    if (!questObjectActions[i].IsUint64())
-                    {
-                        STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading UUID '{}'", JSON_KEY_ACTIONS);
-                        return false;
-                    }
-
-                    questObject->AddAction(UUID(questObjectActions[i].GetUint64()));
+                    questObject->AddAction(UUID(reader.GetUInt64(a)));
                 }
-
-                if (!jsonObject.HasMember(JSON_KEY_FINAL) || !jsonObject[JSON_KEY_FINAL].IsBool())
-                {
-                    STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading bool '{}'", JSON_KEY_FINAL);
-                    return false;
-                }
-                questObject->SetFinal(jsonObject[JSON_KEY_FINAL].GetBool());
+                reader.EndLoadArray();
+                
+                questObject->SetFinal(reader.GetBool(JSON_KEY_FINAL));
 
                 _document->AddObject(questObject);
 
                 break;
             }
+
             case ObjectType::ActionObjectType:
             {
-                if (!jsonObject.HasMember(JSON_KEY_TARGET) || !jsonObject[JSON_KEY_TARGET].IsUint64())
-                {
-                    STRTLR_CORE_LOG_ERROR("GameDocumentSerializer: JSON error reading UUID '{}'", JSON_KEY_TARGET);
-                    return false;
-                }
-
                 auto actionObject = CreatePtr<ActionObject>(objectUuid, [this]() { _document->SetDirty(true); });
-                actionObject->SetTargetUuid(UUID(jsonObject[JSON_KEY_TARGET].GetUint64()));
+                actionObject->SetTargetUuid(UUID(reader.GetUInt64(JSON_KEY_TARGET)));
                 actionObject->SetText(objectText);
                 actionObject->SetName(objectName);
 
@@ -303,9 +203,12 @@ namespace Storyteller
 
                 break;
             }
+
             default:
                 return false;
             }
+
+            reader.EndLoadArrayObject();
         }
 
         return true;

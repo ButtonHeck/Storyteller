@@ -7,13 +7,16 @@
 
 namespace Storyteller
 {
-    class SettingsJsonWriter
+    class JsonWriter
     {
     public:
-        explicit SettingsJsonWriter(const std::string& filename);
+        explicit JsonWriter(const std::string& filename);
 
         bool StartSave();
         bool EndSave();
+
+        bool StartSaveObject();
+        bool EndSaveObject();
 
         bool StartSaveGroup(const std::string& groupName);
         bool EndSaveGroup();

@@ -5,8 +5,8 @@ namespace Storyteller
 {
     SettingsJson::SettingsJson(const std::string& name)
         : _filename(Filesystem::ToU8String(Filesystem::GetCurrentPath().append(name + ".json")))
-        , _reader(new SettingsJsonReader(_filename))
-        , _writer(new SettingsJsonWriter(_filename))
+        , _reader(new JsonReader(_filename))
+        , _writer(new JsonWriter(_filename))
     {}
     //--------------------------------------------------------------------------
 

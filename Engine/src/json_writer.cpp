@@ -1,4 +1,4 @@
-#include "settings_json_impl_writer.h"
+#include "json_writer.h"
 #include "filesystem.h"
 #include "log.h"
 
@@ -6,20 +6,20 @@
 
 namespace Storyteller
 {
-    SettingsJsonWriter::SettingsJsonWriter(const std::string& filename)
+    JsonWriter::JsonWriter(const std::string& filename)
         : _filename(filename)
         , _stringBuffer()
         , _writer(_stringBuffer)
     {}
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::StartSave()
+    bool JsonWriter::StartSave()
     {
-        STRTLR_CORE_LOG_INFO("SettingsWriter: saving to '{}'", _filename);
+        STRTLR_CORE_LOG_INFO("JsonWriter: saving to '{}'", _filename);
 
         if (!Filesystem::CreatePathTree(_filename))
         {
-            STRTLR_CORE_LOG_WARN("SettingsWriter: insufficient path");
+            STRTLR_CORE_LOG_WARN("JsonWriter: insufficient path");
             return false;
         }
 
@@ -27,14 +27,14 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::EndSave()
+    bool JsonWriter::EndSave()
     {
         _writer.EndObject();
 
         std::ofstream outputStream(_filename, std::ios::out | std::ios::trunc);
         if (!outputStream.is_open() || !outputStream.good())
         {
-            STRTLR_CORE_LOG_WARN("SettingsWriter: failed to open file stream");
+            STRTLR_CORE_LOG_WARN("JsonWriter: failed to open file stream");
             return false;
         }
 
@@ -45,11 +45,23 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::StartSaveGroup(const std::string& groupName)
+    bool JsonWriter::StartSaveObject()
+    {
+        return _writer.StartObject();
+    }
+    //--------------------------------------------------------------------------
+
+    bool JsonWriter::EndSaveObject()
+    {
+        return _writer.EndObject();
+    }
+    //--------------------------------------------------------------------------
+
+    bool JsonWriter::StartSaveGroup(const std::string& groupName)
     {
         if (groupName.empty())
         {
-            STRTLR_CORE_LOG_WARN("SettingsWriter: group name should not be empty!");
+            STRTLR_CORE_LOG_WARN("JsonWriter: group name should not be empty!");
             return false;
         }
 
@@ -58,157 +70,157 @@ namespace Storyteller
             return _writer.StartObject();
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot start saving group '{}'", groupName);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot start saving group '{}'", groupName);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::EndSaveGroup()
+    bool JsonWriter::EndSaveGroup()
     {
         return _writer.EndObject();
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::StartSaveArray(const std::string& arrayName)
+    bool JsonWriter::StartSaveArray(const std::string& arrayName)
     {
         if (_writer.Key(arrayName.c_str()))
         {
             return _writer.StartArray();
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save array '{}'", arrayName);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save array '{}'", arrayName);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::EndSaveArray()
+    bool JsonWriter::EndSaveArray()
     {
         return _writer.EndArray();
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveBool(bool value)
+    bool JsonWriter::SaveBool(bool value)
     {
         return _writer.Bool(value);
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveBool(const std::string& name, bool value)
+    bool JsonWriter::SaveBool(const std::string& name, bool value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.Bool(value);
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveInt(int value)
+    bool JsonWriter::SaveInt(int value)
     {
         return _writer.Int(value);
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveInt(const std::string& name, int value)
+    bool JsonWriter::SaveInt(const std::string& name, int value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.Int(value);
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveUInt(unsigned int value)
+    bool JsonWriter::SaveUInt(unsigned int value)
     {
         return _writer.Uint(value);
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveUInt(const std::string& name, unsigned int value)
+    bool JsonWriter::SaveUInt(const std::string& name, unsigned int value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.Uint(value);
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveInt64(int64_t value)
+    bool JsonWriter::SaveInt64(int64_t value)
     {
         return _writer.Int64(value);
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveInt64(const std::string& name, int64_t value)
+    bool JsonWriter::SaveInt64(const std::string& name, int64_t value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.Int64(value);
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveUInt64(uint64_t value)
+    bool JsonWriter::SaveUInt64(uint64_t value)
     {
         return _writer.Uint64(value);
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveUInt64(const std::string& name, uint64_t value)
+    bool JsonWriter::SaveUInt64(const std::string& name, uint64_t value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.Uint64(value);
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveDouble(double value)
+    bool JsonWriter::SaveDouble(double value)
     {
         return _writer.Double(value);
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveDouble(const std::string& name, double value)
+    bool JsonWriter::SaveDouble(const std::string& name, double value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.Double(value);
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveString(const std::string& value)
+    bool JsonWriter::SaveString(const std::string& value)
     {
         return _writer.String(value.c_str());
     }
     //--------------------------------------------------------------------------
 
-    bool SettingsJsonWriter::SaveString(const std::string& name, const std::string& value)
+    bool JsonWriter::SaveString(const std::string& name, const std::string& value)
     {
         if (_writer.Key(name.c_str()))
         {
             return _writer.String(value.c_str());
         }
 
-        STRTLR_CORE_LOG_WARN("SettingsWriter: cannot save '{}'", name);
+        STRTLR_CORE_LOG_WARN("JsonWriter: cannot save '{}'", name);
         return false;
     }
     //--------------------------------------------------------------------------

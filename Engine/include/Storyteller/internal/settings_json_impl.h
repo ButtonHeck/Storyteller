@@ -1,8 +1,8 @@
 #pragma once
 
 #include "pointers.h"
-#include "settings_json_impl_reader.h"
-#include "settings_json_impl_writer.h"
+#include "json_reader.h"
+#include "json_writer.h"
 
 #include <string>
 
@@ -64,8 +64,8 @@ namespace Storyteller
 
     private:
         const std::string _filename;
-        Ptr<SettingsJsonReader> _reader;
-        Ptr<SettingsJsonWriter> _writer;
+        Ptr<JsonReader> _reader;
+        Ptr<JsonWriter> _writer;
     };
     //--------------------------------------------------------------------------
 }
