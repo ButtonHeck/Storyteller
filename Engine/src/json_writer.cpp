@@ -13,7 +13,7 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::StartSave()
+    bool JsonWriter::Start()
     {
         STRTLR_CORE_LOG_INFO("JsonWriter: saving to '{}'", _filename);
 
@@ -27,7 +27,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::EndSave()
+    bool JsonWriter::End()
     {
         _writer.EndObject();
 
@@ -45,19 +45,19 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::StartSaveObject()
+    bool JsonWriter::StartObject()
     {
         return _writer.StartObject();
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::EndSaveObject()
+    bool JsonWriter::EndObject()
     {
         return _writer.EndObject();
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::StartSaveGroup(const std::string& groupName)
+    bool JsonWriter::StartGroup(const std::string& groupName)
     {
         if (groupName.empty())
         {
@@ -75,13 +75,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::EndSaveGroup()
+    bool JsonWriter::EndGroup()
     {
         return _writer.EndObject();
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::StartSaveArray(const std::string& arrayName)
+    bool JsonWriter::StartArray(const std::string& arrayName)
     {
         if (_writer.Key(arrayName.c_str()))
         {
@@ -93,7 +93,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonWriter::EndSaveArray()
+    bool JsonWriter::EndArray()
     {
         return _writer.EndArray();
     }

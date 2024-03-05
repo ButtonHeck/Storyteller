@@ -12,17 +12,17 @@ namespace Storyteller
     public:
         explicit JsonReader(const std::string& filename);
 
-        bool StartLoad();
-        bool EndLoad();
+        bool Start();
+        bool End();
 
-        bool StartLoadArrayObject(int index);
-        bool EndLoadArrayObject();
+        bool StartArrayObject(int index);
+        bool EndArrayObject();
 
-        bool StartLoadGroup(const std::string& groupName);
-        bool EndLoadGroup();
+        bool StartGroup(const std::string& groupName);
+        bool EndGroup();
 
-        int StartLoadArray(const std::string& arrayName);
-        bool EndLoadArray();
+        int StartArray(const std::string& arrayName);
+        bool EndArray();
 
         bool GetBool(int index, bool defaultValue = false);
         bool GetBool(const std::string& name, bool defaultValue = false);

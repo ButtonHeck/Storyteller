@@ -21,7 +21,7 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    bool JsonReader::StartLoad()
+    bool JsonReader::Start()
     {
         STRTLR_CORE_LOG_INFO("JsonReader: loading from '{}'", _filename);
 
@@ -53,13 +53,13 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonReader::EndLoad()
+    bool JsonReader::End()
     {
         return true;
     }
     //--------------------------------------------------------------------------
 
-    bool JsonReader::StartLoadArrayObject(int index)
+    bool JsonReader::StartArrayObject(int index)
     {
         if (!ValidToGetFromArray(index))
         {
@@ -80,7 +80,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonReader::EndLoadArrayObject()
+    bool JsonReader::EndArrayObject()
     {
         if (!_scope.empty())
         {
@@ -96,7 +96,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonReader::StartLoadGroup(const std::string& groupName)
+    bool JsonReader::StartGroup(const std::string& groupName)
     {
         if (!_currentObject)
         {
@@ -130,7 +130,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonReader::EndLoadGroup()
+    bool JsonReader::EndGroup()
     {
         if (!_scope.empty())
         {
@@ -146,7 +146,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    int JsonReader::StartLoadArray(const std::string& arrayName)
+    int JsonReader::StartArray(const std::string& arrayName)
     {
         if (!_currentObject)
         {
@@ -180,9 +180,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool JsonReader::EndLoadArray()
+    bool JsonReader::EndArray()
     {
-        return EndLoadGroup();
+        return EndGroup();
     }
     //--------------------------------------------------------------------------
 

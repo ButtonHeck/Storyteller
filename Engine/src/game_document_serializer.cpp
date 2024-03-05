@@ -85,20 +85,20 @@ namespace Storyteller
         JsonWriter writer(Filesystem::ToU8String(path));
         auto ok = true;
 
-        ok &= writer.StartSave();
+        ok &= writer.Start();
 
         ok &= writer.SaveString(JSON_KEY_GAME_NAME, _document->GetGameName().c_str());
 
         const auto entryPoint = _document->GetEntryPoint();
         ok &= writer.SaveUInt64(JSON_KEY_ENTRY_POINT_UUID, entryPoint ? entryPoint->GetUuid() : UUID::InvalidUuid);
 
-        ok &= writer.StartSaveArray(JSON_KEY_OBJECTS);
+        ok &= writer.StartArray(JSON_KEY_OBJECTS);
         const auto objects = _document->GetObjects();
 
         for (auto i = 0; i < objects.size(); i++)
         {
             const auto object = objects.at(i);
-            ok &= writer.StartSaveObject();
+            ok &= writer.StartObject();
 
             ok &= writer.SaveUInt64(JSON_KEY_UUID, object->GetUuid());
             ok &= writer.SaveString(JSON_KEY_NAME, object->GetName().c_str());
@@ -116,12 +116,12 @@ namespace Storyteller
                 const auto questObject = dynamic_cast<const QuestObject*>(textObject);
                 const auto actions = questObject->GetActions();
 
-                ok &= writer.StartSaveArray(JSON_KEY_ACTIONS);
+                ok &= writer.StartArray(JSON_KEY_ACTIONS);
                 for (auto action = 0; action < actions.size(); action++)
                 {
                     ok &= writer.SaveUInt64(actions.at(action));
                 }
-                ok &= writer.EndSaveArray();
+                ok &= writer.EndArray();
 
                 ok &= writer.SaveBool(JSON_KEY_FINAL, questObject->IsFinal());
                 break;
@@ -138,11 +138,11 @@ namespace Storyteller
                 break;
             }
 
-            ok &= writer.EndSaveObject();
+            ok &= writer.EndObject();
         }
 
-        ok &= writer.EndSaveArray();
-        ok &= writer.EndSave();
+        ok &= writer.EndArray();
+        ok &= writer.End();
 
         return ok;
     }
@@ -152,18 +152,18 @@ namespace Storyteller
     {
         JsonReader reader(Filesystem::ToU8String(path));
 
-        if (!reader.StartLoad())
+        if (!reader.Start())
         {
             return false;
         }
 
         _document->SetGameName(reader.GetString(JSON_KEY_GAME_NAME, "Untitled"));
         _document->SetEntryPoint(reader.GetUInt64(JSON_KEY_ENTRY_POINT_UUID, UUID::InvalidUuid));
-        const auto objectsArraySize = reader.StartLoadArray(JSON_KEY_OBJECTS);
+        const auto objectsArraySize = reader.StartArray(JSON_KEY_OBJECTS);
 
         for (auto i = 0; i < objectsArraySize; i++)
         {
-            reader.StartLoadArrayObject(i);
+            reader.StartArrayObject(i);
 
             const auto objectUuid = UUID(reader.GetUInt64(JSON_KEY_UUID));
             const auto objectName = reader.GetString(JSON_KEY_NAME);
@@ -178,12 +178,12 @@ namespace Storyteller
                 questObject->SetText(objectText);
                 questObject->SetName(objectName);
 
-                const auto questObjectActionsSize = reader.StartLoadArray(JSON_KEY_ACTIONS);
+                const auto questObjectActionsSize = reader.StartArray(JSON_KEY_ACTIONS);
                 for (auto a = 0; a < questObjectActionsSize; a++)
                 {
                     questObject->AddAction(UUID(reader.GetUInt64(a)));
                 }
-                reader.EndLoadArray();
+                reader.EndArray();
                 
                 questObject->SetFinal(reader.GetBool(JSON_KEY_FINAL));
 
@@ -208,7 +208,7 @@ namespace Storyteller
                 return false;
             }
 
-            reader.EndLoadArrayObject();
+            reader.EndArrayObject();
         }
 
         return true;

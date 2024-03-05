@@ -14,37 +14,37 @@ namespace Storyteller
 
     bool Settings::StartSave()
     {
-        return _writer->StartSave();
+        return _writer->Start();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndSave()
     {
-        return _writer->EndSave();
+        return _writer->End();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartSaveGroup(const std::string& groupName)
     {
-        return _writer->StartSaveGroup(groupName);
+        return _writer->StartGroup(groupName);
     }
     //--------------------------------------------------------------------------    
 
     bool Settings::EndSaveGroup()
     {
-        return _writer->EndSaveGroup();
+        return _writer->EndGroup();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartSaveArray(const std::string& arrayName)
     {
-        return _writer->StartSaveArray(arrayName);
+        return _writer->StartArray(arrayName);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndSaveArray()
     {
-        return _writer->EndSaveArray();
+        return _writer->EndArray();
     }
     //--------------------------------------------------------------------------
 
@@ -134,37 +134,37 @@ namespace Storyteller
 
     bool Settings::StartLoad()
     {
-        return _reader->StartLoad();
+        return _reader->Start();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndLoad()
     {
-        return _reader->EndLoad();
+        return _reader->End();
     }
     //--------------------------------------------------------------------------
 
     bool Settings::StartLoadGroup(const std::string& groupName)
     {
-        return _reader->StartLoadGroup(groupName);
+        return _reader->StartGroup(groupName);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndLoadGroup()
     {
-        return _reader->EndLoadGroup();
+        return _reader->EndGroup();
     }
     //--------------------------------------------------------------------------
 
     int Settings::StartLoadArray(const std::string& arrayName)
     {
-        return _reader->StartLoadArray(arrayName);
+        return _reader->StartArray(arrayName);
     }
     //--------------------------------------------------------------------------
 
     bool Settings::EndLoadArray()
     {
-        return _reader->EndLoadArray();
+        return _reader->EndArray();
     }
     //--------------------------------------------------------------------------
 

@@ -12,17 +12,17 @@ namespace Storyteller
     public:
         explicit JsonWriter(const std::string& filename);
 
-        bool StartSave();
-        bool EndSave();
+        bool Start();
+        bool End();
 
-        bool StartSaveObject();
-        bool EndSaveObject();
+        bool StartObject();
+        bool EndObject();
 
-        bool StartSaveGroup(const std::string& groupName);
-        bool EndSaveGroup();
+        bool StartGroup(const std::string& groupName);
+        bool EndGroup();
 
-        bool StartSaveArray(const std::string& arrayName);
-        bool EndSaveArray();
+        bool StartArray(const std::string& arrayName);
+        bool EndArray();
 
         bool SaveBool(bool value);
         bool SaveBool(const std::string& name, bool value);
