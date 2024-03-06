@@ -329,7 +329,7 @@ namespace Storyteller
 
         {
             const auto title = _localizationManager->Translate("StorytellerEditor", "Name");
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
             auto gameName = document->GetGameName();
             const auto oldGameName = gameName;
             if (ImGui::InputText(title.c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
@@ -449,7 +449,10 @@ namespace Storyteller
             {ImGuiCol_HeaderActive, ImColor(180, 160, 130, 180)}
         });
 
-        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects").c_str(), 4, objectsTableFlags))
+        const auto objectsCount = proxy->GetObjects().size();
+        const auto summaryText = _localizationManager->Translate("StorytellerEditor", "total {1} object", "total {1} objects", objectsCount);
+        const auto tableOuterSize = ImVec2(0.0f, ImGui::GetContentRegionAvail().y - ImGui::CalcTextSize(summaryText.c_str()).y - ImGui::GetStyle().ItemSpacing.y);
+        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects").c_str(), 4, objectsTableFlags, tableOuterSize))
         {
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 65.0f);
             ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
@@ -541,6 +544,8 @@ namespace Storyteller
 
             ImGui::EndTable();
         }
+
+        ImGui::TextUnformatted(summaryText.c_str());
     }
     //--------------------------------------------------------------------------
 
@@ -669,7 +674,7 @@ namespace Storyteller
 
         {
             const auto title = _localizationManager->Translate("StorytellerEditor", "Action name");
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
             UiUtils::DisableGuard disableGuard(allActionObjects.empty());
             if (ImGui::BeginCombo(title.c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
             {
@@ -835,7 +840,7 @@ namespace Storyteller
         ImGui::SameLine();
         {
             const auto title = _localizationManager->Translate("StorytellerEditor", "Quest object name");
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x);
+            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
             UiUtils::DisableGuard disableGuard(allQuestObjects.empty());
             if (ImGui::BeginCombo(title.c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
             {
