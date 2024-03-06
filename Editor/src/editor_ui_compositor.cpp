@@ -1150,7 +1150,7 @@ namespace Storyteller
         else
         {
             _popups.warningMessage = true;
-            _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "The selected file is missing or damaged");
+            _popups.warningMessageText = _localizationManager->TranslateCtx("StorytellerEditor", "The selected file is missing or damaged", "Popup message");
         }
     }
     //--------------------------------------------------------------------------
