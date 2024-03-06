@@ -149,8 +149,8 @@ namespace Storyteller
         ImGui::DockBuilderSplitNode(top, ImGuiDir_Left, 0.5f, &topLeft, &topRight);
 
         ImGui::DockBuilderDockWindow("###GamePanel", topLeft);
-        ImGui::DockBuilderDockWindow("Properties", topRight);
-        ImGui::DockBuilderDockWindow("Log", bottom);
+        ImGui::DockBuilderDockWindow("###Properties", topRight);
+        ImGui::DockBuilderDockWindow("###Log", bottom);
         ImGui::DockBuilderFinish(dockspaceId);
 
         ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
@@ -546,7 +546,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanel()
     {
-        if (ImGui::Begin(_localizationManager->Translate("StorytellerEditor", "Properties").c_str(), nullptr))
+        if (ImGui::Begin(_localizationManager->Translate("StorytellerEditor", "Properties").append("###Properties").c_str(), nullptr))
         {
             const auto selectedObject = _gameDocumentManager->GetProxy()->GetSelectedObject();
 
@@ -697,7 +697,7 @@ namespace Storyteller
             _state.selectedChildActionIndex = 0;
         }
 
-        ImGui::SeparatorText(_localizationManager->Translate("Storyteller", "Actions").c_str());
+        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Actions").c_str());
 
         const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable 
             | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_ScrollY;
@@ -876,7 +876,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeLogPanel()
     {
-        ImGui::Begin(_localizationManager->Translate("StorytellerEditor", "Log").c_str(), nullptr);
+        ImGui::Begin(_localizationManager->Translate("StorytellerEditor", "Log").append("###Log").c_str(), nullptr);
 
         auto singleScrollToEnd = false;
 

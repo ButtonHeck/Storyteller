@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pointers.h"
+#include "filesystem.h"
 #include "game_document.h"
 
 #include <boost/locale.hpp>
@@ -12,7 +13,7 @@ namespace Storyteller
     class LocalizationManager
     {
     public:
-        explicit LocalizationManager(const std::string& defaultPath = "locale");
+        explicit LocalizationManager(const std::string& defaultPath = Filesystem::ToU8String(Filesystem::GetCurrentPath().append("locale")));
 
         void SetLocale(const std::string& localeString);
         void AddMessagesPath(const std::string& path);
