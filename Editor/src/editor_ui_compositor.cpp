@@ -963,7 +963,7 @@ namespace Storyteller
                 ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?").c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     _gameDocumentManager->NewDocument();
                     _popups.newDocument = false;
@@ -972,7 +972,7 @@ namespace Storyteller
                 ImGui::SetItemDefaultFocus();
 
                 ImGui::SameLine();
-                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     _popups.newDocument = false;
                     ImGui::CloseCurrentPopup();
@@ -1002,7 +1002,7 @@ namespace Storyteller
                 ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, quit anyway?").c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     _window->SetShouldClose(true);
                     _popups.quit = false;
@@ -1011,7 +1011,7 @@ namespace Storyteller
                 ImGui::SetItemDefaultFocus();
 
                 ImGui::SameLine();
-                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     _window->SetShouldClose(false);
                     _popups.quit = false;
@@ -1040,7 +1040,7 @@ namespace Storyteller
             ImGui::Text(_popups.warningMessageText.c_str());
             ImGui::Separator();
 
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str()))
+            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
             {
                 _popups.warningMessage = false;
                 ImGui::CloseCurrentPopup();
@@ -1065,7 +1065,7 @@ namespace Storyteller
                 ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str()))
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     if (_popups.openDocumentFile.empty())
                     {
@@ -1086,7 +1086,7 @@ namespace Storyteller
                 ImGui::SetItemDefaultFocus();
 
                 ImGui::SameLine();
-                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str()))
+                if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     _popups.openDocument = false;
                     ImGui::CloseCurrentPopup();
