@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-06 07:38+0300\n"
+"POT-Creation-Date: 2024-03-06 17:24+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: ../src/editor_application.cpp:47
 msgid "Storyteller editor"
@@ -34,7 +35,8 @@ msgid "New"
 msgstr "Новый"
 
 #: ../src/editor_ui_compositor.cpp:215 ../src/editor_ui_compositor.cpp:1054
-#: ../src/editor_ui_compositor.cpp:1058
+#: ../src/editor_ui_compositor.cpp:1058 ../src/editor_ui_compositor.cpp:1057
+#: ../src/editor_ui_compositor.cpp:1061
 msgid "Open"
 msgstr "Открыть"
 
@@ -55,11 +57,13 @@ msgid "Save as..."
 msgstr "Сохранить как..."
 
 #: ../src/editor_ui_compositor.cpp:273 ../src/editor_ui_compositor.cpp:991
-#: ../src/editor_ui_compositor.cpp:995
+#: ../src/editor_ui_compositor.cpp:995 ../src/editor_ui_compositor.cpp:994
+#: ../src/editor_ui_compositor.cpp:998
 msgid "Quit"
 msgstr "Выход"
 
 #: ../src/editor_ui_compositor.cpp:288 ../src/editor_ui_compositor.cpp:879
+#: ../src/editor_ui_compositor.cpp:882
 msgid "Log"
 msgstr "Журнал"
 
@@ -77,6 +81,7 @@ msgstr "Игровой документ"
 
 #: ../src/editor_ui_compositor.cpp:331 ../src/editor_ui_compositor.cpp:457
 #: ../src/editor_ui_compositor.cpp:579 ../src/editor_ui_compositor.cpp:741
+#: ../src/editor_ui_compositor.cpp:582 ../src/editor_ui_compositor.cpp:744
 msgid "Name"
 msgstr "Имя"
 
@@ -109,7 +114,8 @@ msgid "Objects"
 msgstr "Объекты"
 
 #: ../src/editor_ui_compositor.cpp:454 ../src/editor_ui_compositor.cpp:700
-#: ../src/editor_ui_compositor.cpp:740
+#: ../src/editor_ui_compositor.cpp:740 ../src/editor_ui_compositor.cpp:703
+#: ../src/editor_ui_compositor.cpp:743
 msgid "Actions"
 msgstr "Действия"
 
@@ -126,139 +132,152 @@ msgid "Delete object"
 msgstr "Удалить объект"
 
 #: ../src/editor_ui_compositor.cpp:519 ../src/editor_ui_compositor.cpp:873
+#: ../src/editor_ui_compositor.cpp:876
 msgid "Find object"
 msgstr "Найти объект"
 
-#: ../src/editor_ui_compositor.cpp:549
+#: ../src/editor_ui_compositor.cpp:549 ../src/editor_ui_compositor.cpp:552
 msgid "Properties"
 msgstr "Свойства"
 
-#: ../src/editor_ui_compositor.cpp:591
+#: ../src/editor_ui_compositor.cpp:591 ../src/editor_ui_compositor.cpp:594
 msgid "Object name cannot be empty!"
 msgstr "Имя объекта не может быть пустым!"
 
-#: ../src/editor_ui_compositor.cpp:598
+#: ../src/editor_ui_compositor.cpp:598 ../src/editor_ui_compositor.cpp:601
 msgid "Object name already exists!"
 msgstr "Имя объекта уже существует!"
 
-#: ../src/editor_ui_compositor.cpp:608
+#: ../src/editor_ui_compositor.cpp:608 ../src/editor_ui_compositor.cpp:611
 msgid "Source text"
 msgstr "Исходный текст"
 
-#: ../src/editor_ui_compositor.cpp:620
+#: ../src/editor_ui_compositor.cpp:620 ../src/editor_ui_compositor.cpp:623
 msgid "Translation"
 msgstr "Перевод"
 
-#: ../src/editor_ui_compositor.cpp:642
+#: ../src/editor_ui_compositor.cpp:642 ../src/editor_ui_compositor.cpp:645
 msgid "Entry point"
 msgstr "Точка входа"
 
-#: ../src/editor_ui_compositor.cpp:654
+#: ../src/editor_ui_compositor.cpp:654 ../src/editor_ui_compositor.cpp:657
 msgid "Final"
 msgstr "Конечный"
 
-#: ../src/editor_ui_compositor.cpp:666
+#: ../src/editor_ui_compositor.cpp:666 ../src/editor_ui_compositor.cpp:669
 msgid "Add action to object"
 msgstr "Добавить действие в объект"
 
-#: ../src/editor_ui_compositor.cpp:671
+#: ../src/editor_ui_compositor.cpp:671 ../src/editor_ui_compositor.cpp:674
 msgid "Action name"
 msgstr "Имя действия"
 
-#: ../src/editor_ui_compositor.cpp:724
+#: ../src/editor_ui_compositor.cpp:724 ../src/editor_ui_compositor.cpp:727
 msgid "Move action up"
 msgstr "Передвинуть действие вверх"
 
-#: ../src/editor_ui_compositor.cpp:734
+#: ../src/editor_ui_compositor.cpp:734 ../src/editor_ui_compositor.cpp:737
 msgid "Move action down"
 msgstr "Передвинуть действие вниз"
 
-#: ../src/editor_ui_compositor.cpp:738
+#: ../src/editor_ui_compositor.cpp:738 ../src/editor_ui_compositor.cpp:741
 msgid "Objects's actions"
 msgstr "Действия объекта"
 
-#: ../src/editor_ui_compositor.cpp:742
+#: ../src/editor_ui_compositor.cpp:742 ../src/editor_ui_compositor.cpp:745
 msgid "Text"
 msgstr "Текст"
 
-#: ../src/editor_ui_compositor.cpp:772
+#: ../src/editor_ui_compositor.cpp:772 ../src/editor_ui_compositor.cpp:775
 msgid "Remove action from object"
 msgstr "Удалить действие из объекта"
 
-#: ../src/editor_ui_compositor.cpp:780
+#: ../src/editor_ui_compositor.cpp:780 ../src/editor_ui_compositor.cpp:783
 msgid "Find action object"
 msgstr "Найти действие"
 
-#: ../src/editor_ui_compositor.cpp:823
+#: ../src/editor_ui_compositor.cpp:823 ../src/editor_ui_compositor.cpp:826
 msgid "Clear target"
 msgstr "Очистить цель"
 
-#: ../src/editor_ui_compositor.cpp:833
+#: ../src/editor_ui_compositor.cpp:833 ../src/editor_ui_compositor.cpp:836
 msgid "Set target"
 msgstr "Установить цель"
 
-#: ../src/editor_ui_compositor.cpp:837
+#: ../src/editor_ui_compositor.cpp:837 ../src/editor_ui_compositor.cpp:840
 msgid "Quest object name"
 msgstr "Имя квест-объекта"
 
-#: ../src/editor_ui_compositor.cpp:859
+#: ../src/editor_ui_compositor.cpp:859 ../src/editor_ui_compositor.cpp:862
 msgid "Current target name: "
 msgstr "Текущее имя цели: "
 
-#: ../src/editor_ui_compositor.cpp:862
+#: ../src/editor_ui_compositor.cpp:862 ../src/editor_ui_compositor.cpp:865
 msgid "Not set or does not exist"
 msgstr "Не установлено или не существует"
 
-#: ../src/editor_ui_compositor.cpp:890
+#: ../src/editor_ui_compositor.cpp:890 ../src/editor_ui_compositor.cpp:893
 msgid "Scroll to end"
 msgstr "Перемотать в конец"
 
-#: ../src/editor_ui_compositor.cpp:899
+#: ../src/editor_ui_compositor.cpp:899 ../src/editor_ui_compositor.cpp:902
 msgid "Autoscroll to end"
 msgstr "Автоперемотка в конец"
 
 #: ../src/editor_ui_compositor.cpp:952 ../src/editor_ui_compositor.cpp:956
+#: ../src/editor_ui_compositor.cpp:955 ../src/editor_ui_compositor.cpp:959
 msgid "New Document"
 msgstr "Новый документ"
 
-#: ../src/editor_ui_compositor.cpp:958
+#: ../src/editor_ui_compositor.cpp:958 ../src/editor_ui_compositor.cpp:961
 msgid "You have unsaved changes, create new document anyway?"
 msgstr "Есть несохраненные изменения, создать новый документ?"
 
 #: ../src/editor_ui_compositor.cpp:961 ../src/editor_ui_compositor.cpp:1000
-#: ../src/editor_ui_compositor.cpp:1063
+#: ../src/editor_ui_compositor.cpp:1063 ../src/editor_ui_compositor.cpp:964
+#: ../src/editor_ui_compositor.cpp:1003 ../src/editor_ui_compositor.cpp:1066
 msgid "Yes"
 msgstr "Да"
 
 #: ../src/editor_ui_compositor.cpp:970 ../src/editor_ui_compositor.cpp:1009
-#: ../src/editor_ui_compositor.cpp:1084
+#: ../src/editor_ui_compositor.cpp:1084 ../src/editor_ui_compositor.cpp:973
+#: ../src/editor_ui_compositor.cpp:1012 ../src/editor_ui_compositor.cpp:1087
 msgid "No"
 msgstr "Нет"
 
-#: ../src/editor_ui_compositor.cpp:997
+#: ../src/editor_ui_compositor.cpp:997 ../src/editor_ui_compositor.cpp:1000
 msgid "You have unsaved changes, quit anyway?"
 msgstr "Есть несохраненные изменения, выйти?"
 
 #: ../src/editor_ui_compositor.cpp:1029 ../src/editor_ui_compositor.cpp:1033
+#: ../src/editor_ui_compositor.cpp:1032 ../src/editor_ui_compositor.cpp:1036
 msgid "Warning"
 msgstr "Предупреждение"
 
-#: ../src/editor_ui_compositor.cpp:1038
+#: ../src/editor_ui_compositor.cpp:1038 ../src/editor_ui_compositor.cpp:1041
 msgid "Ok"
 msgstr "Ок"
 
-#: ../src/editor_ui_compositor.cpp:1060
+#: ../src/editor_ui_compositor.cpp:1060 ../src/editor_ui_compositor.cpp:1063
 msgid "You have unsaved changes, open other document anyway?"
 msgstr "Есть несохраненные изменения, открыть другой документ?"
 
 #: ../src/editor_ui_compositor.cpp:1067 ../src/editor_ui_compositor.cpp:1097
+#: ../src/editor_ui_compositor.cpp:1070 ../src/editor_ui_compositor.cpp:1100
 msgid "Open document"
 msgstr "Открыть документ"
 
-#: ../src/editor_ui_compositor.cpp:1128
+#: ../src/editor_ui_compositor.cpp:1128 ../src/editor_ui_compositor.cpp:1131
 msgid "Save document"
 msgstr "Сохранить документ"
 
-#: ../src/editor_ui_compositor.cpp:1148
+#: ../src/editor_ui_compositor.cpp:1148 ../src/editor_ui_compositor.cpp:1151
 msgid "The selected file is missing or damaged"
 msgstr "Выбранный файл отсутствует или поврежден"
+
+#: ../src/editor_ui_compositor.cpp:546
+msgid "total {1} object"
+msgid_plural "total {1} objects"
+msgstr[0] "Всего {1} объект"
+msgstr[1] "Всего {1} объекта"
+msgstr[2] "Всего {1} объектов"
