@@ -17,14 +17,19 @@ namespace Storyteller
         EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager);
 
         bool Initialize();
+
+        void LoopIteration();
+
         void NewFrame();
         void Stylize();
-        void BeginDockspace();
+        void BeginApplicationArea();
+        void BeginMainWorkingArea();
         void Compose();
-        void EndDockspace();
+        void EndMainWorkingArea();
+        void ComposeStatusBar();
+        void EndApplicationArea();
         void Render();
         void EndFrame();
-        void Shutdown();
 
         bool OnWindowCloseEvent(WindowCloseEvent& event);
         bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event);
@@ -32,6 +37,8 @@ namespace Storyteller
 
         void SaveSettings(Ptr<Settings> settings) const;
         void LoadSettings(Ptr<Settings> settings);
+
+        void Shutdown();
 
     private:
         void AddDefaultFont();

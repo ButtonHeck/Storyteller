@@ -59,13 +59,7 @@ namespace Storyteller
         {
             _window->ProcessEvents();
 
-            _ui->NewFrame();
-            _ui->Stylize();
-            _ui->BeginDockspace();
-            _ui->Compose();
-            _ui->EndDockspace();
-            _ui->Render();
-            _ui->EndFrame();
+            _ui->LoopIteration();
 
             _window->SwapBuffers();
         }

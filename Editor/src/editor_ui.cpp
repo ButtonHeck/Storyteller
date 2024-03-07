@@ -29,6 +29,21 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void EditorUi::LoopIteration()
+    {
+        NewFrame();
+        Stylize();
+        BeginApplicationArea();
+        BeginMainWorkingArea();
+        Compose();
+        EndMainWorkingArea();
+        ComposeStatusBar();
+        EndApplicationArea();
+        Render();
+        EndFrame();
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUi::NewFrame()
     {
         _uiImpl->NewFrame();
@@ -69,9 +84,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::BeginDockspace()
+    void EditorUi::BeginApplicationArea()
     {
-        const auto windowFlags =
+        const auto applicationWindowFlags =
             ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
             ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
             ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
@@ -81,15 +96,33 @@ namespace Storyteller
         ImGui::SetNextWindowSize(viewport->WorkSize);
         ImGui::SetNextWindowViewport(viewport->ID);
 
+        UiUtils::StyleVarGuard guard({
+            {ImGuiStyleVar_WindowRounding, 0.0f},
+            {ImGuiStyleVar_WindowBorderSize, 0.0f},
+            {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)}
+        });
+        ImGui::Begin("ApplicationWindow", nullptr, applicationWindowFlags);
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUi::BeginMainWorkingArea()
+    {
+        const auto workingAreaFlags =
+            ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+            ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+        const auto viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
         {
             UiUtils::StyleVarGuard guard({ 
                 {ImGuiStyleVar_WindowRounding, 0.0f}, 
                 {ImGuiStyleVar_WindowBorderSize, 0.0f}, 
                 {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)} 
             });
-            ImGui::Begin("ApplicationWindow", nullptr, windowFlags);
-
-            ImGui::BeginChild("MainWorkingArea", ImVec2(viewport->WorkSize.x, viewport->WorkSize.y - 40), false, windowFlags | ImGuiWindowFlags_MenuBar);
+            ImGui::BeginChild("MainWorkingArea", ImVec2(viewport->WorkSize.x, viewport->WorkSize.y - 40), false, workingAreaFlags);
         }
 
         const auto& io = ImGui::GetIO();
@@ -107,25 +140,31 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::EndDockspace()
+    void EditorUi::EndMainWorkingArea()
     {
         ImGui::EndChild();
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUi::ComposeStatusBar()
+    {
+        UiUtils::StyleVarGuard styleVarGuard({
+            {ImGuiStyleVar_WindowRounding, 0.0f},
+            {ImGuiStyleVar_WindowBorderSize, 0.0f},
+            {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)}
+        });
+
+        UiUtils::StyleColorGuard styleColorGuard({ { ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_MenuBarBg)} });
+
+        if (ImGui::BeginChild("StatusBar", ImGui::GetContentRegionAvail(), false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking))
         {
-            UiUtils::StyleVarGuard guard({
-                {ImGuiStyleVar_WindowRounding, 0.0f},
-                {ImGuiStyleVar_WindowBorderSize, 0.0f},
-                {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)}
-                });
-
-            UiUtils::StyleColorGuard styleColorGuard({ { ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_MenuBarBg)}});
-
-            if (ImGui::BeginChild("StatusBar", ImGui::GetContentRegionAvail(), false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking))
-            {
-                ImGui::EndChild();
-            }
+            ImGui::EndChild();
         }
+    }
+    //--------------------------------------------------------------------------
 
+    void EditorUi::EndApplicationArea()
+    {
         ImGui::End();
     }
     //--------------------------------------------------------------------------
@@ -143,13 +182,6 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::Shutdown()
-    {
-        _uiImpl->Shutdown();
-        ImGui::DestroyContext();
-    }
-    //--------------------------------------------------------------------------
-
     bool EditorUi::OnWindowCloseEvent(WindowCloseEvent& event)
     {
         return _compositor->OnWindowCloseEvent(event);
@@ -158,13 +190,7 @@ namespace Storyteller
 
     bool EditorUi::OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event)
     {
-        NewFrame();
-        Stylize();
-        BeginDockspace();
-        Compose();
-        EndDockspace();
-        Render();
-        EndFrame();
+        LoopIteration();
 
         return true;
     }
@@ -189,6 +215,13 @@ namespace Storyteller
         settings->StartLoadGroup("EditorUi");
         _compositor->LoadSettings(settings);
         settings->EndLoadGroup();
+    }
+    //--------------------------------------------------------------------------
+
+    void EditorUi::Shutdown()
+    {
+        _uiImpl->Shutdown();
+        ImGui::DestroyContext();
     }
     //--------------------------------------------------------------------------
 
