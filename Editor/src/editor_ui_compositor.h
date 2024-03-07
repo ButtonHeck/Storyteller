@@ -9,6 +9,7 @@
 #include "Storyteller/window_event.h"
 
 #include <list>
+#include <unordered_map>
 
 namespace Storyteller
 {
@@ -101,6 +102,7 @@ namespace Storyteller
         UiComponentsState _state;
         UiPopupsState _popups;
         std::list<std::string> _recentList;
+        std::unordered_map<std::string, std::string> _translationCache; //TODO: maybe move to localization manager?
     };
     //--------------------------------------------------------------------------
 }
