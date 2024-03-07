@@ -36,8 +36,8 @@ namespace Storyteller
         glfwSetWindowUserPointer(_window, new UserData());
         MakeContextCurrent();
 
-        SetIcon(Filesystem::ToU8String(std::filesystem::path(STRTLR_ASSETS_PATH).append("icons/strtlr64.png")));
         InitializeCallbacks();
+        SetIcon(Filesystem::ToU8String(std::filesystem::path(STRTLR_ASSETS_PATH).append("icons/strtlr64.png")));
 
         return true;
     }
@@ -263,6 +263,11 @@ namespace Storyteller
 
     void WindowGlfw::InitializeCallbacks() const
     {
+        glfwSetErrorCallback([](int code, const char* description) {
+            STRTLR_CORE_LOG_ERROR("WindowGlfw: Error '{}': {}", code, description);
+            }
+        );
+
         glfwSetWindowPosCallback(_window, [](GLFWwindow* window, int x, int y) {
             const auto userData = GetUserPointer(window);
             if (userData)
