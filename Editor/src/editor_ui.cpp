@@ -72,7 +72,7 @@ namespace Storyteller
     void EditorUi::BeginDockspace()
     {
         const auto windowFlags =
-            ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
             ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
             ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
@@ -87,7 +87,9 @@ namespace Storyteller
                 {ImGuiStyleVar_WindowBorderSize, 0.0f}, 
                 {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)} 
             });
-            ImGui::Begin("Dockspace", nullptr, windowFlags);
+            ImGui::Begin("ApplicationWindow", nullptr, windowFlags);
+
+            ImGui::BeginChild("MainWorkingArea", ImVec2(viewport->WorkSize.x, viewport->WorkSize.y - 40), false, windowFlags | ImGuiWindowFlags_MenuBar);
         }
 
         const auto& io = ImGui::GetIO();
@@ -107,6 +109,23 @@ namespace Storyteller
 
     void EditorUi::EndDockspace()
     {
+        ImGui::EndChild();
+
+        {
+            UiUtils::StyleVarGuard guard({
+                {ImGuiStyleVar_WindowRounding, 0.0f},
+                {ImGuiStyleVar_WindowBorderSize, 0.0f},
+                {ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f)}
+                });
+
+            UiUtils::StyleColorGuard styleColorGuard({ { ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_MenuBarBg)}});
+
+            if (ImGui::BeginChild("StatusBar", ImGui::GetContentRegionAvail(), false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking))
+            {
+                ImGui::EndChild();
+            }
+        }
+
         ImGui::End();
     }
     //--------------------------------------------------------------------------
