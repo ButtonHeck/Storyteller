@@ -1,4 +1,5 @@
 #include "localization_manager.h"
+#include "localization_translator.h"
 #include "filesystem.h"
 #include "log.h"
 
@@ -9,6 +10,7 @@ namespace Storyteller
 {
     LocalizationManager::LocalizationManager(const std::string& defaultPath)
         : _localeGenerator()
+        , _translator(new LocalizationTranslator())
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
 
@@ -46,25 +48,25 @@ namespace Storyteller
 
     std::string LocalizationManager::Translate(const std::string& domain, const std::string& message)
     {
-        return boost::locale::translate(message).str(domain);
+        return _translator->Translate(domain, message);
     }
     //--------------------------------------------------------------------------
 
     std::string LocalizationManager::Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count)
     {
-        return (boost::locale::format(boost::locale::translate(messageSingular, messagePlural, count).str(domain)) % count).str();
+        return _translator->Translate(domain, messageSingular, messagePlural, count);
     }
     //--------------------------------------------------------------------------
 
     std::string LocalizationManager::TranslateCtx(const std::string& domain, const std::string& message, const std::string& context)
     {
-        return boost::locale::translate(context, message).str(domain);
+        return _translator->TranslateCtx(domain, message, context);
     }
     //--------------------------------------------------------------------------
 
     std::string LocalizationManager::TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context)
     {
-        return (boost::locale::format(boost::locale::translate(context, messageSingular, messagePlural, count).str(domain)) % count).str();
+        return _translator->TranslateCtx(domain, messageSingular, messagePlural, count, context);
     }
     //--------------------------------------------------------------------------
 
@@ -102,6 +104,5 @@ namespace Storyteller
 
         return true;
     }
-    //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
 }

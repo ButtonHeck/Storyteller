@@ -10,6 +10,8 @@
 
 namespace Storyteller
 {
+    class LocalizationTranslator;
+
     class LocalizationManager
     {
     public:
@@ -26,6 +28,7 @@ namespace Storyteller
 
     private:
         boost::locale::generator _localeGenerator;
+        Ptr<LocalizationTranslator> _translator;
     };
     //--------------------------------------------------------------------------
 }
