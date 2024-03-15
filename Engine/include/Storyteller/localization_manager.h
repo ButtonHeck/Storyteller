@@ -3,6 +3,8 @@
 #include "pointers.h"
 #include "filesystem.h"
 #include "game_document.h"
+#include "localization_dictionary.h"
+#include "localization_translator.h"
 
 #include <boost/locale.hpp>
 
@@ -10,7 +12,7 @@
 
 namespace Storyteller
 {
-    class LocalizationTranslator;
+    class LocalizationLibrary;
 
     class LocalizationManager
     {
@@ -19,16 +21,21 @@ namespace Storyteller
 
         void SetLocale(const std::string& localeString);
         void AddMessagesPath(const std::string& path);
-        void AddMessagesDomain(const std::string& domain);
+        Ptr<LocalizationDictionary> AddMessagesDomain(const std::string& domain);
+        Ptr<LocalizationDictionary> GetDictionary(const std::string& domain) const;
+        bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const;
+
         std::string Translate(const std::string& domain, const std::string& message);
         std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count);
         std::string TranslateCtx(const std::string& domain, const std::string& message, const std::string& context);
         std::string TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context);
-        bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const;
+
+        const std::string& Translation(const std::string& domain, const std::string& message);
+        const std::string& Translation(const std::string& domain, const std::string& message, const std::string& context);
 
     private:
         boost::locale::generator _localeGenerator;
-        Ptr<LocalizationTranslator> _translator;
+        Ptr<LocalizationLibrary> _library;
     };
     //--------------------------------------------------------------------------
 }

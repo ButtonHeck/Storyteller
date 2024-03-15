@@ -15,19 +15,69 @@ namespace Storyteller
         : _window(window)
         , _localizationManager(localizationManager)
         , _gameDocumentManager(new GameDocumentManager())
-        , _translationCache()
+        , _translationsDict(_localizationManager->GetDictionary("StorytellerEditor"))
     {
-        _translationCache.insert({ "Open", _localizationManager->Translate("StorytellerEditor", "Open") });
-        _translationCache.insert({ "Quit", _localizationManager->Translate("StorytellerEditor", "Quit") });
-        _translationCache.insert({ "Log", _localizationManager->Translate("StorytellerEditor", "Log") });
-        _translationCache.insert({ "Name", _localizationManager->Translate("StorytellerEditor", "Name") });
-        _translationCache.insert({ "Actions", _localizationManager->Translate("StorytellerEditor", "Actions") });
-        _translationCache.insert({ "Find object", _localizationManager->Translate("StorytellerEditor", "Find object") });
-        _translationCache.insert({ "New document", _localizationManager->Translate("StorytellerEditor", "New document") });
-        _translationCache.insert({ "Open document", _localizationManager->Translate("StorytellerEditor", "Open document") });
-        _translationCache.insert({ "Yes", _localizationManager->Translate("StorytellerEditor", "Yes") });
-        _translationCache.insert({ "No", _localizationManager->Translate("StorytellerEditor", "No") });
-        _translationCache.insert({ "Warning", _localizationManager->Translate("StorytellerEditor", "Warning") });
+        assert(_translationsDict);
+
+        _translationsDict->Add("Open", _localizationManager->Translate("StorytellerEditor", "Open"));
+        _translationsDict->Add("Quit", _localizationManager->Translate("StorytellerEditor", "Quit"));
+        _translationsDict->Add("Log", _localizationManager->Translate("StorytellerEditor", "Log"));
+        _translationsDict->Add("Name", _localizationManager->Translate("StorytellerEditor", "Name"));
+        _translationsDict->Add("Actions", _localizationManager->Translate("StorytellerEditor", "Actions"));
+        _translationsDict->Add("Find object", _localizationManager->Translate("StorytellerEditor", "Find object"));
+        _translationsDict->Add("New document", _localizationManager->Translate("StorytellerEditor", "New document"));
+        _translationsDict->Add("Open document", _localizationManager->Translate("StorytellerEditor", "Open document"));
+        _translationsDict->Add("Yes", _localizationManager->Translate("StorytellerEditor", "Yes"));
+        _translationsDict->Add("No", _localizationManager->Translate("StorytellerEditor", "No"));
+        _translationsDict->Add("Warning", _localizationManager->Translate("StorytellerEditor", "Warning"));
+        _translationsDict->Add("File", _localizationManager->Translate("StorytellerEditor", "File"));
+        _translationsDict->Add("View", _localizationManager->Translate("StorytellerEditor", "View"));
+        _translationsDict->Add("New", _localizationManager->Translate("StorytellerEditor", "New"));
+        _translationsDict->Add("Open recent", _localizationManager->Translate("StorytellerEditor", "Open recent"));
+        _translationsDict->Add("Clear", _localizationManager->Translate("StorytellerEditor", "Clear"));
+        _translationsDict->Add("Save", _localizationManager->Translate("StorytellerEditor", "Save"));
+        _translationsDict->Add("Save as...", _localizationManager->Translate("StorytellerEditor", "Save as..."));
+        _translationsDict->Add("Fullscreen", _localizationManager->Translate("StorytellerEditor", "Fullscreen"));
+        _translationsDict->Add("Untitled document", _localizationManager->Translate("StorytellerEditor", "Untitled document"));
+        _translationsDict->Add("Game document", _localizationManager->Translate("StorytellerEditor", "Game document"));
+        _translationsDict->Add("Game name cannot be empty!", _localizationManager->Translate("StorytellerEditor", "Game name cannot be empty!"));
+        _translationsDict->Add("Create translations file", _localizationManager->Translate("StorytellerEditor", "Create translations file"));
+        _translationsDict->Add("Save translations", _localizationManager->Translate("StorytellerEditor", "Save translations"));
+        _translationsDict->Add("Objects management", _localizationManager->Translate("StorytellerEditor", "Objects management"));
+        _translationsDict->Add("Add object", _localizationManager->Translate("StorytellerEditor", "Add object"));
+        _translationsDict->Add("Visibility filters", _localizationManager->Translate("StorytellerEditor", "Visibility filters"));
+        _translationsDict->Add("Objects", _localizationManager->Translate("StorytellerEditor", "Objects"));
+        _translationsDict->Add("Type", _localizationManager->Translate("StorytellerEditor", "Type"));
+        _translationsDict->Add("UUID", _localizationManager->Translate("StorytellerEditor", "UUID"));
+        _translationsDict->Add("Delete object", _localizationManager->Translate("StorytellerEditor", "Delete object"));
+        _translationsDict->Add("Properties", _localizationManager->Translate("StorytellerEditor", "Properties"));
+        _translationsDict->Add("Object name cannot be empty!", _localizationManager->Translate("StorytellerEditor", "Object name cannot be empty!"));
+        _translationsDict->Add("Object name already exists!", _localizationManager->Translate("StorytellerEditor", "Object name already exists!"));
+        _translationsDict->Add("Source text", _localizationManager->Translate("StorytellerEditor", "Source text"));
+        _translationsDict->Add("Translation", _localizationManager->Translate("StorytellerEditor", "Translation"));
+        _translationsDict->Add("Entry point", _localizationManager->Translate("StorytellerEditor", "Entry point"));
+        _translationsDict->Add("Final", _localizationManager->Translate("StorytellerEditor", "Final"));
+        _translationsDict->Add("Add action to object", _localizationManager->Translate("StorytellerEditor", "Add action to object"));
+        _translationsDict->Add("Action name", _localizationManager->Translate("StorytellerEditor", "Action name"));
+        _translationsDict->Add("Move action up", _localizationManager->Translate("StorytellerEditor", "Move action up"));
+        _translationsDict->Add("Move action down", _localizationManager->Translate("StorytellerEditor", "Move action down"));
+        _translationsDict->Add("Objects's actions", _localizationManager->Translate("StorytellerEditor", "Objects's actions"));
+        _translationsDict->Add("Text", _localizationManager->Translate("StorytellerEditor", "Text"));
+        _translationsDict->Add("Remove action from object", _localizationManager->Translate("StorytellerEditor", "Remove action from object"));
+        _translationsDict->Add("Find action object", _localizationManager->Translate("StorytellerEditor", "Find action object"));
+        _translationsDict->Add("Clear target", _localizationManager->Translate("StorytellerEditor", "Clear target"));
+        _translationsDict->Add("Set target", _localizationManager->Translate("StorytellerEditor", "Set target"));
+        _translationsDict->Add("Quest object name", _localizationManager->Translate("StorytellerEditor", "Quest object name"));
+        _translationsDict->Add("Current target name: ", _localizationManager->Translate("StorytellerEditor", "Current target name: "));
+        _translationsDict->Add("Not set or does not exist", _localizationManager->Translate("StorytellerEditor", "Not set or does not exist"));
+        _translationsDict->Add("Scroll to end", _localizationManager->Translate("StorytellerEditor", "Scroll to end"));
+        _translationsDict->Add("Autoscroll to end", _localizationManager->Translate("StorytellerEditor", "Autoscroll to end"));
+        _translationsDict->Add("You have unsaved changes, create new document anyway?", _localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?"));
+        _translationsDict->Add("You have unsaved changes, quit anyway?", _localizationManager->Translate("StorytellerEditor", "You have unsaved changes, quit anyway?"));
+        _translationsDict->Add("Ok", _localizationManager->Translate("StorytellerEditor", "Ok"));
+        _translationsDict->Add("You have unsaved changes, open other document anyway?", _localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?"));
+        _translationsDict->Add("Save document", _localizationManager->Translate("StorytellerEditor", "Save document"));
+        _translationsDict->Add("The selected file is missing or damaged", "Popup message", _localizationManager->TranslateCtx("StorytellerEditor", "The selected file is missing or damaged", "Popup message"));
     }
     //--------------------------------------------------------------------------
 
@@ -184,7 +234,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuFile()
     {
-        if (ImGui::BeginMenu(_localizationManager->Translate("StorytellerEditor", "File").c_str()))
+        if (ImGui::BeginMenu(_translationsDict->Get("File").c_str()))
         {
             ComposeMenuItemNew();
             ComposeMenuItemOpen();
@@ -204,7 +254,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuView()
     {
-        if (ImGui::BeginMenu(_localizationManager->Translate("StorytellerEditor", "View").c_str()))
+        if (ImGui::BeginMenu(_translationsDict->Get("View").c_str()))
         {
             ComposeMenuItemLog();
             ComposeMenuItemFullscreen();
@@ -216,7 +266,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemNew()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "New").c_str(), "Ctrl+N"))
+        if (ImGui::MenuItem(_translationsDict->Get("New").c_str(), "Ctrl+N"))
         {
             _popups.newDocument = true;
         }
@@ -225,7 +275,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemOpen()
     {
-        if (ImGui::MenuItem(_translationCache.at("Open").c_str(), "Ctrl+O"))
+        if (ImGui::MenuItem(_translationsDict->Get("Open").c_str(), "Ctrl+O"))
         {
             _popups.openDocument = true;
             _popups.openDocumentFile = "";
@@ -236,7 +286,7 @@ namespace Storyteller
     void EditorUiCompositor::ComposeMenuItemOpenRecent()
     {
         UiUtils::DisableGuard guard(_recentList.empty());
-        if (ImGui::BeginMenu(_localizationManager->Translate("StorytellerEditor", "Open recent").c_str()))
+        if (ImGui::BeginMenu(_translationsDict->Get("Open recent").c_str()))
         {
             for (const auto& recentFile : _recentList)
             {
@@ -252,7 +302,7 @@ namespace Storyteller
             if (!_recentList.empty())
             {
                 ImGui::Separator();
-                if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Clear").c_str()))
+                if (ImGui::MenuItem(_translationsDict->Get("Clear").c_str()))
                 {
                     _recentList.clear();
                 }
@@ -265,7 +315,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemSave()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Save").c_str(), "Ctrl+S"))
+        if (ImGui::MenuItem(_translationsDict->Get("Save").c_str(), "Ctrl+S"))
         {
             SaveDocument();
         }
@@ -274,7 +324,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemSaveAs()
     {
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Save as...").c_str(), "Ctrl+Shift+S"))
+        if (ImGui::MenuItem(_translationsDict->Get("Save as...").c_str(), "Ctrl+Shift+S"))
         {
             SaveAsDocument();
         }
@@ -283,7 +333,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemQuit()
     {
-        if (ImGui::MenuItem(_translationCache.at("Quit").c_str(), "Ctrl+Q"))
+        if (ImGui::MenuItem(_translationsDict->Get("Quit").c_str(), "Ctrl+Q"))
         {
             _popups.quit = true;
         }
@@ -298,7 +348,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeMenuItemLog()
     {
-        ImGui::MenuItem(_translationCache.at("Log").c_str(), "Ctrl+L", &_state.logPanel);
+        ImGui::MenuItem(_translationsDict->Get("Log").c_str(), "Ctrl+L", &_state.logPanel);
     }
     //--------------------------------------------------------------------------
 
@@ -306,7 +356,7 @@ namespace Storyteller
     {
         const auto screenMode = _window->GetScreenMode();
         auto isFullscreen = screenMode == Window::WindowedFullscreenMode;
-        if (ImGui::MenuItem(_localizationManager->Translate("StorytellerEditor", "Fullscreen").c_str(), "Alt+Enter", &isFullscreen))
+        if (ImGui::MenuItem(_translationsDict->Get("Fullscreen").c_str(), "Alt+Enter", &isFullscreen))
         {
             _window->SetScreenMode(isFullscreen ? Window::WindowedFullscreenMode : Window::WindowedMode);
         }        
@@ -318,7 +368,7 @@ namespace Storyteller
         const auto document = _gameDocumentManager->GetDocument();
         const auto mainFlags = document->IsDirty() ? ImGuiWindowFlags_UnsavedDocument : ImGuiWindowFlags();
         const auto pathUnicode = Filesystem::ToU8String(document->GetPath());
-        auto windowTitle = pathUnicode.empty() ? _localizationManager->Translate("StorytellerEditor", "Untitled document") : pathUnicode;
+        auto windowTitle = pathUnicode.empty() ? _translationsDict->Get("Untitled document") : pathUnicode;
         windowTitle.append("###GamePanel");
 
         if (ImGui::Begin(windowTitle.c_str(), nullptr, mainFlags))
@@ -336,12 +386,12 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelGame()
     {
-        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Game document").c_str());
+        ImGui::SeparatorText(_translationsDict->Get("Game document").c_str());
 
         const auto document = _gameDocumentManager->GetDocument();
 
         {
-            const auto& title = _translationCache.at("Name");
+            const auto& title = _translationsDict->Get("Name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
             auto gameName = document->GetGameName();
             const auto oldGameName = gameName;
@@ -352,7 +402,7 @@ namespace Storyteller
                     if (gameName.empty())
                     {
                         _popups.warningMessage = true;
-                        _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "Game name cannot be empty!");
+                        _popups.warningMessageText = _translationsDict->Get("Game name cannot be empty!");
                     }
                     else
                     {
@@ -362,7 +412,7 @@ namespace Storyteller
             }
         }
 
-        if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Create translations file").c_str()))
+        if (ImGui::Button(_translationsDict->Get("Create translations file").c_str()))
         {
             const auto documentPath = document->GetPath();
             std::string filepath;
@@ -372,7 +422,7 @@ namespace Storyteller
             }
             else
             {
-                filepath = Dialogs::SaveFile(_localizationManager->Translate("StorytellerEditor", "Save translations"), { "Text Files", "*.txt" });
+                filepath = Dialogs::SaveFile(_translationsDict->Get("Save translations"), { "Text Files", "*.txt" });
             }
 
             if (!filepath.empty())
@@ -385,7 +435,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposeGameDocumentPanelObjectsManagement()
     {
-        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Objects management").c_str());
+        ImGui::SeparatorText(_translationsDict->Get("Objects management").c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
 
@@ -396,7 +446,7 @@ namespace Storyteller
             {
                 ImGui::OpenPopup("AddObjectPopup");
             }
-            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add object").c_str());
+            UiUtils::SetItemTooltip(_translationsDict->Get("Add object").c_str());
 
             std::string typeItems[] = {
                 _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::QuestObjectType)),
@@ -420,7 +470,7 @@ namespace Storyteller
             {
                 ImGui::OpenPopup("ObjectFilterPopup");
             }
-            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Visibility filters").c_str());
+            UiUtils::SetItemTooltip(_translationsDict->Get("Visibility filters").c_str());
 
             if (ImGui::BeginPopup("ObjectFilterPopup"))
             {
@@ -463,14 +513,14 @@ namespace Storyteller
         });
 
         const auto objectsCount = proxy->GetObjects().size();
-        const auto summaryText = _localizationManager->Translate("StorytellerEditor", "total {1} object", "total {1} objects", objectsCount);
+        const auto summaryText = LocalizationTranslator::Format(_localizationManager->Translate("StorytellerEditor", "total {1} object", "total {1} objects", objectsCount), objectsCount);
         const auto tableOuterSize = ImVec2(0.0f, ImGui::GetContentRegionAvail().y - ImGui::CalcTextSize(summaryText.c_str()).y - ImGui::GetStyle().ItemSpacing.y);
-        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects").c_str(), 4, objectsTableFlags, tableOuterSize))
+        if (ImGui::BeginTable(_translationsDict->Get("Objects").c_str(), 4, objectsTableFlags, tableOuterSize))
         {
-            ImGui::TableSetupColumn(_translationCache.at("Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 65.0f);
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
-            ImGui::TableSetupColumn(_translationCache.at("Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_translationsDict->Get("Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 65.0f);
+            ImGui::TableSetupColumn(_translationsDict->Get("Type").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_translationsDict->Get("UUID").c_str(), ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_DefaultSort);
+            ImGui::TableSetupColumn(_translationsDict->Get("Name").c_str(), ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
             ImGui::TableSetupScrollFreeze(0, 1);
             ImGui::TableHeadersRow();
 
@@ -514,7 +564,7 @@ namespace Storyteller
                         proxy->RemoveObject(object->GetUuid());
                         objects = proxy->GetObjects();
                     }
-                    UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Delete object").c_str());
+                    UiUtils::SetItemTooltip(_translationsDict->Get("Delete object").c_str());
 
                     if (object->GetObjectType() == ObjectType::ActionObjectType)
                     {
@@ -532,7 +582,7 @@ namespace Storyteller
                                 }
                             }
                         }
-                        UiUtils::SetItemTooltip(_translationCache.at("Find object").c_str());
+                        UiUtils::SetItemTooltip(_translationsDict->Get("Find object").c_str());
                     }
                 }
 
@@ -564,7 +614,8 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanel()
     {
-        if (ImGui::Begin(_localizationManager->Translate("StorytellerEditor", "Properties").append("###Properties").c_str(), nullptr))
+        auto title = _translationsDict->Get("Properties");
+        if (ImGui::Begin(title.append("###Properties").c_str(), nullptr))
         {
             const auto selectedObject = _gameDocumentManager->GetProxy()->GetSelectedObject();
 
@@ -594,7 +645,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_translationCache.at("Name").c_str());
+        ImGui::SeparatorText(_translationsDict->Get("Name").c_str());
 
         const auto uuidString = std::to_string(selectedObject->GetUuid());
 
@@ -606,14 +657,14 @@ namespace Storyteller
             if (objectName.empty())
             {
                 _popups.warningMessage = true;
-                _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "Object name cannot be empty!");
+                _popups.warningMessageText = _translationsDict->Get("Object name cannot be empty!");
                 return;
             }
 
             if (oldObjectName != objectName && !_gameDocumentManager->GetProxy()->SetObjectName(selectedObject->GetUuid(), objectName))
             {
                 _popups.warningMessage = true;
-                _popups.warningMessageText = _localizationManager->Translate("StorytellerEditor", "Object name already exists!");
+                _popups.warningMessageText = _translationsDict->Get("Object name already exists!");
             }
         }
     }
@@ -623,7 +674,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Source text").c_str());
+        ImGui::SeparatorText(_translationsDict->Get("Source text").c_str());
 
         const auto uuidString = std::to_string(selectedObject->GetUuid());
         const auto textPanelHeight = ImGui::GetContentRegionAvail().y / 4.0f;
@@ -635,7 +686,7 @@ namespace Storyteller
             selectedTextObject->SetText(sourceText);
         }
 
-        ImGui::SeparatorText(_localizationManager->Translate("StorytellerEditor", "Translation").c_str());
+        ImGui::SeparatorText(_translationsDict->Get("Translation").c_str());
 
         auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), selectedTextObject->GetText()) : std::string();
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_ReadOnly);
@@ -657,7 +708,7 @@ namespace Storyteller
         const auto entryPointObject = proxy->GetEntryPoint();
         auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedUuid) : false;
 
-        if (ImGui::Checkbox(_localizationManager->Translate("StorytellerEditor", "Entry point").c_str(), &isEntryPoint))
+        if (ImGui::Checkbox(_translationsDict->Get("Entry point").c_str(), &isEntryPoint))
         {
             proxy->SetEntryPoint(selectedUuid);
         }
@@ -669,7 +720,7 @@ namespace Storyteller
 
         auto isFinal = selectedQuestObject->IsFinal();
         ImGui::SameLine();
-        if (ImGui::Checkbox(_localizationManager->Translate("StorytellerEditor", "Final").c_str(), &isFinal))
+        if (ImGui::Checkbox(_translationsDict->Get("Final").c_str(), &isFinal))
         {
             selectedQuestObject->SetFinal(isFinal);
         }
@@ -681,12 +732,12 @@ namespace Storyteller
                 selectedQuestObject->AddAction(allActionObjects.at(_state.selectedActionIndex)->GetUuid());
             }
         }
-        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Add action to object").c_str());
+        UiUtils::SetItemTooltip(_translationsDict->Get("Add action to object").c_str());
 
         ImGui::SameLine();
 
         {
-            const auto title = _localizationManager->Translate("StorytellerEditor", "Action name");
+            const auto title = _translationsDict->Get("Action name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
             UiUtils::DisableGuard disableGuard(allActionObjects.empty());
             if (ImGui::BeginCombo(title.c_str(), allActionObjects.empty() ? "" : allActionObjects[_state.selectedActionIndex]->GetName().c_str()))
@@ -715,7 +766,7 @@ namespace Storyteller
             _state.selectedChildActionIndex = 0;
         }
 
-        ImGui::SeparatorText(_translationCache.at("Actions").c_str());
+        ImGui::SeparatorText(_translationsDict->Get("Actions").c_str());
 
         const auto actionsTableFlags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable 
             | ImGuiTableFlags_NoHostExtendX | ImGuiTableFlags_ScrollY;
@@ -739,7 +790,7 @@ namespace Storyteller
                     _state.selectedChildActionIndex--;
                 }
             }
-            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Move action up").c_str());
+            UiUtils::SetItemTooltip(_translationsDict->Get("Move action up").c_str());
 
             {
                 UiUtils::DisableGuard disableGuard(questObjectActions.empty() || _state.selectedChildActionIndex >= (questObjectActions.size() - 1));
@@ -749,15 +800,15 @@ namespace Storyteller
                     _state.selectedChildActionIndex++;
                 }
             }
-            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Move action down").c_str());
+            UiUtils::SetItemTooltip(_translationsDict->Get("Move action down").c_str());
         }
 
         ImGui::SameLine();
-        if (ImGui::BeginTable(_localizationManager->Translate("StorytellerEditor", "Objects's actions").c_str(), 3, actionsTableFlags))
+        if (ImGui::BeginTable(_translationsDict->Get("Objects's actions").c_str(), 3, actionsTableFlags))
         {
-            ImGui::TableSetupColumn(_translationCache.at("Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 65.0f);
-            ImGui::TableSetupColumn(_translationCache.at("Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
-            ImGui::TableSetupColumn(_localizationManager->Translate("StorytellerEditor", "Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn(_translationsDict->Get("Actions").c_str(), ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 65.0f);
+            ImGui::TableSetupColumn(_translationsDict->Get("Name").c_str(), ImGuiTableColumnFlags_WidthFixed);
+            ImGui::TableSetupColumn(_translationsDict->Get("Text").c_str(), ImGuiTableColumnFlags_WidthStretch);
             ImGui::TableSetupScrollFreeze(0, 1);
             ImGui::TableHeadersRow();
 
@@ -787,7 +838,7 @@ namespace Storyteller
                         selectedQuestObject->RemoveAction(actionObject->GetUuid());
                         continue;
                     }
-                    UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Remove action from object").c_str());
+                    UiUtils::SetItemTooltip(_translationsDict->Get("Remove action from object").c_str());
 
                     ImGui::SameLine();
                     if (ImGui::Button(ICON_FK_SEARCH))
@@ -795,7 +846,7 @@ namespace Storyteller
                         proxy->Select(actionObject->GetUuid());
                         break;
                     }
-                    UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Find action object").c_str());
+                    UiUtils::SetItemTooltip(_translationsDict->Get("Find action object").c_str());
                 }
 
                 UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, actionObject->IsConsistent() ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
@@ -838,7 +889,7 @@ namespace Storyteller
                 selectedActionObject->SetTargetUuid(Storyteller::UUID::InvalidUuid);
             }
         }
-        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Clear target").c_str());
+        UiUtils::SetItemTooltip(_translationsDict->Get("Clear target").c_str());
 
         ImGui::SameLine();
         {
@@ -848,11 +899,11 @@ namespace Storyteller
                 selectedActionObject->SetTargetUuid(allQuestObjects.at(_state.selectedQuestIndex)->GetUuid());
             }
         }
-        UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Set target").c_str());
+        UiUtils::SetItemTooltip(_translationsDict->Get("Set target").c_str());
 
         ImGui::SameLine();
         {
-            const auto title = _localizationManager->Translate("StorytellerEditor", "Quest object name");
+            const auto title = _translationsDict->Get("Quest object name");
             UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
             UiUtils::DisableGuard disableGuard(allQuestObjects.empty());
             if (ImGui::BeginCombo(title.c_str(), allQuestObjects.empty() ? "" : allQuestObjects[_state.selectedQuestIndex]->GetName().c_str()))
@@ -874,10 +925,10 @@ namespace Storyteller
             }
         }
 
-        ImGui::Text(_localizationManager->Translate("StorytellerEditor", "Current target name: ").c_str());
+        ImGui::Text(_translationsDict->Get("Current target name: ").c_str());
         ImGui::SameLine();
         const auto targetObject = proxy->GetObject(selectedActionObject->GetTargetUuid());
-        ImGui::Text(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _localizationManager->Translate("StorytellerEditor", "Not set or does not exist").c_str());
+        ImGui::Text(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _translationsDict->Get("Not set or does not exist").c_str());
 
 
         ImGui::SameLine();
@@ -888,13 +939,13 @@ namespace Storyteller
                 proxy->Select(targetObject->GetUuid());
             }
         }
-        UiUtils::SetItemTooltip(_translationCache.at("Find object").c_str());
+        UiUtils::SetItemTooltip(_translationsDict->Get("Find object").c_str());
     }
     //--------------------------------------------------------------------------
 
     void EditorUiCompositor::ComposeLogPanel()
     {
-        auto title = _translationCache.at("Log");
+        auto title = _translationsDict->Get("Log");
         ImGui::Begin(title.append("###Log").c_str(), nullptr);
 
         auto singleScrollToEnd = false;
@@ -906,7 +957,7 @@ namespace Storyteller
             {
                 singleScrollToEnd = true;
             }
-            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Scroll to end").c_str());
+            UiUtils::SetItemTooltip(_translationsDict->Get("Scroll to end").c_str());
 
             {
                 UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_Border, _state.logAutoscroll ? ImVec4(1, 1, 1, 1) : ImGui::GetStyleColorVec4(ImGuiCol_Border)} });
@@ -915,7 +966,7 @@ namespace Storyteller
                     _state.logAutoscroll = !_state.logAutoscroll;
                 }
             }
-            UiUtils::SetItemTooltip(_localizationManager->Translate("StorytellerEditor", "Autoscroll to end").c_str());
+            UiUtils::SetItemTooltip(_translationsDict->Get("Autoscroll to end").c_str());
         }
 
         ImGui::SameLine();
@@ -968,17 +1019,17 @@ namespace Storyteller
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
-            const auto& title = _translationCache.at("New document");
+            const auto& title = _translationsDict->Get("New document");
             ImGui::OpenPopup(title.c_str());
             const auto center = ImGui::GetMainViewport()->GetCenter();
             ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
             if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?").c_str());
+                ImGui::Text(_translationsDict->Get("You have unsaved changes, create new document anyway?").c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button(_translationCache.at("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
+                if (ImGui::Button(_translationsDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     _gameDocumentManager->NewDocument();
                     _popups.newDocument = false;
@@ -987,7 +1038,7 @@ namespace Storyteller
                 ImGui::SetItemDefaultFocus();
 
                 ImGui::SameLine();
-                if (ImGui::Button(_translationCache.at("No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+                if (ImGui::Button(_translationsDict->Get("No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     _popups.newDocument = false;
                     ImGui::CloseCurrentPopup();
@@ -1008,7 +1059,7 @@ namespace Storyteller
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
-            const auto& title = _translationCache.at("Quit");
+            const auto& title = _translationsDict->Get("Quit");
 
             ImGui::OpenPopup(title.c_str());
             const auto center = ImGui::GetMainViewport()->GetCenter();
@@ -1016,10 +1067,10 @@ namespace Storyteller
 
             if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, quit anyway?").c_str());
+                ImGui::Text(_translationsDict->Get("You have unsaved changes, quit anyway?").c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button(_translationCache.at("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
+                if (ImGui::Button(_translationsDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     _window->SetShouldClose(true);
                     _popups.quit = false;
@@ -1028,7 +1079,7 @@ namespace Storyteller
                 ImGui::SetItemDefaultFocus();
 
                 ImGui::SameLine();
-                if (ImGui::Button(_translationCache.at("No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+                if (ImGui::Button(_translationsDict->Get("No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     _window->SetShouldClose(false);
                     _popups.quit = false;
@@ -1048,7 +1099,7 @@ namespace Storyteller
 
     void EditorUiCompositor::PopupWarningMessage()
     {
-        const auto& title = _translationCache.at("Warning");
+        const auto& title = _translationsDict->Get("Warning");
         ImGui::OpenPopup(title.c_str());
         const auto center = ImGui::GetMainViewport()->GetCenter();
         ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -1058,7 +1109,7 @@ namespace Storyteller
             ImGui::Text(_popups.warningMessageText.c_str());
             ImGui::Separator();
 
-            if (ImGui::Button(_localizationManager->Translate("StorytellerEditor", "Ok").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+            if (ImGui::Button(_translationsDict->Get("Ok").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
             {
                 _popups.warningMessage = false;
                 ImGui::CloseCurrentPopup();
@@ -1074,7 +1125,7 @@ namespace Storyteller
     {
         if (_gameDocumentManager->GetDocument()->IsDirty())
         {
-            const auto& title = _translationCache.at("Open");
+            const auto& title = _translationsDict->Get("Open");
 
             ImGui::OpenPopup(title.c_str());
             const auto center = ImGui::GetMainViewport()->GetCenter();
@@ -1082,14 +1133,14 @@ namespace Storyteller
 
             if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text(_localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?").c_str());
+                ImGui::Text(_translationsDict->Get("You have unsaved changes, open other document anyway?").c_str());
                 ImGui::Separator();
 
-                if (ImGui::Button(_translationCache.at("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
+                if (ImGui::Button(_translationsDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     if (_popups.openDocumentFile.empty())
                     {
-                        const auto filepath = Dialogs::OpenFile(_translationCache.at("Open document"), {"JSON Files", "*.json"});
+                        const auto filepath = Dialogs::OpenFile(_translationsDict->Get("Open document"), {"JSON Files", "*.json"});
                         if (!filepath.empty())
                         {
                             OpenDocument(filepath);
@@ -1106,7 +1157,7 @@ namespace Storyteller
                 ImGui::SetItemDefaultFocus();
 
                 ImGui::SameLine();
-                if (ImGui::Button(_translationCache.at("No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
+                if (ImGui::Button(_translationsDict->Get("No").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
                 {
                     _popups.openDocument = false;
                     ImGui::CloseCurrentPopup();
@@ -1119,7 +1170,7 @@ namespace Storyteller
         {
             if (_popups.openDocumentFile.empty())
             {
-                const auto filepath = Dialogs::OpenFile(_translationCache.at("Open document"), { "JSON Files", "*.json" });
+                const auto filepath = Dialogs::OpenFile(_translationsDict->Get("Open document"), { "JSON Files", "*.json" });
                 if (!filepath.empty())
                 {
                     OpenDocument(filepath);
@@ -1150,7 +1201,7 @@ namespace Storyteller
 
     void EditorUiCompositor::SaveAsDocument()
     {
-        const auto filepath = Dialogs::SaveFile(_localizationManager->Translate("StorytellerEditor", "Save document"), { "JSON Files", "*.json" });
+        const auto filepath = Dialogs::SaveFile(_translationsDict->Get("Save document"), { "JSON Files", "*.json" });
         if (!filepath.empty())
         {
             _gameDocumentManager->Save(filepath);
@@ -1170,7 +1221,7 @@ namespace Storyteller
         else
         {
             _popups.warningMessage = true;
-            _popups.warningMessageText = _localizationManager->TranslateCtx("StorytellerEditor", "The selected file is missing or damaged", "Popup message");
+            _popups.warningMessageText = _translationsDict->Get("The selected file is missing or damaged", "Popup message");
         }
     }
     //--------------------------------------------------------------------------
