@@ -15,7 +15,7 @@ namespace Storyteller
         Filesystem::Initialize();
         Log::Initialize();
 
-        _localizationManager.reset(new LocalizationManager());
+        _localizationManager.reset(new LocalizationManager("ru_RU.UTF-8")); //TODO: config-based locale?
         _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_ENGINE);
 
         _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Quest object");

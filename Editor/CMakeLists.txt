@@ -58,10 +58,10 @@ if(MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:RELWITHDEBINFO>:/PROFILE>)
 endif()
 
-add_custom_target(copy_translations
-	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/cmake/copy_translations.cmake
+add_custom_target(copy_translations_to_editor
+	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/copy_translations_to_editor.cmake
 )
-add_dependencies(${PROJECT_NAME} copy_translations)
+add_dependencies(${PROJECT_NAME} copy_translations_to_editor)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER STRTLR_TR_DOMAIN_ENGINE)
-set_target_properties(copy_translations PROPERTIES FOLDER STRTLR_TR_DOMAIN_ENGINE)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER Storyteller)
+set_target_properties(copy_translations_to_editor PROPERTIES FOLDER Storyteller)

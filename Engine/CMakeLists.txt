@@ -116,4 +116,4 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE glfw
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER STRTLR_TR_DOMAIN_ENGINE)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER Storyteller)

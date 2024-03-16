@@ -36,7 +36,6 @@ namespace Storyteller
         }
 
         _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
-        _localizationManager->SetLocale("ru_RU.UTF-8");
 
         _ui.reset(new EditorUi(_window, _localizationManager));
         if (!_ui || !_ui->Initialize())
