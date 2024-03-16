@@ -23,3 +23,6 @@ Makefile
 /build
 
 /CMakeSettings.json
+
+*.mo
+*.pot

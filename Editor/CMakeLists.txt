@@ -57,8 +57,10 @@ if(MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:RELWITHDEBINFO>:/PROFILE>)
 endif()
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Storyteller")
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/locale" "${CMAKE_CURRENT_BINARY_DIR}/locale"
+add_custom_target(copy_translations
+	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/cmake/copy_translations.cmake
 )
+add_dependencies(${PROJECT_NAME} copy_translations)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Storyteller")
+set_target_properties(copy_translations PROPERTIES FOLDER "Storyteller")
