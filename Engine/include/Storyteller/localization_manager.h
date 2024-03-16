@@ -37,6 +37,10 @@ namespace Storyteller
 
         const std::string& Translation(const std::string& domain, const std::string& message);
         const std::string& Translation(const std::string& domain, const std::string& message, const std::string& context);
+        const std::string& TranslationOr(const std::string& domain, const std::string& message, const std::string& defaultString);
+        const std::string& TranslationOr(const std::string& domain, const std::string& message, const std::string& context, const std::string& defaultString);
+        const std::string& TranslationOrSource(const std::string& domain, const std::string& message);
+        const std::string& TranslationOrSource(const std::string& domain, const std::string& message, const std::string& context);
 
     private:
         boost::locale::generator _localeGenerator;

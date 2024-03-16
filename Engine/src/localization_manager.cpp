@@ -129,4 +129,32 @@ namespace Storyteller
         return _library->Get(domain, message, context);
     }
     //--------------------------------------------------------------------------
+
+    const std::string& LocalizationManager::TranslationOr(const std::string& domain, const std::string& message, const std::string& defaultString)
+    {
+        const auto& translation = Translation(domain, message);
+        return translation.empty() ? defaultString : translation;
+    }
+    //--------------------------------------------------------------------------
+
+    const std::string& LocalizationManager::TranslationOr(const std::string& domain, const std::string& message, const std::string& context, const std::string& defaultString)
+    {
+        const auto& translation = Translation(domain, message, context);
+        return translation.empty() ? defaultString : translation;
+    }
+    //--------------------------------------------------------------------------
+
+    const std::string& LocalizationManager::TranslationOrSource(const std::string& domain, const std::string& message)
+    {
+        const auto& translation = Translation(domain, message);
+        return translation.empty() ? message : translation;
+    }
+    //--------------------------------------------------------------------------
+
+    const std::string& LocalizationManager::TranslationOrSource(const std::string& domain, const std::string& message, const std::string& context)
+    {
+        const auto& translation = Translation(domain, message, context);
+        return translation.empty() ? message : translation;
+    }
+    //--------------------------------------------------------------------------
 }

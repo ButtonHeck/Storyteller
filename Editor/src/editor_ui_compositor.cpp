@@ -449,8 +449,8 @@ namespace Storyteller
             UiUtils::SetItemTooltip(_translationsDict->Get("Add object").c_str());
 
             std::string typeItems[] = {
-                _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)),
-                _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)),
+                _localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)),
+                _localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType))
             };
 
             if (ImGui::BeginPopup("AddObjectPopup"))
@@ -487,7 +487,7 @@ namespace Storyteller
     {
         const auto proxy = _gameDocumentManager->GetProxy();
 
-        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(objectType)).c_str(), &filterState))
+        if (ImGui::Checkbox(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(objectType)).c_str(), &filterState))
         {
             if (filterState)
             {
@@ -590,7 +590,7 @@ namespace Storyteller
                     UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                     ImGui::TableNextColumn();
-                    ImGui::Selectable(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                    ImGui::Selectable(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
 
                     if (ImGui::IsItemClicked(0))
                     {
@@ -697,7 +697,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+        ImGui::SeparatorText(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedUuid = selectedObject->GetUuid();
@@ -871,7 +871,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+        ImGui::SeparatorText(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
