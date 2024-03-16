@@ -35,7 +35,7 @@ namespace Storyteller
             return false;
         }
 
-        _localizationManager->AddMessagesDomain("StorytellerEditor");
+        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
         _localizationManager->SetLocale("ru_RU.UTF-8");
 
         _ui.reset(new EditorUi(_window, _localizationManager));
@@ -44,7 +44,7 @@ namespace Storyteller
             return false;
         }
 
-        _window->SetTitle(_localizationManager->Translate("StorytellerEditor", "Storyteller editor"));
+        _window->SetTitle(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Storyteller editor"));
         _window->SetEventCallback(BIND_EVENT_FUNCTION(EditorApplication::OnEvent));
 
         LoadSettings();

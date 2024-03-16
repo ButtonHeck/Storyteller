@@ -16,7 +16,7 @@ namespace Storyteller
         Log::Initialize();
 
         _localizationManager.reset(new LocalizationManager());
-        _localizationManager->AddMessagesDomain("Storyteller");
+        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_ENGINE);
 
         _settings.reset(new Settings(GetApplicationName()));
 

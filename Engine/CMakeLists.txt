@@ -107,10 +107,13 @@ if(Boost_FOUND)
     target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC "STRTLR_ASSETS_PATH=\"${PROJECT_SOURCE_DIR}/assets\"")
+target_compile_definitions(${PROJECT_NAME} 
+    PUBLIC STRTLR_ASSETS_PATH=\"${PROJECT_SOURCE_DIR}/assets\"
+    PUBLIC STRTLR_TR_DOMAIN_ENGINE=\"Storyteller\"
+)
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE glfw
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Storyteller")
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER STRTLR_TR_DOMAIN_ENGINE)

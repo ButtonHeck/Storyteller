@@ -15,69 +15,69 @@ namespace Storyteller
         : _window(window)
         , _localizationManager(localizationManager)
         , _gameDocumentManager(new GameDocumentManager())
-        , _translationsDict(_localizationManager->GetDictionary("StorytellerEditor"))
+        , _translationsDict(_localizationManager->GetDictionary(STRTLR_TR_DOMAIN_EDITOR))
     {
         assert(_translationsDict);
 
-        _translationsDict->Add("Open", _localizationManager->Translate("StorytellerEditor", "Open"));
-        _translationsDict->Add("Quit", _localizationManager->Translate("StorytellerEditor", "Quit"));
-        _translationsDict->Add("Log", _localizationManager->Translate("StorytellerEditor", "Log"));
-        _translationsDict->Add("Name", _localizationManager->Translate("StorytellerEditor", "Name"));
-        _translationsDict->Add("Actions", _localizationManager->Translate("StorytellerEditor", "Actions"));
-        _translationsDict->Add("Find object", _localizationManager->Translate("StorytellerEditor", "Find object"));
-        _translationsDict->Add("New document", _localizationManager->Translate("StorytellerEditor", "New document"));
-        _translationsDict->Add("Open document", _localizationManager->Translate("StorytellerEditor", "Open document"));
-        _translationsDict->Add("Yes", _localizationManager->Translate("StorytellerEditor", "Yes"));
-        _translationsDict->Add("No", _localizationManager->Translate("StorytellerEditor", "No"));
-        _translationsDict->Add("Warning", _localizationManager->Translate("StorytellerEditor", "Warning"));
-        _translationsDict->Add("File", _localizationManager->Translate("StorytellerEditor", "File"));
-        _translationsDict->Add("View", _localizationManager->Translate("StorytellerEditor", "View"));
-        _translationsDict->Add("New", _localizationManager->Translate("StorytellerEditor", "New"));
-        _translationsDict->Add("Open recent", _localizationManager->Translate("StorytellerEditor", "Open recent"));
-        _translationsDict->Add("Clear", _localizationManager->Translate("StorytellerEditor", "Clear"));
-        _translationsDict->Add("Save", _localizationManager->Translate("StorytellerEditor", "Save"));
-        _translationsDict->Add("Save as...", _localizationManager->Translate("StorytellerEditor", "Save as..."));
-        _translationsDict->Add("Fullscreen", _localizationManager->Translate("StorytellerEditor", "Fullscreen"));
-        _translationsDict->Add("Untitled document", _localizationManager->Translate("StorytellerEditor", "Untitled document"));
-        _translationsDict->Add("Game document", _localizationManager->Translate("StorytellerEditor", "Game document"));
-        _translationsDict->Add("Game name cannot be empty!", _localizationManager->Translate("StorytellerEditor", "Game name cannot be empty!"));
-        _translationsDict->Add("Create translations file", _localizationManager->Translate("StorytellerEditor", "Create translations file"));
-        _translationsDict->Add("Save translations", _localizationManager->Translate("StorytellerEditor", "Save translations"));
-        _translationsDict->Add("Objects management", _localizationManager->Translate("StorytellerEditor", "Objects management"));
-        _translationsDict->Add("Add object", _localizationManager->Translate("StorytellerEditor", "Add object"));
-        _translationsDict->Add("Visibility filters", _localizationManager->Translate("StorytellerEditor", "Visibility filters"));
-        _translationsDict->Add("Objects", _localizationManager->Translate("StorytellerEditor", "Objects"));
-        _translationsDict->Add("Type", _localizationManager->Translate("StorytellerEditor", "Type"));
-        _translationsDict->Add("UUID", _localizationManager->Translate("StorytellerEditor", "UUID"));
-        _translationsDict->Add("Delete object", _localizationManager->Translate("StorytellerEditor", "Delete object"));
-        _translationsDict->Add("Properties", _localizationManager->Translate("StorytellerEditor", "Properties"));
-        _translationsDict->Add("Object name cannot be empty!", _localizationManager->Translate("StorytellerEditor", "Object name cannot be empty!"));
-        _translationsDict->Add("Object name already exists!", _localizationManager->Translate("StorytellerEditor", "Object name already exists!"));
-        _translationsDict->Add("Source text", _localizationManager->Translate("StorytellerEditor", "Source text"));
-        _translationsDict->Add("Translation", _localizationManager->Translate("StorytellerEditor", "Translation"));
-        _translationsDict->Add("Entry point", _localizationManager->Translate("StorytellerEditor", "Entry point"));
-        _translationsDict->Add("Final", _localizationManager->Translate("StorytellerEditor", "Final"));
-        _translationsDict->Add("Add action to object", _localizationManager->Translate("StorytellerEditor", "Add action to object"));
-        _translationsDict->Add("Action name", _localizationManager->Translate("StorytellerEditor", "Action name"));
-        _translationsDict->Add("Move action up", _localizationManager->Translate("StorytellerEditor", "Move action up"));
-        _translationsDict->Add("Move action down", _localizationManager->Translate("StorytellerEditor", "Move action down"));
-        _translationsDict->Add("Objects's actions", _localizationManager->Translate("StorytellerEditor", "Objects's actions"));
-        _translationsDict->Add("Text", _localizationManager->Translate("StorytellerEditor", "Text"));
-        _translationsDict->Add("Remove action from object", _localizationManager->Translate("StorytellerEditor", "Remove action from object"));
-        _translationsDict->Add("Find action object", _localizationManager->Translate("StorytellerEditor", "Find action object"));
-        _translationsDict->Add("Clear target", _localizationManager->Translate("StorytellerEditor", "Clear target"));
-        _translationsDict->Add("Set target", _localizationManager->Translate("StorytellerEditor", "Set target"));
-        _translationsDict->Add("Quest object name", _localizationManager->Translate("StorytellerEditor", "Quest object name"));
-        _translationsDict->Add("Current target name: ", _localizationManager->Translate("StorytellerEditor", "Current target name: "));
-        _translationsDict->Add("Not set or does not exist", _localizationManager->Translate("StorytellerEditor", "Not set or does not exist"));
-        _translationsDict->Add("Scroll to end", _localizationManager->Translate("StorytellerEditor", "Scroll to end"));
-        _translationsDict->Add("Autoscroll to end", _localizationManager->Translate("StorytellerEditor", "Autoscroll to end"));
-        _translationsDict->Add("You have unsaved changes, create new document anyway?", _localizationManager->Translate("StorytellerEditor", "You have unsaved changes, create new document anyway?"));
-        _translationsDict->Add("You have unsaved changes, quit anyway?", _localizationManager->Translate("StorytellerEditor", "You have unsaved changes, quit anyway?"));
-        _translationsDict->Add("Ok", _localizationManager->Translate("StorytellerEditor", "Ok"));
-        _translationsDict->Add("You have unsaved changes, open other document anyway?", _localizationManager->Translate("StorytellerEditor", "You have unsaved changes, open other document anyway?"));
-        _translationsDict->Add("Save document", _localizationManager->Translate("StorytellerEditor", "Save document"));
-        _translationsDict->Add("The selected file is missing or damaged", "Popup message", _localizationManager->TranslateCtx("StorytellerEditor", "The selected file is missing or damaged", "Popup message"));
+        _translationsDict->Add("Open", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open"));
+        _translationsDict->Add("Quit", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit"));
+        _translationsDict->Add("Log", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log"));
+        _translationsDict->Add("Name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name"));
+        _translationsDict->Add("Actions", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Actions"));
+        _translationsDict->Add("Find object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find object"));
+        _translationsDict->Add("New document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New document"));
+        _translationsDict->Add("Open document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open document"));
+        _translationsDict->Add("Yes", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Yes"));
+        _translationsDict->Add("No", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "No"));
+        _translationsDict->Add("Warning", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning"));
+        _translationsDict->Add("File", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File"));
+        _translationsDict->Add("View", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "View"));
+        _translationsDict->Add("New", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New"));
+        _translationsDict->Add("Open recent", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent"));
+        _translationsDict->Add("Clear", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear"));
+        _translationsDict->Add("Save", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save"));
+        _translationsDict->Add("Save as...", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as..."));
+        _translationsDict->Add("Fullscreen", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Fullscreen"));
+        _translationsDict->Add("Untitled document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document"));
+        _translationsDict->Add("Game document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document"));
+        _translationsDict->Add("Game name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game name cannot be empty!"));
+        _translationsDict->Add("Create translations file", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file"));
+        _translationsDict->Add("Save translations", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save translations"));
+        _translationsDict->Add("Objects management", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management"));
+        _translationsDict->Add("Add object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add object"));
+        _translationsDict->Add("Visibility filters", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Visibility filters"));
+        _translationsDict->Add("Objects", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects"));
+        _translationsDict->Add("Type", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type"));
+        _translationsDict->Add("UUID", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID"));
+        _translationsDict->Add("Delete object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Delete object"));
+        _translationsDict->Add("Properties", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties"));
+        _translationsDict->Add("Object name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name cannot be empty!"));
+        _translationsDict->Add("Object name already exists!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name already exists!"));
+        _translationsDict->Add("Source text", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text"));
+        _translationsDict->Add("Translation", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation"));
+        _translationsDict->Add("Entry point", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point"));
+        _translationsDict->Add("Final", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final"));
+        _translationsDict->Add("Add action to object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action to object"));
+        _translationsDict->Add("Action name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name"));
+        _translationsDict->Add("Move action up", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Move action up"));
+        _translationsDict->Add("Move action down", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Move action down"));
+        _translationsDict->Add("Objects's actions", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects's actions"));
+        _translationsDict->Add("Text", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Text"));
+        _translationsDict->Add("Remove action from object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove action from object"));
+        _translationsDict->Add("Find action object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find action object"));
+        _translationsDict->Add("Clear target", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target"));
+        _translationsDict->Add("Set target", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target"));
+        _translationsDict->Add("Quest object name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest object name"));
+        _translationsDict->Add("Current target name: ", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: "));
+        _translationsDict->Add("Not set or does not exist", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist"));
+        _translationsDict->Add("Scroll to end", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Scroll to end"));
+        _translationsDict->Add("Autoscroll to end", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Autoscroll to end"));
+        _translationsDict->Add("You have unsaved changes, create new document anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, create new document anyway?"));
+        _translationsDict->Add("You have unsaved changes, quit anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, quit anyway?"));
+        _translationsDict->Add("Ok", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Ok"));
+        _translationsDict->Add("You have unsaved changes, open other document anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, open other document anyway?"));
+        _translationsDict->Add("Save document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save document"));
+        _translationsDict->Add("The selected file is missing or damaged", "Popup message", _localizationManager->TranslateCtx(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged", "Popup message"));
     }
     //--------------------------------------------------------------------------
 
@@ -449,8 +449,8 @@ namespace Storyteller
             UiUtils::SetItemTooltip(_translationsDict->Get("Add object").c_str());
 
             std::string typeItems[] = {
-                _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::QuestObjectType)),
-                _localizationManager->Translate("Storyteller", ObjectTypeToString(ObjectType::ActionObjectType)),
+                _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)),
+                _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType)),
             };
 
             if (ImGui::BeginPopup("AddObjectPopup"))
@@ -487,7 +487,7 @@ namespace Storyteller
     {
         const auto proxy = _gameDocumentManager->GetProxy();
 
-        if (ImGui::Checkbox(_localizationManager->Translate("Storyteller", ObjectTypeToString(objectType)).c_str(), &filterState))
+        if (ImGui::Checkbox(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(objectType)).c_str(), &filterState))
         {
             if (filterState)
             {
@@ -513,7 +513,7 @@ namespace Storyteller
         });
 
         const auto objectsCount = proxy->GetObjects().size();
-        const auto summaryText = LocalizationTranslator::Format(_localizationManager->Translate("StorytellerEditor", "total {1} object", "total {1} objects", objectsCount), objectsCount);
+        const auto summaryText = LocalizationTranslator::Format(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "total {1} object", "total {1} objects", objectsCount), objectsCount);
         const auto tableOuterSize = ImVec2(0.0f, ImGui::GetContentRegionAvail().y - ImGui::CalcTextSize(summaryText.c_str()).y - ImGui::GetStyle().ItemSpacing.y);
         if (ImGui::BeginTable(_translationsDict->Get("Objects").c_str(), 4, objectsTableFlags, tableOuterSize))
         {
@@ -590,7 +590,7 @@ namespace Storyteller
                     UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                     ImGui::TableNextColumn();
-                    ImGui::Selectable(_localizationManager->Translate("Storyteller", ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                    ImGui::Selectable(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
 
                     if (ImGui::IsItemClicked(0))
                     {
@@ -697,7 +697,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->Translate("Storyteller", ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedUuid = selectedObject->GetUuid();
@@ -871,7 +871,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->Translate("Storyteller", ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+        ImGui::SeparatorText(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());

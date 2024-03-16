@@ -42,6 +42,7 @@ source_group("Imgui Sources" FILES
 
 target_compile_definitions(${PROJECT_NAME} 
 	PRIVATE STRTLR_EDITOR_FONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts"
+    PRIVATE STRTLR_TR_DOMAIN_EDITOR=\"StorytellerEditor\"
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -62,5 +63,5 @@ add_custom_target(copy_translations
 )
 add_dependencies(${PROJECT_NAME} copy_translations)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Storyteller")
-set_target_properties(copy_translations PROPERTIES FOLDER "Storyteller")
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER STRTLR_TR_DOMAIN_ENGINE)
+set_target_properties(copy_translations PROPERTIES FOLDER STRTLR_TR_DOMAIN_ENGINE)

@@ -9,11 +9,11 @@ namespace Storyteller
         {
         case ObjectType::QuestObjectType:
             return "Quest object";
-            //Translate("Storyteller", "Quest object") - for translator
+            //Translate(STRTLR_TR_DOMAIN_ENGINE, "Quest object") - for translator
 
         case ObjectType::ActionObjectType:
             return "Action object";
-            //Translate("Storyteller", "Action object") - for translator
+            //Translate(STRTLR_TR_DOMAIN_ENGINE, "Action object") - for translator
 
         default:
             break;

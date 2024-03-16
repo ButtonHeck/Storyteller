@@ -73,7 +73,7 @@ namespace Storyteller
             const auto typeString = ObjectTypeToString(type);
             STRTLR_CORE_LOG_CRITICAL("GameController: Game data is incorrect (object is null), required: '{}'", typeString);
 
-            _consoleManager->PrintCriticalHint(_localizationManager->Translate("Storyteller", "Game data is incorrect (object is null), required: ").append(typeString));
+            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Game data is incorrect (object is null), required: ").append(typeString));
             return false;
         }
 
@@ -82,7 +82,7 @@ namespace Storyteller
             const auto typeString = ObjectTypeToString(type);
             STRTLR_CORE_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", object->GetUuid(), typeString);
 
-            _consoleManager->PrintCriticalHint(_localizationManager->Translate("Storyteller", "Game data is incorrect (object is not of correct type), required: ").append(typeString));
+            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Game data is incorrect (object is not of correct type), required: ").append(typeString));
             return false;
         }
 
@@ -121,13 +121,13 @@ namespace Storyteller
                 else
                 {
                     STRTLR_CORE_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionIndex, questActions.size());
-                    _consoleManager->PrintErrorHint(_localizationManager->Translate("Storyteller", "No action found, try again"));
+                    _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "No action found, try again"));
                 }
             }
             catch (const std::exception&)
             {
                 STRTLR_CORE_LOG_CRITICAL("GameController: cannot recognize action number, input is '{}'", input);
-                _consoleManager->PrintErrorHint(_localizationManager->Translate("Storyteller", "Cannot recognize action number, try again"));
+                _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Cannot recognize action number, try again"));
             }
         }
 

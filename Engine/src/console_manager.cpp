@@ -49,7 +49,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintMadeByString() const
     {
-        std::cout << _localizationManager->Translate("Storyteller", "Made with Storyteller engine") << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Made with Storyteller engine") << std::endl;
     }
     //--------------------------------------------------------------------------
 
@@ -93,7 +93,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintInputHint() const
     {
-        std::cout << _localizationManager->Translate("Storyteller", "Enter action: ");
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Enter action: ");
     }
     //--------------------------------------------------------------------------
 
@@ -101,7 +101,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_ERROR("ConsoleManager: error '{}'", details);
 
-        std::cout << _localizationManager->Translate("Storyteller", "Error: ") << details << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Error: ") << details << std::endl;
     }
     //--------------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_CRITICAL("ConsoleManager: critical error '{}'", details);
 
-        std::cout << _localizationManager->Translate("Storyteller", "Critical error: ") << details << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Critical error: ") << details << std::endl;
 
         if (waitForKeyboardHit)
         {
@@ -120,13 +120,13 @@ namespace Storyteller
 
     void ConsoleManager::PrintEndHint() const
     {
-        std::cout << _localizationManager->Translate("Storyteller", "Game is over!") << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Game is over!") << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::WaitForKeyboardHit() const
     {
-        std::cout << _localizationManager->Translate("Storyteller", "Press any key...") << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Press any key...") << std::endl;
         while (!_kbhit()) {}
     }
     //--------------------------------------------------------------------------
