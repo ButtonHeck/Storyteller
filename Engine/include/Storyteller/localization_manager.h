@@ -23,12 +23,17 @@ namespace Storyteller
         void AddMessagesPath(const std::string& path);
         Ptr<LocalizationDictionary> AddMessagesDomain(const std::string& domain);
         Ptr<LocalizationDictionary> GetDictionary(const std::string& domain) const;
-        bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const;
+        bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const; //TODO: abstract out GameDocument
 
         std::string Translate(const std::string& domain, const std::string& message);
         std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count);
         std::string TranslateCtx(const std::string& domain, const std::string& message, const std::string& context);
         std::string TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context);
+
+        static void TranslateDefer(const std::string& domain, const std::string& message) {};
+        static void TranslateDefer(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count) {};
+        static void TranslateCtxDefer(const std::string& domain, const std::string& message, const std::string& context) {};
+        static void TranslateCtxDefer(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context) {};
 
         const std::string& Translation(const std::string& domain, const std::string& message);
         const std::string& Translation(const std::string& domain, const std::string& message, const std::string& context);

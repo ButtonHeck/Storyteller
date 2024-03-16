@@ -13,6 +13,11 @@ namespace Storyteller
         std::string TranslateCtx(const std::string& domain, const std::string& message, const std::string& context);
         std::string TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context);
 
+        inline void TranslateDefer(const std::string& domain, const std::string& message) {};
+        inline void TranslateDefer(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count) {};
+        inline void TranslateCtxDefer(const std::string& domain, const std::string& message, const std::string& context) {};
+        inline void TranslateCtxDefer(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context) {};
+
         template<typename... Types>
         std::string Format(const std::string& message, Types&&... args)
         {

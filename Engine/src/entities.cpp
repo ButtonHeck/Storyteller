@@ -1,5 +1,6 @@
 #include "entities.h"
 #include "log.h"
+#include "localization_manager.h"
 
 namespace Storyteller
 {
@@ -8,12 +9,12 @@ namespace Storyteller
         switch (type)
         {
         case ObjectType::QuestObjectType:
+            LocalizationManager::TranslateDefer(STRTLR_TR_DOMAIN_ENGINE, "Quest object");
             return "Quest object";
-            //Translate(STRTLR_TR_DOMAIN_ENGINE, "Quest object") - for translator
 
         case ObjectType::ActionObjectType:
+            LocalizationManager::TranslateDefer(STRTLR_TR_DOMAIN_ENGINE, "Action object");
             return "Action object";
-            //Translate(STRTLR_TR_DOMAIN_ENGINE, "Action object") - for translator
 
         default:
             break;

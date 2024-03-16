@@ -1,7 +1,7 @@
-filelist=`find ../src -type f \( -iname \*.cpp -o -iname \*.h \)`
+filelist=`find ../src ../include -type f \( -iname \*.cpp -o -iname \*.h \)`
 echo ${filelist} | tr ' ' '\n'
 
-pot_file=../locale/ru_RU/LC_MESSAGES/StorytellerEditor.pot
+pot_file=../locale/ru_RU/LC_MESSAGES/Storyteller.pot
 if [ -f "$pot_file" ]; then
 	echo "updating $pot_file"
 else
@@ -18,7 +18,7 @@ sed -i 's|nplurals=INTEGER|nplurals=3|g' $pot_file
 sed -i 's|plural=EXPRESSION|plural=n%10==1 \&\& n%100!=11 ? 0 : n%10>=2 \&\& n%10<=4 \&\& (n%100<10 \|\| n%100>=20) ? 1 : 2|g' $pot_file
 
 
-po_file=../locale/ru_RU/LC_MESSAGES/StorytellerEditor.po
+po_file=../locale/ru_RU/LC_MESSAGES/Storyteller.po
 if [ ! -f "$po_file" ]; then
 	echo "initializing $po_file"
 	msginit -i $pot_file -o $po_file -l ru_RU
