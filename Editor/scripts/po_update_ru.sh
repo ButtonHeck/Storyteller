@@ -3,9 +3,9 @@ echo ${filelist} | tr ' ' '\n'
 
 pot_file=../locale/ru_RU/LC_MESSAGES/StorytellerEditor.pot
 if [ -f "$pot_file" ]; then
-	echo "updating $pot_file"
+	echo "updating $pot_file ..."
 else
-	echo "initializing $pot_file"
+	echo "initializing $pot_file ..."
 	po_dir=`dirname $pot_file`
 	[ ! -d $po_dir ] && mkdir -p $po_dir
 	touch $pot_file
@@ -20,8 +20,10 @@ sed -i 's|plural=EXPRESSION|plural=n%10==1 \&\& n%100!=11 ? 0 : n%10>=2 \&\& n%1
 
 po_file=../locale/ru_RU/LC_MESSAGES/StorytellerEditor.po
 if [ ! -f "$po_file" ]; then
-	echo "initializing $po_file"
+	echo "initializing $po_file ..."
 	msginit -i $pot_file -o $po_file -l ru_RU
+else
+	echo "updating $po_file ..."
 fi
 
 msgattrib --set-obsolete --ignore-file=$pot_file -o $po_file $po_file
@@ -29,3 +31,6 @@ msgattrib --no-obsolete -o $po_file $po_file
 msgmerge -q -o $po_file $po_file $pot_file
 
 rm $pot_file
+
+echo "Done! press any key..."
+read i
