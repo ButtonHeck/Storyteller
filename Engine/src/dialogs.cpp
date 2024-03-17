@@ -32,13 +32,33 @@ namespace Storyteller
 				return std::vector<std::string>();
 			}
 
-			return files;
+			std::vector<std::string> paths;
+			for (const auto& path : files)
+			{
+				paths.push_back(Filesystem::ToString(Utils::FromStrBytesToWStrBytes(path)));
+			}
+
+			return paths;
 		}
 		//--------------------------------------------------------------------------
 
-		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters)
+		std::string OpenDirectory(const std::string& title)
 		{
-			pfd::save_file saver(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, true);
+			pfd::open_file opener(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), {}, pfd::opt::force_path);
+
+			const auto dir = opener.result();
+			if (dir.empty())
+			{
+				return std::string();
+			}
+
+			return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(dir.front()));
+		}
+		//--------------------------------------------------------------------------
+
+		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters, bool forceOverwrite)
+		{
+			pfd::save_file saver(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, forceOverwrite ? pfd::opt::force_overwrite : pfd::opt::none);
 
 			return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(saver.result()));
 		}
