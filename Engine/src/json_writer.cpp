@@ -1,13 +1,12 @@
 #include "json_writer.h"
-#include "filesystem.h"
 #include "log.h"
 
 #include <fstream>
 
 namespace Storyteller
 {
-    JsonWriter::JsonWriter(const std::string& filename)
-        : _filename(filename)
+    JsonWriter::JsonWriter(const std::filesystem::path& path)
+        : _path(path)
         , _stringBuffer()
         , _writer(_stringBuffer)
     {}
@@ -15,9 +14,9 @@ namespace Storyteller
 
     bool JsonWriter::Start()
     {
-        STRTLR_CORE_LOG_INFO("JsonWriter: saving to '{}'", _filename);
+        STRTLR_CORE_LOG_INFO("JsonWriter: saving to '{}'", Filesystem::ToU8String(_path));
 
-        if (!Filesystem::CreatePathTree(_filename))
+        if (!Filesystem::CreatePathTree(_path))
         {
             STRTLR_CORE_LOG_WARN("JsonWriter: insufficient path");
             return false;
@@ -31,7 +30,7 @@ namespace Storyteller
     {
         _writer.EndObject();
 
-        std::ofstream outputStream(_filename, std::ios::out | std::ios::trunc);
+        std::ofstream outputStream(_path, std::ios::out | std::ios::trunc);
         if (!outputStream.is_open() || !outputStream.good())
         {
             STRTLR_CORE_LOG_WARN("JsonWriter: failed to open file stream");

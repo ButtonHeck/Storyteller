@@ -1,5 +1,7 @@
 #pragma once
 
+#include "filesystem.h"
+
 #include <rapidjson/document.h>
 
 #include <string>
@@ -10,7 +12,7 @@ namespace Storyteller
     class JsonReader
     {
     public:
-        explicit JsonReader(const std::string& filename);
+        explicit JsonReader(const std::filesystem::path& path);
 
         bool Start();
         bool End();
@@ -44,7 +46,7 @@ namespace Storyteller
         bool ValidToGetFromArray(int index) const;
 
     private:
-        const std::string _filename;
+        const std::filesystem::path _path;
 
         rapidjson::Document _document;
         std::vector<std::string> _scope;

@@ -1,6 +1,5 @@
 #include "json_reader.h"
 #include "log.h"
-#include "filesystem.h"
 
 #include <rapidjson/pointer.h>
 #include <rapidjson/istreamwrapper.h>
@@ -12,8 +11,8 @@
 
 namespace Storyteller
 {
-    JsonReader::JsonReader(const std::string& filename)
-        : _filename(filename)
+    JsonReader::JsonReader(const std::filesystem::path& path)
+        : _path(path)
         , _document()
         , _scope()
         , _scopeString("")
@@ -23,15 +22,15 @@ namespace Storyteller
 
     bool JsonReader::Start()
     {
-        STRTLR_CORE_LOG_INFO("JsonReader: loading from '{}'", _filename);
+        STRTLR_CORE_LOG_INFO("JsonReader: loading from '{}'", Filesystem::ToU8String(_path));
 
-        if (!Filesystem::PathExists(_filename))
+        if (!Filesystem::PathExists(_path))
         {
             STRTLR_CORE_LOG_WARN("JsonReader: insufficient path");
             return false;
         }
 
-        std::ifstream inputStream(_filename);
+        std::ifstream inputStream(_path);
         if (!inputStream.is_open() || !inputStream.good())
         {
             return false;

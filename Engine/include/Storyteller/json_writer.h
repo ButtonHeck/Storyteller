@@ -1,5 +1,7 @@
 #pragma once
 
+#include "filesystem.h"
+
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/stringbuffer.h>
 
@@ -10,7 +12,7 @@ namespace Storyteller
     class JsonWriter
     {
     public:
-        explicit JsonWriter(const std::string& filename);
+        explicit JsonWriter(const std::filesystem::path& path);
 
         bool Start();
         bool End();
@@ -40,7 +42,7 @@ namespace Storyteller
         bool SaveString(const std::string& name, const std::string& value);
 
     private:
-        const std::string _filename;
+        const std::filesystem::path _path;
 
         rapidjson::StringBuffer _stringBuffer;
         rapidjson::PrettyWriter<rapidjson::StringBuffer> _writer;
