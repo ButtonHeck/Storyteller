@@ -427,7 +427,7 @@ namespace Storyteller
 
             if (!filepath.empty())
             {
-                _localizationManager->CreateTranslations(document, filepath);
+                _gameDocumentManager->CreateTranslations(filepath);
             }
         }
     }

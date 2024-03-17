@@ -22,6 +22,8 @@ namespace Storyteller
         Ptr<GameDocument> GetDocument() const;
         Ptr<GameDocumentSortFilterProxyView> GetProxy();
 
+        bool CreateTranslations(const std::filesystem::path& path) const;
+
     private:
         Ptr<GameDocument> _document;
         Ptr<GameDocumentSortFilterProxyView> _proxy;

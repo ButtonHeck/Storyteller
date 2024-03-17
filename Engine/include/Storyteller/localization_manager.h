@@ -2,7 +2,6 @@
 
 #include "pointers.h"
 #include "filesystem.h"
-#include "game_document.h"
 #include "localization_dictionary.h"
 #include "localization_translator.h"
 
@@ -17,6 +16,12 @@ namespace Storyteller
     class LocalizationManager
     {
     public:
+        static constexpr auto TranslateKeyword = "Translate";
+        static constexpr auto TranslateCtxKeyword = "TranslateCtx";
+        static constexpr auto TranslateDeferKeyword = "TranslateDefer";
+        static constexpr auto TranslateCtxDeferKeyword = "TranslateCtxDefer";
+
+    public:
         explicit LocalizationManager(const std::string& defaultLocale = "", const std::string& defaultPath = Filesystem::ToString(Filesystem::GetCurrentPath().append("locale")));
 
         void SetLocale(const std::string& localeString);
@@ -24,7 +29,6 @@ namespace Storyteller
         void AddMessagesPath(const std::string& path);
         Ptr<LocalizationDictionary> AddMessagesDomain(const std::string& domain);
         Ptr<LocalizationDictionary> GetDictionary(const std::string& domain) const;
-        bool CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const; //TODO: abstract out GameDocument
 
         std::string Translate(const std::string& domain, const std::string& message);
         std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count);

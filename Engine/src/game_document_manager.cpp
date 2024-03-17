@@ -1,5 +1,10 @@
 #include "game_document_manager.h"
 #include "game_document_serializer.h"
+#include "localization_manager.h"
+#include "filesystem.h"
+#include "log.h"
+
+#include <fstream>
 
 namespace Storyteller
 {
@@ -77,4 +82,41 @@ namespace Storyteller
         return _proxy;
     }
     //--------------------------------------------------------------------------
+
+    bool GameDocumentManager::CreateTranslations(const std::filesystem::path& path) const
+    {
+        STRTLR_CORE_LOG_INFO("GameDocumentManager: creating translations for '{}', path '{}'", _document->GetGameName(), Filesystem::ToU8String(path));
+
+        if (!Filesystem::CreatePathTree(path))
+        {
+            STRTLR_CORE_LOG_ERROR("GameDocumentManager: cannot create path '{}' for translations");
+
+            return false;
+        }
+
+        std::ofstream outputStream(path.string(), std::ios::out | std::ios::trunc);
+        if (!outputStream.is_open() || !outputStream.good())
+        {
+            STRTLR_CORE_LOG_ERROR("GameDocumentManager: error opening file stream");
+
+            return false;
+        }
+
+        const auto gameName = _document->GetGameName();
+        const auto documentObjects = _document->GetObjects();
+
+        std::stringstream ss;
+        ss << LocalizationManager::TranslateKeyword << "(\"" << gameName << "\");\n";
+        for (size_t i = 0; i < documentObjects.size(); i++)
+        {
+            const auto object = documentObjects.at(i);
+            const auto textObject = dynamic_cast<const TextObject*>(object.get());
+            ss << object->GetName() << ", " << LocalizationManager::TranslateKeyword << "(\"" << textObject->GetText() << "\");\n";
+        }
+
+        outputStream << ss.str();
+        outputStream.close();
+
+        return true;
+    }
 }

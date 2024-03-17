@@ -1,10 +1,8 @@
 #include "localization_manager.h"
 #include "localization_library.h"
-#include "filesystem.h"
 #include "log.h"
 
 #include <iostream>
-#include <fstream>
 
 namespace Storyteller
 {
@@ -59,42 +57,6 @@ namespace Storyteller
     Ptr<LocalizationDictionary> LocalizationManager::GetDictionary(const std::string& domain) const
     {
         return _library->GetDictionary(domain);
-    }
-    //--------------------------------------------------------------------------
-
-    bool LocalizationManager::CreateTranslations(const Ptr<GameDocument> document, const std::filesystem::path& path) const
-    {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: creating translations for '{}', path '{}'", document->GetGameName(), Filesystem::ToString(path));
-
-        if (!Filesystem::CreatePathTree(path))
-        {
-            return false;
-        }
-
-        std::ofstream outputStream(path.string(), std::ios::out | std::ios::trunc);
-        if (!outputStream.is_open() || !outputStream.good())
-        {
-            STRTLR_CORE_LOG_ERROR("LocalizationManager: error opening file stream");
-
-            return false;
-        }
-
-        const auto gameName = document->GetGameName();
-        const auto documentObjects = document->GetObjects();
-
-        std::stringstream ss;
-        ss << "Translate(\"" << gameName << "\");\n";
-        for (size_t i = 0; i < documentObjects.size(); i++)
-        {
-            const auto object = documentObjects.at(i);
-            const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            ss << object->GetName() << ", Translate(\"" << textObject->GetText() << "\");\n";
-        }
-
-        outputStream << ss.str();
-        outputStream.close();
-
-        return true;
     }
     //--------------------------------------------------------------------------
 
