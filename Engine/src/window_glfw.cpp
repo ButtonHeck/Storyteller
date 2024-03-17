@@ -37,7 +37,7 @@ namespace Storyteller
         MakeContextCurrent();
 
         InitializeCallbacks();
-        SetIcon(Filesystem::ToU8String(std::filesystem::path(STRTLR_ASSETS_PATH).append("icons/strtlr64.png")));
+        SetIcon(Filesystem::ToString(std::filesystem::path(STRTLR_ASSETS_PATH).append("icons/strtlr64.png")));
 
         return true;
     }

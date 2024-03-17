@@ -1,5 +1,6 @@
 #include "dialogs.h"
 #include "filesystem.h"
+#include "utils.h"
 
 #include <portable-file-dialogs.h>
 
@@ -9,7 +10,7 @@ namespace Storyteller
 	{
 		std::string OpenFile(const std::string& title, const std::vector<std::string>& filters)
 		{
-			pfd::open_file opener(title, Filesystem::ToU8String(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::none);
+			pfd::open_file opener(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::none);
 
 			const auto files = opener.result();
 			if (files.empty())
@@ -17,13 +18,13 @@ namespace Storyteller
 				return std::string();
 			}
 
-			return files.front();
+			return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(files.front()));
 		}
 		//--------------------------------------------------------------------------
 
 		std::vector<std::string> OpenFiles(const std::string& title, const std::vector<std::string>& filters)
 		{
-			pfd::open_file opener(title, Filesystem::ToU8String(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::multiselect);
+			pfd::open_file opener(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::multiselect);
 
 			const auto files = opener.result();
 			if (files.empty())
@@ -37,33 +38,10 @@ namespace Storyteller
 
 		std::string SaveFile(const std::string& title, const std::vector<std::string>& filters)
 		{
-			pfd::save_file saver(title, Filesystem::ToU8String(Filesystem::GetCurrentPathCRef()), filters, true);
+			pfd::save_file saver(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, true);
 
-			return saver.result();
+			return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(saver.result()));
 		}
 		//--------------------------------------------------------------------------
-
-		/*
-		bool Message(const char* text, const char* caption, Ptr<Window> window, MessageButtons buttons)
-		{
-			auto implWindow = reinterpret_cast<GLFWwindow*>(window->GetImplPointer());
-			if (!implWindow)
-			{
-				return false;
-			}
-
-			window->BeginBlock();
-
-			const auto nativeButtons = (buttons == YesNoButtons)
-				? MB_YESNO
-				: (buttons == OkButtons ? MB_OK : MB_OKCANCEL);
-			const auto result = MessageBox(glfwGetWin32Window(implWindow), text, caption, nativeButtons);
-
-			window->EndBlock();
-
-			return result == IDYES || result == IDOK;
-		}
-		//--------------------------------------------------------------------------
-		*/
 	}
 }

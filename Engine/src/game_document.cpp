@@ -45,7 +45,7 @@ namespace Storyteller
 
     std::string GameDocument::GetPathString() const
     {
-        return Filesystem::ToU8String(_path);
+        return Filesystem::ToString(_path);
     }
     //--------------------------------------------------------------------------
 

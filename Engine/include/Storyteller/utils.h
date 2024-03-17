@@ -13,5 +13,12 @@ namespace Storyteller
             (oss << ... << std::forward<Ts>(args));
             return oss.str();
         }
+        //--------------------------------------------------------------------------
+
+        std::wstring FromStrBytesToWStrBytes(const std::string& strBytes);
+        //--------------------------------------------------------------------------
+
+        std::string FromWStrBytesToStrBytes(const std::wstring& wstrBytes);
+        //--------------------------------------------------------------------------
     }
 }

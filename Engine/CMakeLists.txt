@@ -66,6 +66,7 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/image.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/utils.cpp"
 )
 
 aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)

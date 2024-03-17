@@ -418,7 +418,7 @@ namespace Storyteller
             std::string filepath;
             if (Filesystem::PathExists(documentPath) && Filesystem::FilePathIsValid(documentPath))
             {
-                filepath = Filesystem::ToU8String(documentPath.parent_path().append(document->GetGameName())).append(".txt");
+                filepath = Filesystem::ToString(documentPath.parent_path().append(document->GetGameName())).append(".txt");
             }
             else
             {

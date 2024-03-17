@@ -17,7 +17,7 @@ namespace Storyteller
     class LocalizationManager
     {
     public:
-        explicit LocalizationManager(const std::string& defaultLocale = "", const std::string& defaultPath = Filesystem::ToU8String(Filesystem::GetCurrentPath().append("locale")));
+        explicit LocalizationManager(const std::string& defaultLocale = "", const std::string& defaultPath = Filesystem::ToString(Filesystem::GetCurrentPath().append("locale")));
 
         void SetLocale(const std::string& localeString);
         void ImbueLocale() const;

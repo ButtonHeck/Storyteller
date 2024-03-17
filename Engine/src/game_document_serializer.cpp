@@ -58,7 +58,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Save(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", Filesystem::ToU8String(path));
+        STRTLR_CORE_LOG_INFO("GameDocumentSerializer: saving to '{}'", Filesystem::ToString(path));
 
         if (!Filesystem::CreatePathTree(path))
         {
@@ -82,7 +82,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Serialize(const std::filesystem::path& path)
     {
-        JsonWriter writer(Filesystem::ToU8String(path));
+        JsonWriter writer(path);
         auto ok = true;
 
         ok &= writer.Start();
@@ -114,7 +114,7 @@ namespace Storyteller
             case ObjectType::QuestObjectType:
             {
                 const auto questObject = dynamic_cast<const QuestObject*>(textObject);
-                const auto actions = questObject->GetActions();
+                const auto& actions = questObject->GetActions();
 
                 ok &= writer.StartArray(JSON_KEY_ACTIONS);
                 for (auto action = 0; action < actions.size(); action++)
@@ -150,7 +150,7 @@ namespace Storyteller
 
     bool GameDocumentSerializer::Deserialize(const std::filesystem::path& path)
     {
-        JsonReader reader(Filesystem::ToU8String(path));
+        JsonReader reader(path);
 
         if (!reader.Start())
         {
