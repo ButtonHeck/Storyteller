@@ -9,9 +9,14 @@ namespace Storyteller
     LocalizationManager::LocalizationManager(const std::string& defaultLocale, const std::string& defaultPath)
         : _localeGenerator()
         , _library(new LocalizationLibrary())
-        , _localeString(defaultLocale)
+        , _localeString("")
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
+
+        if (!defaultLocale.empty())
+        {
+            SetLocale(defaultLocale);
+        }
 
         if (!defaultPath.empty())
         {
