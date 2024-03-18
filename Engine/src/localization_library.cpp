@@ -5,6 +5,17 @@ namespace Storyteller
 {
     static const std::string noTranslation = std::string("");
 
+    LocalizationLibrary::LocalizationLibrary(const std::string& defaultLocale)
+        : _currentLocaleString(defaultLocale)
+    {}
+    //--------------------------------------------------------------------------
+
+    void LocalizationLibrary::SetLocale(const std::string& localeString)
+    {
+        _currentLocaleString = localeString;
+    }
+    //--------------------------------------------------------------------------
+
     Ptr<LocalizationDictionary> LocalizationLibrary::AddDictionary(const std::string& domain)
     {
         auto dictionary = CreatePtr<LocalizationDictionary>(domain);

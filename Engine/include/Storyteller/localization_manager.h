@@ -50,7 +50,7 @@ namespace Storyteller
     private:
         boost::locale::generator _localeGenerator;
         Ptr<LocalizationLibrary> _library;
-        std::string _localeString;
+        std::string _currentLocaleString;
     };
     //--------------------------------------------------------------------------
 }

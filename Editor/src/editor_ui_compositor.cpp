@@ -412,6 +412,20 @@ namespace Storyteller
             }
         }
 
+        // TODO: TEMPORARY CODE, REMOVE LATER
+        if (ImGui::Button("ENG"))
+        {
+            _localizationManager->SetLocale("en_EN.UTF-8");
+            _localizationManager->ImbueLocale();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("RUS"))
+        {
+            _localizationManager->SetLocale("ru_RU.UTF-8");
+            _localizationManager->ImbueLocale();
+        }
+        // TODO: REMOVE CODE ABOVE LATER
+
         if (ImGui::Button(_translationsDict->Get("Create translations file").c_str()))
         {
             const auto documentPath = document->GetPath();

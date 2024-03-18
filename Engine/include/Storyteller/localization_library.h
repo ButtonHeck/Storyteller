@@ -12,6 +12,10 @@ namespace Storyteller
     class LocalizationLibrary
     {
     public:
+        explicit LocalizationLibrary(const std::string& defaultLocale = "");
+
+        void SetLocale(const std::string& localeString);
+
         Ptr<LocalizationDictionary> AddDictionary(const std::string& domain);
         Ptr<LocalizationDictionary> GetDictionary(const std::string& domain) const;
         void RemoveDictionary(const std::string& domain);
@@ -23,6 +27,7 @@ namespace Storyteller
 
     private:
         std::unordered_map<std::string, Ptr<LocalizationDictionary>> _dictionaries;
+        std::string _currentLocaleString;
     };
     //--------------------------------------------------------------------------
 }

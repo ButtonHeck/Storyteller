@@ -8,8 +8,8 @@ namespace Storyteller
 {
     LocalizationManager::LocalizationManager(const std::string& defaultLocale, const std::string& defaultPath)
         : _localeGenerator()
-        , _library(new LocalizationLibrary())
-        , _localeString("")
+        , _library(new LocalizationLibrary(""))
+        , _currentLocaleString("")
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
 
@@ -29,13 +29,14 @@ namespace Storyteller
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: set locale '{}'", localeString);
 
-        _localeString = localeString;
+        _currentLocaleString = localeString;
+        _library->SetLocale(localeString);
     }
     //--------------------------------------------------------------------------
 
     void LocalizationManager::ImbueLocale() const
     {
-        std::locale::global(_localeGenerator(_localeString));
+        std::locale::global(_localeGenerator(_currentLocaleString));
         std::cout.imbue(std::locale());
     }
     //--------------------------------------------------------------------------
