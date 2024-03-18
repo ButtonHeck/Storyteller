@@ -1,6 +1,7 @@
 #include "editor_application.h"
 #include "Storyteller/entry_point.h"
 #include "Storyteller/storyteller.h"
+#include "Storyteller/utils.h"
 
 namespace Storyteller
 {
@@ -44,7 +45,7 @@ namespace Storyteller
         }
 
         _window->SetTitle(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Storyteller editor"));
-        _window->SetEventCallback(BIND_EVENT_FUNCTION(EditorApplication::OnEvent));
+        _window->SetEventCallback(STRTLR_BIND(EditorApplication::OnEvent));
 
         LoadSettings();
 
@@ -71,22 +72,22 @@ namespace Storyteller
     {
         EventDispatcher dispatcher(event);
 
-        dispatcher.Dispatch<WindowMoveEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowMoveEvent));
-        dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowCloseEvent));
-        dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowResizeEvent));
-        dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowFocusEvent));
-        dispatcher.Dispatch<WindowIconifyEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowIconifyEvent));
-        dispatcher.Dispatch<WindowFramebufferRefreshEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowFramebufferRefreshEvent));
-        dispatcher.Dispatch<WindowFramebufferResizeEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnWindowFramebufferResizeEvent));
+        dispatcher.Dispatch<WindowMoveEvent>(STRTLR_BIND(EditorApplication::OnWindowMoveEvent));
+        dispatcher.Dispatch<WindowCloseEvent>(STRTLR_BIND(EditorApplication::OnWindowCloseEvent));
+        dispatcher.Dispatch<WindowResizeEvent>(STRTLR_BIND(EditorApplication::OnWindowResizeEvent));
+        dispatcher.Dispatch<WindowFocusEvent>(STRTLR_BIND(EditorApplication::OnWindowFocusEvent));
+        dispatcher.Dispatch<WindowIconifyEvent>(STRTLR_BIND(EditorApplication::OnWindowIconifyEvent));
+        dispatcher.Dispatch<WindowFramebufferRefreshEvent>(STRTLR_BIND(EditorApplication::OnWindowFramebufferRefreshEvent));
+        dispatcher.Dispatch<WindowFramebufferResizeEvent>(STRTLR_BIND(EditorApplication::OnWindowFramebufferResizeEvent));
 
-        dispatcher.Dispatch<MouseMoveEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnMouseMoveEvent));
-        dispatcher.Dispatch<MouseScrollEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnMouseScrollEvent));
-        dispatcher.Dispatch<MouseButtonPressEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnMouseButtonPressEvent));
-        dispatcher.Dispatch<MouseButtonReleaseEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnMouseButtonReleaseEvent));
+        dispatcher.Dispatch<MouseMoveEvent>(STRTLR_BIND(EditorApplication::OnMouseMoveEvent));
+        dispatcher.Dispatch<MouseScrollEvent>(STRTLR_BIND(EditorApplication::OnMouseScrollEvent));
+        dispatcher.Dispatch<MouseButtonPressEvent>(STRTLR_BIND(EditorApplication::OnMouseButtonPressEvent));
+        dispatcher.Dispatch<MouseButtonReleaseEvent>(STRTLR_BIND(EditorApplication::OnMouseButtonReleaseEvent));
 
-        dispatcher.Dispatch<KeyPressEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnKeyPressEvent));
-        dispatcher.Dispatch<KeyReleaseEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnKeyReleaseEvent));
-        dispatcher.Dispatch<KeyCharEvent>(BIND_EVENT_FUNCTION(EditorApplication::OnKeyCharEvent));
+        dispatcher.Dispatch<KeyPressEvent>(STRTLR_BIND(EditorApplication::OnKeyPressEvent));
+        dispatcher.Dispatch<KeyReleaseEvent>(STRTLR_BIND(EditorApplication::OnKeyReleaseEvent));
+        dispatcher.Dispatch<KeyCharEvent>(STRTLR_BIND(EditorApplication::OnKeyCharEvent));
     }
     //--------------------------------------------------------------------------
 
