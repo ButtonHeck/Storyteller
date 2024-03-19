@@ -373,6 +373,10 @@ namespace Storyteller
                     }
                 }
             }
+
+            auto gameNameTranslation = _localizationManager->Translate(gameName, gameName);
+            UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
+            ImGui::InputText("###GameNameTranslation", &gameNameTranslation, ImGuiInputTextFlags_ReadOnly);
         }
 
         if (ImGui::Button(_lookupDict->Get("Create translations file").c_str()))
