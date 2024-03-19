@@ -7,7 +7,7 @@
 
 namespace Storyteller
 {
-    class LocalizationDictionary;
+    class LocalizationLookupDictionary;
 
     class LocalizationLibrary
     {
@@ -16,9 +16,8 @@ namespace Storyteller
 
         void SetLocale(const std::string& localeString);
 
-        Ptr<LocalizationDictionary> AddDictionary(const std::string& domain);
-        Ptr<LocalizationDictionary> GetDictionary(const std::string& domain) const;
-        void RemoveDictionary(const std::string& domain);
+        Ptr<LocalizationLookupDictionary> AddLookupDictionary(const std::string& domain);
+        Ptr<LocalizationLookupDictionary> GetLookupDictionary(const std::string& domain) const;
 
         void Add(const std::string& domain, const std::string& source, const std::string& translation);
         void Add(const std::string& domain, const std::string& source, const std::string& context, const std::string& translation);
@@ -26,7 +25,8 @@ namespace Storyteller
         const std::string& Get(const std::string& domain, const std::string& source, const std::string& context);
 
     private:
-        std::unordered_map<std::string, Ptr<LocalizationDictionary>> _dictionaries;
+        typedef std::string DomainName;
+        std::unordered_map<DomainName, Ptr<LocalizationLookupDictionary>> _lookupDictionaries;
         std::string _currentLocaleString;
     };
     //--------------------------------------------------------------------------

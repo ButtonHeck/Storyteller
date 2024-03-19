@@ -1,5 +1,5 @@
 #include "localization_library.h"
-#include "localization_dictionary.h"
+#include "localization_lookup_dictionary.h"
 
 namespace Storyteller
 {
@@ -13,57 +13,55 @@ namespace Storyteller
     void LocalizationLibrary::SetLocale(const std::string& localeString)
     {
         _currentLocaleString = localeString;
+        for (auto& dict : _lookupDictionaries)
+        {
+            dict.second->SetLocale(localeString);
+        }
     }
     //--------------------------------------------------------------------------
 
-    Ptr<LocalizationDictionary> LocalizationLibrary::AddDictionary(const std::string& domain)
+    Ptr<LocalizationLookupDictionary> LocalizationLibrary::AddLookupDictionary(const std::string& domain)
     {
-        auto dictionary = CreatePtr<LocalizationDictionary>(domain);
-        _dictionaries.insert(std::make_pair(domain, dictionary));
+        auto dictionary = CreatePtr<LocalizationLookupDictionary>(domain, _currentLocaleString);
+        _lookupDictionaries.insert(std::make_pair(domain, dictionary));
         return dictionary;
     }
     //--------------------------------------------------------------------------
 
-    Ptr<LocalizationDictionary> LocalizationLibrary::GetDictionary(const std::string& domain) const
+    Ptr<LocalizationLookupDictionary> LocalizationLibrary::GetLookupDictionary(const std::string& domain) const
     {
-        if (_dictionaries.contains(domain))
+        if (_lookupDictionaries.contains(domain))
         {
-            return _dictionaries.at(domain);
+            return _lookupDictionaries.at(domain);
         }
 
         return nullptr;
     }
     //--------------------------------------------------------------------------
 
-    void LocalizationLibrary::RemoveDictionary(const std::string& domain)
-    {
-        _dictionaries.erase(domain);
-    }
-    //--------------------------------------------------------------------------
-
     void LocalizationLibrary::Add(const std::string& domain, const std::string& source, const std::string& translation)
     {
-        if (_dictionaries.contains(domain))
+        if (_lookupDictionaries.contains(domain))
         {
-            _dictionaries.at(domain)->Add(source, translation);
+            _lookupDictionaries.at(domain)->Add(source, translation);
         }
     }
     //--------------------------------------------------------------------------
 
     void LocalizationLibrary::Add(const std::string& domain, const std::string& source, const std::string& context, const std::string& translation)
     {
-        if (_dictionaries.contains(domain))
+        if (_lookupDictionaries.contains(domain))
         {
-            _dictionaries.at(domain)->Add(source, context, translation);
+            _lookupDictionaries.at(domain)->Add(source, context, translation);
         }
     }
     //--------------------------------------------------------------------------
 
     const std::string& LocalizationLibrary::Get(const std::string& domain, const std::string& source)
     {
-        if (_dictionaries.contains(domain))
+        if (_lookupDictionaries.contains(domain))
         {
-            return _dictionaries.at(domain)->Get(source);
+            return _lookupDictionaries.at(domain)->Get(source);
         }
 
         return noTranslation;
@@ -72,9 +70,9 @@ namespace Storyteller
 
     const std::string& LocalizationLibrary::Get(const std::string& domain, const std::string& source, const std::string& context)
     {
-        if (_dictionaries.contains(domain))
+        if (_lookupDictionaries.contains(domain))
         {
-            return _dictionaries.at(domain)->Get(source, context);
+            return _lookupDictionaries.at(domain)->Get(source, context);
         }
         
         return noTranslation;

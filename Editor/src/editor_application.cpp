@@ -44,7 +44,7 @@ namespace Storyteller
             return false;
         }
 
-        _window->SetTitle(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Storyteller editor"));
+        _window->SetTitle(GetApplicationName());
         _window->SetEventCallback(STRTLR_BIND(EditorApplication::OnEvent));
 
         LoadSettings();

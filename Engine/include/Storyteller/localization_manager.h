@@ -2,12 +2,13 @@
 
 #include "pointers.h"
 #include "filesystem.h"
-#include "localization_dictionary.h"
 #include "localization_translator.h"
+#include "localization_lookup_dictionary.h"
 
 #include <boost/locale.hpp>
 
 #include <string>
+#include <functional>
 
 namespace Storyteller
 {
@@ -22,13 +23,17 @@ namespace Storyteller
         static constexpr auto TranslateCtxDeferKeyword = "TranslateCtxDefer";
 
     public:
+        typedef std::function<void()> LocaleChangeCallback;
+
+    public:
         explicit LocalizationManager(const std::string& defaultLocale = "", const std::string& defaultPath = Filesystem::ToString(Filesystem::GetCurrentPath().append("locale")));
 
         void SetLocale(const std::string& localeString);
         void ImbueLocale() const;
         void AddMessagesPath(const std::string& path);
-        Ptr<LocalizationDictionary> AddMessagesDomain(const std::string& domain);
-        Ptr<LocalizationDictionary> GetDictionary(const std::string& domain) const;
+        Ptr<LocalizationLookupDictionary> AddMessagesDomain(const std::string& domain);
+        Ptr<LocalizationLookupDictionary> GetLookupDictionary(const std::string& domain) const;
+        void AddLocaleChangedCallback(const LocaleChangeCallback& callback);
 
         std::string Translate(const std::string& domain, const std::string& message);
         std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count);
@@ -48,9 +53,13 @@ namespace Storyteller
         const std::string& TranslationOrSource(const std::string& domain, const std::string& message, const std::string& context);
 
     private:
+        void NotifyLocaleListeners() const;
+
+    private:
         boost::locale::generator _localeGenerator;
         Ptr<LocalizationLibrary> _library;
         std::string _currentLocaleString;
+        std::vector<LocaleChangeCallback> _localeChangedCallbacks;
     };
     //--------------------------------------------------------------------------
 }

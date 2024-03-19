@@ -94,6 +94,8 @@ namespace Storyteller
         void SwitchLogWindowVisibility();
         void SwitchFullscreen();
 
+        void FillDictionary();
+
     private:
         Ptr<Window> _window;
         Ptr<LocalizationManager> _localizationManager;
@@ -101,7 +103,7 @@ namespace Storyteller
         UiComponentsState _state;
         UiPopupsState _popups;
         std::list<std::string> _recentList;
-        Ptr<LocalizationDictionary> _translationsDict;
+        Ptr<LocalizationLookupDictionary> _lookupDict;
     };
     //--------------------------------------------------------------------------
 }

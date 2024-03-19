@@ -8,7 +8,7 @@ namespace Storyteller
 {
     LocalizationManager::LocalizationManager(const std::string& defaultLocale, const std::string& defaultPath)
         : _localeGenerator()
-        , _library(new LocalizationLibrary(""))
+        , _library(CreatePtr<LocalizationLibrary>(""))
         , _currentLocaleString("")
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
@@ -31,6 +31,9 @@ namespace Storyteller
 
         _currentLocaleString = localeString;
         _library->SetLocale(localeString);
+
+        ImbueLocale();
+        NotifyLocaleListeners();
     }
     //--------------------------------------------------------------------------
 
@@ -49,20 +52,35 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    Ptr<LocalizationDictionary> LocalizationManager::AddMessagesDomain(const std::string& domain)
+    Ptr<LocalizationLookupDictionary> LocalizationManager::AddMessagesDomain(const std::string& domain)
     {
         STRTLR_CORE_LOG_INFO("LocalizationManager: add messages domain '{}'", domain);
 
         _localeGenerator.add_messages_domain(domain);
         ImbueLocale();
         
-        return _library->AddDictionary(domain);
+        return _library->AddLookupDictionary(domain);
     }
     //--------------------------------------------------------------------------
 
-    Ptr<LocalizationDictionary> LocalizationManager::GetDictionary(const std::string& domain) const
+    Ptr<LocalizationLookupDictionary> LocalizationManager::GetLookupDictionary(const std::string& domain) const
     {
-        return _library->GetDictionary(domain);
+        return _library->GetLookupDictionary(domain);
+    }
+    //--------------------------------------------------------------------------
+
+    void LocalizationManager::AddLocaleChangedCallback(const LocaleChangeCallback& callback)
+    {
+        _localeChangedCallbacks.push_back(callback);
+    }
+    //--------------------------------------------------------------------------
+
+    void LocalizationManager::NotifyLocaleListeners() const
+    {
+        for (const auto& callback : _localeChangedCallbacks)
+        {
+            callback();
+        }
     }
     //--------------------------------------------------------------------------
 
