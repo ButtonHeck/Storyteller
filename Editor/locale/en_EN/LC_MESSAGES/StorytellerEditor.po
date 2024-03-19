@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-18 17:08+0300\n"
+"POT-Creation-Date: 2024-03-19 18:40+0300\n"
 "PO-Revision-Date: 2024-03-18 08:50+0300\n"
 "Last-Translator: U-DESKTOP-002D5DN\\sound <sound@desktop-002d5dn>\n"
 "Language-Team: English\n"
@@ -17,249 +17,249 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/editor_application.cpp:47
-msgid "Storyteller editor"
-msgstr "Storyteller editor"
-
-#: ../src/editor_ui_compositor.cpp:22
-msgid "Open"
-msgstr "Open"
-
-#: ../src/editor_ui_compositor.cpp:23
-msgid "Quit"
-msgstr "Quit"
-
-#: ../src/editor_ui_compositor.cpp:24
-msgid "Log"
-msgstr "Log"
-
-#: ../src/editor_ui_compositor.cpp:25
-msgid "Name"
-msgstr "Name"
-
-#: ../src/editor_ui_compositor.cpp:26
-msgid "Actions"
-msgstr "Actions"
-
-#: ../src/editor_ui_compositor.cpp:27
-msgid "Find object"
-msgstr "Find object"
-
-#: ../src/editor_ui_compositor.cpp:28
-msgid "New document"
-msgstr "New document"
-
-#: ../src/editor_ui_compositor.cpp:29
-msgid "Open document"
-msgstr "Open document"
-
-#: ../src/editor_ui_compositor.cpp:30
-msgid "Yes"
-msgstr "Yes"
-
-#: ../src/editor_ui_compositor.cpp:31
-msgid "No"
-msgstr "No"
-
-#: ../src/editor_ui_compositor.cpp:32
-msgid "Warning"
-msgstr "Warning"
-
-#: ../src/editor_ui_compositor.cpp:33
-msgid "File"
-msgstr "File"
-
-#: ../src/editor_ui_compositor.cpp:34
-msgid "View"
-msgstr "View"
-
-#: ../src/editor_ui_compositor.cpp:35
-msgid "New"
-msgstr "New"
-
-#: ../src/editor_ui_compositor.cpp:36
-msgid "Open recent"
-msgstr "Open recent"
-
-#: ../src/editor_ui_compositor.cpp:37
-msgid "Clear"
-msgstr "Clear"
-
-#: ../src/editor_ui_compositor.cpp:38
-msgid "Save"
-msgstr "Save"
-
-#: ../src/editor_ui_compositor.cpp:39
-msgid "Save as..."
-msgstr "Save as..."
-
-#: ../src/editor_ui_compositor.cpp:40
-msgid "Fullscreen"
-msgstr "Fullscreen"
-
-#: ../src/editor_ui_compositor.cpp:41
-msgid "Untitled document"
-msgstr "Untitled document"
-
-#: ../src/editor_ui_compositor.cpp:42
-msgid "Game document"
-msgstr "Game document"
-
-#: ../src/editor_ui_compositor.cpp:43
-msgid "Game name cannot be empty!"
-msgstr "Game name cannot be empty!"
-
-#: ../src/editor_ui_compositor.cpp:44
-msgid "Create translations file"
-msgstr "Create translations file"
-
-#: ../src/editor_ui_compositor.cpp:45
-msgid "Save translations"
-msgstr "Save translations"
-
-#: ../src/editor_ui_compositor.cpp:46
-msgid "Objects management"
-msgstr "Objects management"
-
-#: ../src/editor_ui_compositor.cpp:47
-msgid "Add object"
-msgstr "Add object"
-
-#: ../src/editor_ui_compositor.cpp:48
-msgid "Visibility filters"
-msgstr "Visibility filters"
-
-#: ../src/editor_ui_compositor.cpp:49
-msgid "Objects"
-msgstr "Objects"
-
-#: ../src/editor_ui_compositor.cpp:50
-msgid "Type"
-msgstr "Type"
-
-#: ../src/editor_ui_compositor.cpp:51
-msgid "UUID"
-msgstr "UUID"
-
-#: ../src/editor_ui_compositor.cpp:52
-msgid "Delete object"
-msgstr "Delete object"
-
-#: ../src/editor_ui_compositor.cpp:53
-msgid "Properties"
-msgstr "Properties"
-
-#: ../src/editor_ui_compositor.cpp:54
-msgid "Object name cannot be empty!"
-msgstr "Object name cannot be empty!"
-
-#: ../src/editor_ui_compositor.cpp:55
-msgid "Object name already exists!"
-msgstr "Object name already exists!"
-
-#: ../src/editor_ui_compositor.cpp:56
-msgid "Source text"
-msgstr "Source text"
-
-#: ../src/editor_ui_compositor.cpp:57
-msgid "Translation"
-msgstr "Translation"
-
-#: ../src/editor_ui_compositor.cpp:58
-msgid "Entry point"
-msgstr "Entry point"
-
-#: ../src/editor_ui_compositor.cpp:59
-msgid "Final"
-msgstr "Final"
-
-#: ../src/editor_ui_compositor.cpp:60
-msgid "Add action to object"
-msgstr "Add action to object"
-
-#: ../src/editor_ui_compositor.cpp:61
-msgid "Action name"
-msgstr "Action name"
-
-#: ../src/editor_ui_compositor.cpp:62
-msgid "Move action up"
-msgstr "Move action up"
-
-#: ../src/editor_ui_compositor.cpp:63
-msgid "Move action down"
-msgstr "Move action down"
-
-#: ../src/editor_ui_compositor.cpp:64
-msgid "Objects's actions"
-msgstr "Objects's actions"
-
-#: ../src/editor_ui_compositor.cpp:65
-msgid "Text"
-msgstr "Text"
-
-#: ../src/editor_ui_compositor.cpp:66
-msgid "Remove action from object"
-msgstr "Remove action from object"
-
-#: ../src/editor_ui_compositor.cpp:67
-msgid "Find action object"
-msgstr "Find action object"
-
-#: ../src/editor_ui_compositor.cpp:68
-msgid "Clear target"
-msgstr "Clear target"
-
-#: ../src/editor_ui_compositor.cpp:69
-msgid "Set target"
-msgstr "Set target"
-
-#: ../src/editor_ui_compositor.cpp:70
-msgid "Quest object name"
-msgstr "Quest object name"
-
-#: ../src/editor_ui_compositor.cpp:71
-msgid "Current target name: "
-msgstr "Current target name: "
-
-#: ../src/editor_ui_compositor.cpp:72
-msgid "Not set or does not exist"
-msgstr "Not set or does not exist"
-
-#: ../src/editor_ui_compositor.cpp:73
-msgid "Scroll to end"
-msgstr "Scroll to end"
-
-#: ../src/editor_ui_compositor.cpp:74
-msgid "Autoscroll to end"
-msgstr "Autoscroll to end"
-
-#: ../src/editor_ui_compositor.cpp:75
-msgid "You have unsaved changes, create new document anyway?"
-msgstr "You have unsaved changes, create new document anyway?"
-
-#: ../src/editor_ui_compositor.cpp:76
-msgid "You have unsaved changes, quit anyway?"
-msgstr "You have unsaved changes, quit anyway?"
-
-#: ../src/editor_ui_compositor.cpp:77
-msgid "Ok"
-msgstr "Ok"
-
-#: ../src/editor_ui_compositor.cpp:78
-msgid "You have unsaved changes, open other document anyway?"
-msgstr "You have unsaved changes, open other document anyway?"
-
-#: ../src/editor_ui_compositor.cpp:79
-msgid "Save document"
-msgstr "Save document"
-
-#: ../src/editor_ui_compositor.cpp:80
-msgctxt "Popup message"
-msgid "The selected file is missing or damaged"
-msgstr "The selected file is missing or damaged"
-
-#: ../src/editor_ui_compositor.cpp:516
+#: ../src/editor_ui_compositor.cpp:491
 msgid "total {1} object"
 msgid_plural "total {1} objects"
 msgstr[0] "total {1} object"
 msgstr[1] "total {1} objects"
+
+#: ../src/editor_ui_compositor.cpp:1224
+msgid "Open"
+msgstr "Open"
+
+#: ../src/editor_ui_compositor.cpp:1225
+msgid "Quit"
+msgstr "Quit"
+
+#: ../src/editor_ui_compositor.cpp:1226
+msgid "Log"
+msgstr "Log"
+
+#: ../src/editor_ui_compositor.cpp:1227
+msgid "Name"
+msgstr "Name"
+
+#: ../src/editor_ui_compositor.cpp:1228
+msgid "Actions"
+msgstr "Actions"
+
+#: ../src/editor_ui_compositor.cpp:1229
+msgid "Find object"
+msgstr "Find object"
+
+#: ../src/editor_ui_compositor.cpp:1230
+msgid "New document"
+msgstr "New document"
+
+#: ../src/editor_ui_compositor.cpp:1231
+msgid "Open document"
+msgstr "Open document"
+
+#: ../src/editor_ui_compositor.cpp:1232
+msgid "Yes"
+msgstr "Yes"
+
+#: ../src/editor_ui_compositor.cpp:1233
+msgid "No"
+msgstr "No"
+
+#: ../src/editor_ui_compositor.cpp:1234
+msgid "Warning"
+msgstr "Warning"
+
+#: ../src/editor_ui_compositor.cpp:1235
+msgid "File"
+msgstr "File"
+
+#: ../src/editor_ui_compositor.cpp:1236
+msgid "View"
+msgstr "View"
+
+#: ../src/editor_ui_compositor.cpp:1237
+msgid "New"
+msgstr "New"
+
+#: ../src/editor_ui_compositor.cpp:1238
+msgid "Open recent"
+msgstr "Open recent"
+
+#: ../src/editor_ui_compositor.cpp:1239
+msgid "Clear"
+msgstr "Clear"
+
+#: ../src/editor_ui_compositor.cpp:1240
+msgid "Save"
+msgstr "Save"
+
+#: ../src/editor_ui_compositor.cpp:1241
+msgid "Save as..."
+msgstr "Save as..."
+
+#: ../src/editor_ui_compositor.cpp:1242
+msgid "Fullscreen"
+msgstr "Fullscreen"
+
+#: ../src/editor_ui_compositor.cpp:1243
+msgid "Untitled document"
+msgstr "Untitled document"
+
+#: ../src/editor_ui_compositor.cpp:1244
+msgid "Game document"
+msgstr "Game document"
+
+#: ../src/editor_ui_compositor.cpp:1245
+msgid "Game name cannot be empty!"
+msgstr "Game name cannot be empty!"
+
+#: ../src/editor_ui_compositor.cpp:1246
+msgid "Create translations file"
+msgstr "Create translations file"
+
+#: ../src/editor_ui_compositor.cpp:1247
+msgid "Save translations"
+msgstr "Save translations"
+
+#: ../src/editor_ui_compositor.cpp:1248
+msgid "Objects management"
+msgstr "Objects management"
+
+#: ../src/editor_ui_compositor.cpp:1249
+msgid "Add object"
+msgstr "Add object"
+
+#: ../src/editor_ui_compositor.cpp:1250
+msgid "Visibility filters"
+msgstr "Visibility filters"
+
+#: ../src/editor_ui_compositor.cpp:1251
+msgid "Objects"
+msgstr "Objects"
+
+#: ../src/editor_ui_compositor.cpp:1252
+msgid "Type"
+msgstr "Type"
+
+#: ../src/editor_ui_compositor.cpp:1253
+msgid "UUID"
+msgstr "UUID"
+
+#: ../src/editor_ui_compositor.cpp:1254
+msgid "Delete object"
+msgstr "Delete object"
+
+#: ../src/editor_ui_compositor.cpp:1255
+msgid "Properties"
+msgstr "Properties"
+
+#: ../src/editor_ui_compositor.cpp:1256
+msgid "Object name cannot be empty!"
+msgstr "Object name cannot be empty!"
+
+#: ../src/editor_ui_compositor.cpp:1257
+msgid "Object name already exists!"
+msgstr "Object name already exists!"
+
+#: ../src/editor_ui_compositor.cpp:1258
+msgid "Source text"
+msgstr "Source text"
+
+#: ../src/editor_ui_compositor.cpp:1259
+msgid "Translation"
+msgstr "Translation"
+
+#: ../src/editor_ui_compositor.cpp:1260
+msgid "Entry point"
+msgstr "Entry point"
+
+#: ../src/editor_ui_compositor.cpp:1261
+msgid "Final"
+msgstr "Final"
+
+#: ../src/editor_ui_compositor.cpp:1262
+msgid "Add action to object"
+msgstr "Add action to object"
+
+#: ../src/editor_ui_compositor.cpp:1263
+msgid "Action name"
+msgstr "Action name"
+
+#: ../src/editor_ui_compositor.cpp:1264
+msgid "Move action up"
+msgstr "Move action up"
+
+#: ../src/editor_ui_compositor.cpp:1265
+msgid "Move action down"
+msgstr "Move action down"
+
+#: ../src/editor_ui_compositor.cpp:1266
+msgid "Objects's actions"
+msgstr "Objects's actions"
+
+#: ../src/editor_ui_compositor.cpp:1267
+msgid "Text"
+msgstr "Text"
+
+#: ../src/editor_ui_compositor.cpp:1268
+msgid "Remove action from object"
+msgstr "Remove action from object"
+
+#: ../src/editor_ui_compositor.cpp:1269
+msgid "Find action object"
+msgstr "Find action object"
+
+#: ../src/editor_ui_compositor.cpp:1270
+msgid "Clear target"
+msgstr "Clear target"
+
+#: ../src/editor_ui_compositor.cpp:1271
+msgid "Set target"
+msgstr "Set target"
+
+#: ../src/editor_ui_compositor.cpp:1272
+msgid "Quest object name"
+msgstr "Quest object name"
+
+#: ../src/editor_ui_compositor.cpp:1273
+msgid "Current target name: "
+msgstr "Current target name: "
+
+#: ../src/editor_ui_compositor.cpp:1274
+msgid "Not set or does not exist"
+msgstr "Not set or does not exist"
+
+#: ../src/editor_ui_compositor.cpp:1275
+msgid "Scroll to end"
+msgstr "Scroll to end"
+
+#: ../src/editor_ui_compositor.cpp:1276
+msgid "Autoscroll to end"
+msgstr "Autoscroll to end"
+
+#: ../src/editor_ui_compositor.cpp:1277
+msgid "You have unsaved changes, create new document anyway?"
+msgstr "You have unsaved changes, create new document anyway?"
+
+#: ../src/editor_ui_compositor.cpp:1278
+msgid "You have unsaved changes, quit anyway?"
+msgstr "You have unsaved changes, quit anyway?"
+
+#: ../src/editor_ui_compositor.cpp:1279
+msgid "Ok"
+msgstr "Ok"
+
+#: ../src/editor_ui_compositor.cpp:1280
+msgid "You have unsaved changes, open other document anyway?"
+msgstr "You have unsaved changes, open other document anyway?"
+
+#: ../src/editor_ui_compositor.cpp:1281
+msgid "Save document"
+msgstr "Save document"
+
+#: ../src/editor_ui_compositor.cpp:1282
+msgctxt "Popup message"
+msgid "The selected file is missing or damaged"
+msgstr "The selected file is missing or damaged"
+
+#: ../src/editor_ui_compositor.cpp:1283
+msgid "Language"
+msgstr ""

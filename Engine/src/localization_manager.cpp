@@ -37,6 +37,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    const std::string& LocalizationManager::GetLocale() const
+    {
+        return _currentLocaleString;
+    }
+    //--------------------------------------------------------------------------
+
     void LocalizationManager::ImbueLocale() const
     {
         std::locale::global(_localeGenerator(_currentLocaleString));

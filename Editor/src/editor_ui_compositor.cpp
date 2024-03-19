@@ -107,6 +107,7 @@ namespace Storyteller
         settings->StartSaveGroup("EditorUiCompositor");
         settings->SaveBool("Log", _state.logPanel);
         settings->SaveBool("LogAutoscroll", _state.logAutoscroll);
+        settings->SaveString("Language", _localizationManager->GetLocale());
         settings->StartSaveArray("RecentDocuments");
         for (const auto& recent : _recentList)
         {
@@ -122,6 +123,7 @@ namespace Storyteller
         settings->StartLoadGroup("EditorUiCompositor");
         _state.logPanel = settings->GetBool("Log", true);
         _state.logAutoscroll = settings->GetBool("LogAutoscroll", false);
+        _localizationManager->SetLocale(settings->GetString("Language", LocalizationManager::LocaleEnUTF8Keyword));
         const auto recentSize = settings->StartLoadArray("RecentDocuments");
         for (auto i = 0; i < recentSize; i++)
         {
@@ -199,6 +201,7 @@ namespace Storyteller
         {
             ComposeMenuItemLog();
             ComposeMenuItemFullscreen();
+            ComposeMenuItemLanguage();
 
             ImGui::EndMenu();
         }
@@ -304,6 +307,25 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void EditorUiCompositor::ComposeMenuItemLanguage()
+    {
+        if (ImGui::BeginMenu(_lookupDict->Get("Language").c_str()))
+        {
+            if (ImGui::MenuItem(LocalizationManager::LocaleEnName))
+            {
+                _localizationManager->SetLocale(LocalizationManager::LocaleEnUTF8Keyword);
+            }
+
+            if (ImGui::MenuItem(LocalizationManager::LocaleRuName))
+            {
+                _localizationManager->SetLocale(LocalizationManager::LocaleRuUTF8Keyword);
+            }
+
+            ImGui::EndMenu();
+        }
+    }
+    //--------------------------------------------------------------------------
+
     void EditorUiCompositor::ComposeGameDocumentPanel()
     {
         const auto document = _gameDocumentManager->GetDocument();
@@ -352,18 +374,6 @@ namespace Storyteller
                 }
             }
         }
-
-        // TODO: TEMPORARY CODE, REMOVE LATER
-        if (ImGui::Button("ENG"))
-        {
-            _localizationManager->SetLocale("en_EN.UTF-8");
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("RUS"))
-        {
-            _localizationManager->SetLocale("ru_RU.UTF-8");
-        }
-        // TODO: REMOVE CODE ABOVE LATER
 
         if (ImGui::Button(_lookupDict->Get("Create translations file").c_str()))
         {
@@ -641,7 +651,8 @@ namespace Storyteller
 
         ImGui::SeparatorText(_lookupDict->Get("Translation").c_str());
 
-        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), selectedTextObject->GetText()) : std::string();
+        auto sourceTextTranslation = selectedTextObject ? _localizationManager->TranslationOr(_gameDocumentManager->GetDocument()->GetGameName(), selectedTextObject->GetText(), "") : std::string();
+        UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_ReadOnly);
     }
     //--------------------------------------------------------------------------
@@ -1258,6 +1269,7 @@ namespace Storyteller
         _lookupDict->Add("You have unsaved changes, open other document anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, open other document anyway?"));
         _lookupDict->Add("Save document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save document"));
         _lookupDict->Add("The selected file is missing or damaged", "Popup message", _localizationManager->TranslateCtx(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged", "Popup message"));
+        _lookupDict->Add("Language", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Language"));
     }
     //--------------------------------------------------------------------------
 }

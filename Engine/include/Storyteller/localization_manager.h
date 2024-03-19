@@ -22,6 +22,11 @@ namespace Storyteller
         static constexpr auto TranslateDeferKeyword = "TranslateDefer";
         static constexpr auto TranslateCtxDeferKeyword = "TranslateCtxDefer";
 
+        static constexpr auto LocaleEnUTF8Keyword = "en_EN.UTF-8";
+        static constexpr auto LocaleEnName = "English";
+        static constexpr auto LocaleRuUTF8Keyword = "ru_RU.UTF-8";
+        static constexpr auto LocaleRuName = u8"Русский";
+
     public:
         typedef std::function<void()> LocaleChangeCallback;
 
@@ -29,6 +34,7 @@ namespace Storyteller
         explicit LocalizationManager(const std::string& defaultLocale = "", const std::string& defaultPath = Filesystem::ToString(Filesystem::GetCurrentPath().append("locale")));
 
         void SetLocale(const std::string& localeString);
+        const std::string& GetLocale() const;
         void ImbueLocale() const;
         void AddMessagesPath(const std::string& path);
         Ptr<LocalizationLookupDictionary> AddMessagesDomain(const std::string& domain);

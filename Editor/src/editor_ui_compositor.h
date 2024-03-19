@@ -65,6 +65,7 @@ namespace Storyteller
         void ComposeMenuItemDemoWindow();
         void ComposeMenuItemLog();
         void ComposeMenuItemFullscreen();
+        void ComposeMenuItemLanguage();
 
         void ComposeGameDocumentPanel();
         void ComposeGameDocumentPanelGame();
