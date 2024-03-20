@@ -115,13 +115,23 @@ namespace Storyteller
         const auto gameName = _document->GetGameName();
         const auto documentObjects = _document->GetObjects();
 
-        std::stringstream ss;
-        ss << LocalizationManager::TranslateKeyword << "(\"" << gameName << "\");\n";
-        for (size_t i = 0; i < documentObjects.size(); i++)
+        std::ostringstream ss;
+        const auto openBracket = '(';
+        const auto closeBracket = ')';
+        const auto quote = '\"';
+        const auto separator = ", ";
+        const auto semicolon = ';';
+        const auto newLine = '\n';
+
+        Utils::ToSStream(ss, "Game name", newLine);
+        Utils::ToSStream(ss, LocalizationManager::TranslateKeyword, openBracket, quote, gameName, quote, closeBracket, semicolon, newLine);
+        for (auto i = 0; i < documentObjects.size(); i++)
         {
             const auto object = documentObjects.at(i);
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            ss << object->GetName() << ", " << LocalizationManager::TranslateKeyword << "(\"" << textObject->GetText() << "\");\n";
+
+            Utils::ToSStream(ss, object->GetName(), newLine);
+            Utils::ToSStream(ss, LocalizationManager::TranslateKeyword, openBracket, quote, textObject->GetText(), quote, closeBracket, semicolon, newLine);
         }
 
         outputStream << ss.str();
