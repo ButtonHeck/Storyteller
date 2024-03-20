@@ -695,7 +695,7 @@ namespace Storyteller
         const auto selectedUuid = selectedObject->GetUuid();
 
         auto selectedQuestObject = dynamic_cast<QuestObject*>(selectedObject.get());
-        const auto allActionObjects = proxy->GetObjects(ObjectType::ActionObjectType);
+        const auto allActionObjects = proxy->GetObjects<ActionObject>();
 
         const auto entryPointObject = proxy->GetEntryPoint();
         auto isEntryPoint = entryPointObject ? (entryPointObject->GetUuid() == selectedUuid) : false;
@@ -867,7 +867,7 @@ namespace Storyteller
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
-        const auto allQuestObjects = proxy->GetObjects(ObjectType::QuestObjectType);
+        const auto allQuestObjects = proxy->GetObjects<QuestObject>();
 
         if (_state.selectedQuestIndex >= allQuestObjects.size())
         {
