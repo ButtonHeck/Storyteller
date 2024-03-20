@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-19 18:40+0300\n"
+"POT-Creation-Date: 2024-03-20 17:46+0300\n"
 "PO-Revision-Date: 2024-03-18 08:50+0300\n"
 "Last-Translator: U-DESKTOP-002D5DN\\sound <sound@desktop-002d5dn>\n"
 "Language-Team: English\n"
@@ -17,249 +17,258 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/editor_ui_compositor.cpp:491
+#: ../src/editor_ui_compositor.cpp:507
 msgid "total {1} object"
 msgid_plural "total {1} objects"
 msgstr[0] "total {1} object"
 msgstr[1] "total {1} objects"
 
-#: ../src/editor_ui_compositor.cpp:1224
+#: ../src/editor_ui_compositor.cpp:1241
 msgid "Open"
 msgstr "Open"
 
-#: ../src/editor_ui_compositor.cpp:1225
+#: ../src/editor_ui_compositor.cpp:1242
 msgid "Quit"
 msgstr "Quit"
 
-#: ../src/editor_ui_compositor.cpp:1226
+#: ../src/editor_ui_compositor.cpp:1243
 msgid "Log"
 msgstr "Log"
 
-#: ../src/editor_ui_compositor.cpp:1227
+#: ../src/editor_ui_compositor.cpp:1244
 msgid "Name"
 msgstr "Name"
 
-#: ../src/editor_ui_compositor.cpp:1228
+#: ../src/editor_ui_compositor.cpp:1245
+#, fuzzy
+msgid "Translation domain"
+msgstr "Translation domain"
+
+#: ../src/editor_ui_compositor.cpp:1246
 msgid "Actions"
 msgstr "Actions"
 
-#: ../src/editor_ui_compositor.cpp:1229
+#: ../src/editor_ui_compositor.cpp:1247
 msgid "Find object"
 msgstr "Find object"
 
-#: ../src/editor_ui_compositor.cpp:1230
+#: ../src/editor_ui_compositor.cpp:1248
 msgid "New document"
 msgstr "New document"
 
-#: ../src/editor_ui_compositor.cpp:1231
+#: ../src/editor_ui_compositor.cpp:1249
 msgid "Open document"
 msgstr "Open document"
 
-#: ../src/editor_ui_compositor.cpp:1232
+#: ../src/editor_ui_compositor.cpp:1250
 msgid "Yes"
 msgstr "Yes"
 
-#: ../src/editor_ui_compositor.cpp:1233
+#: ../src/editor_ui_compositor.cpp:1251
 msgid "No"
 msgstr "No"
 
-#: ../src/editor_ui_compositor.cpp:1234
+#: ../src/editor_ui_compositor.cpp:1252
 msgid "Warning"
 msgstr "Warning"
 
-#: ../src/editor_ui_compositor.cpp:1235
+#: ../src/editor_ui_compositor.cpp:1253
 msgid "File"
 msgstr "File"
 
-#: ../src/editor_ui_compositor.cpp:1236
+#: ../src/editor_ui_compositor.cpp:1254
 msgid "View"
 msgstr "View"
 
-#: ../src/editor_ui_compositor.cpp:1237
+#: ../src/editor_ui_compositor.cpp:1255
 msgid "New"
 msgstr "New"
 
-#: ../src/editor_ui_compositor.cpp:1238
+#: ../src/editor_ui_compositor.cpp:1256
 msgid "Open recent"
 msgstr "Open recent"
 
-#: ../src/editor_ui_compositor.cpp:1239
+#: ../src/editor_ui_compositor.cpp:1257
 msgid "Clear"
 msgstr "Clear"
 
-#: ../src/editor_ui_compositor.cpp:1240
+#: ../src/editor_ui_compositor.cpp:1258
 msgid "Save"
 msgstr "Save"
 
-#: ../src/editor_ui_compositor.cpp:1241
+#: ../src/editor_ui_compositor.cpp:1259
 msgid "Save as..."
 msgstr "Save as..."
 
-#: ../src/editor_ui_compositor.cpp:1242
+#: ../src/editor_ui_compositor.cpp:1260
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
-#: ../src/editor_ui_compositor.cpp:1243
+#: ../src/editor_ui_compositor.cpp:1261
 msgid "Untitled document"
 msgstr "Untitled document"
 
-#: ../src/editor_ui_compositor.cpp:1244
+#: ../src/editor_ui_compositor.cpp:1262
 msgid "Game document"
 msgstr "Game document"
 
-#: ../src/editor_ui_compositor.cpp:1245
+#: ../src/editor_ui_compositor.cpp:1263
 msgid "Game name cannot be empty!"
 msgstr "Game name cannot be empty!"
 
-#: ../src/editor_ui_compositor.cpp:1246
+#: ../src/editor_ui_compositor.cpp:1264
+msgid "Game domain name cannot be empty!"
+msgstr "Game domain name cannot be empty!"
+
+#: ../src/editor_ui_compositor.cpp:1265
 msgid "Create translations file"
 msgstr "Create translations file"
 
-#: ../src/editor_ui_compositor.cpp:1247
+#: ../src/editor_ui_compositor.cpp:1266
 msgid "Save translations"
 msgstr "Save translations"
 
-#: ../src/editor_ui_compositor.cpp:1248
+#: ../src/editor_ui_compositor.cpp:1267
 msgid "Objects management"
 msgstr "Objects management"
 
-#: ../src/editor_ui_compositor.cpp:1249
+#: ../src/editor_ui_compositor.cpp:1268
 msgid "Add object"
 msgstr "Add object"
 
-#: ../src/editor_ui_compositor.cpp:1250
+#: ../src/editor_ui_compositor.cpp:1269
 msgid "Visibility filters"
 msgstr "Visibility filters"
 
-#: ../src/editor_ui_compositor.cpp:1251
+#: ../src/editor_ui_compositor.cpp:1270
 msgid "Objects"
 msgstr "Objects"
 
-#: ../src/editor_ui_compositor.cpp:1252
+#: ../src/editor_ui_compositor.cpp:1271
 msgid "Type"
 msgstr "Type"
 
-#: ../src/editor_ui_compositor.cpp:1253
+#: ../src/editor_ui_compositor.cpp:1272
 msgid "UUID"
 msgstr "UUID"
 
-#: ../src/editor_ui_compositor.cpp:1254
+#: ../src/editor_ui_compositor.cpp:1273
 msgid "Delete object"
 msgstr "Delete object"
 
-#: ../src/editor_ui_compositor.cpp:1255
+#: ../src/editor_ui_compositor.cpp:1274
 msgid "Properties"
 msgstr "Properties"
 
-#: ../src/editor_ui_compositor.cpp:1256
+#: ../src/editor_ui_compositor.cpp:1275
 msgid "Object name cannot be empty!"
 msgstr "Object name cannot be empty!"
 
-#: ../src/editor_ui_compositor.cpp:1257
+#: ../src/editor_ui_compositor.cpp:1276
 msgid "Object name already exists!"
 msgstr "Object name already exists!"
 
-#: ../src/editor_ui_compositor.cpp:1258
+#: ../src/editor_ui_compositor.cpp:1277
 msgid "Source text"
 msgstr "Source text"
 
-#: ../src/editor_ui_compositor.cpp:1259
+#: ../src/editor_ui_compositor.cpp:1278
 msgid "Translation"
 msgstr "Translation"
 
-#: ../src/editor_ui_compositor.cpp:1260
+#: ../src/editor_ui_compositor.cpp:1279
 msgid "Entry point"
 msgstr "Entry point"
 
-#: ../src/editor_ui_compositor.cpp:1261
+#: ../src/editor_ui_compositor.cpp:1280
 msgid "Final"
 msgstr "Final"
 
-#: ../src/editor_ui_compositor.cpp:1262
+#: ../src/editor_ui_compositor.cpp:1281
 msgid "Add action to object"
 msgstr "Add action to object"
 
-#: ../src/editor_ui_compositor.cpp:1263
+#: ../src/editor_ui_compositor.cpp:1282
 msgid "Action name"
 msgstr "Action name"
 
-#: ../src/editor_ui_compositor.cpp:1264
+#: ../src/editor_ui_compositor.cpp:1283
 msgid "Move action up"
 msgstr "Move action up"
 
-#: ../src/editor_ui_compositor.cpp:1265
+#: ../src/editor_ui_compositor.cpp:1284
 msgid "Move action down"
 msgstr "Move action down"
 
-#: ../src/editor_ui_compositor.cpp:1266
+#: ../src/editor_ui_compositor.cpp:1285
 msgid "Objects's actions"
 msgstr "Objects's actions"
 
-#: ../src/editor_ui_compositor.cpp:1267
+#: ../src/editor_ui_compositor.cpp:1286
 msgid "Text"
 msgstr "Text"
 
-#: ../src/editor_ui_compositor.cpp:1268
+#: ../src/editor_ui_compositor.cpp:1287
 msgid "Remove action from object"
 msgstr "Remove action from object"
 
-#: ../src/editor_ui_compositor.cpp:1269
+#: ../src/editor_ui_compositor.cpp:1288
 msgid "Find action object"
 msgstr "Find action object"
 
-#: ../src/editor_ui_compositor.cpp:1270
+#: ../src/editor_ui_compositor.cpp:1289
 msgid "Clear target"
 msgstr "Clear target"
 
-#: ../src/editor_ui_compositor.cpp:1271
+#: ../src/editor_ui_compositor.cpp:1290
 msgid "Set target"
 msgstr "Set target"
 
-#: ../src/editor_ui_compositor.cpp:1272
+#: ../src/editor_ui_compositor.cpp:1291
 msgid "Quest object name"
 msgstr "Quest object name"
 
-#: ../src/editor_ui_compositor.cpp:1273
+#: ../src/editor_ui_compositor.cpp:1292
 msgid "Current target name: "
 msgstr "Current target name: "
 
-#: ../src/editor_ui_compositor.cpp:1274
+#: ../src/editor_ui_compositor.cpp:1293
 msgid "Not set or does not exist"
 msgstr "Not set or does not exist"
 
-#: ../src/editor_ui_compositor.cpp:1275
+#: ../src/editor_ui_compositor.cpp:1294
 msgid "Scroll to end"
 msgstr "Scroll to end"
 
-#: ../src/editor_ui_compositor.cpp:1276
+#: ../src/editor_ui_compositor.cpp:1295
 msgid "Autoscroll to end"
 msgstr "Autoscroll to end"
 
-#: ../src/editor_ui_compositor.cpp:1277
+#: ../src/editor_ui_compositor.cpp:1296
 msgid "You have unsaved changes, create new document anyway?"
 msgstr "You have unsaved changes, create new document anyway?"
 
-#: ../src/editor_ui_compositor.cpp:1278
+#: ../src/editor_ui_compositor.cpp:1297
 msgid "You have unsaved changes, quit anyway?"
 msgstr "You have unsaved changes, quit anyway?"
 
-#: ../src/editor_ui_compositor.cpp:1279
+#: ../src/editor_ui_compositor.cpp:1298
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/editor_ui_compositor.cpp:1280
+#: ../src/editor_ui_compositor.cpp:1299
 msgid "You have unsaved changes, open other document anyway?"
 msgstr "You have unsaved changes, open other document anyway?"
 
-#: ../src/editor_ui_compositor.cpp:1281
+#: ../src/editor_ui_compositor.cpp:1300
 msgid "Save document"
 msgstr "Save document"
 
-#: ../src/editor_ui_compositor.cpp:1282
+#: ../src/editor_ui_compositor.cpp:1301
 msgctxt "Popup message"
 msgid "The selected file is missing or damaged"
 msgstr "The selected file is missing or damaged"
 
-#: ../src/editor_ui_compositor.cpp:1283
+#: ../src/editor_ui_compositor.cpp:1302
 msgid "Language"
 msgstr ""

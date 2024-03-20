@@ -38,6 +38,7 @@ namespace Storyteller
         void ImbueLocale() const;
         void AddMessagesPath(const std::string& path);
         Ptr<LocalizationLookupDictionary> AddMessagesDomain(const std::string& domain);
+        void RemoveMessagesDomain(const std::string& domain);
         Ptr<LocalizationLookupDictionary> GetLookupDictionary(const std::string& domain) const;
         void AddLocaleChangedCallback(const LocaleChangeCallback& callback);
 

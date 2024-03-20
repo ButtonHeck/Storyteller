@@ -3,13 +3,14 @@
 #include "pointers.h"
 #include "game_document.h"
 #include "game_document_sort_filter_proxy_view.h"
+#include "localization_manager.h"
 
 namespace Storyteller
 {
     class GameDocumentManager
     {
     public:
-        GameDocumentManager();
+        explicit GameDocumentManager(Ptr<LocalizationManager> localizationManager);
 
         void NewDocument();
         bool OpenDocument(const std::string& pathString);
@@ -25,8 +26,12 @@ namespace Storyteller
         bool CreateTranslations(const std::filesystem::path& path) const;
 
     private:
+        void FillDictionary() const;
+
+    private:
         Ptr<GameDocument> _document;
         Ptr<GameDocumentSortFilterProxyView> _proxy;
+        Ptr<LocalizationManager> _localizationManager;
     };
     //--------------------------------------------------------------------------
 }

@@ -3,13 +3,17 @@
 #include "localization_manager.h"
 #include "filesystem.h"
 #include "log.h"
+#include "utils.h"
 
 #include <fstream>
 
 namespace Storyteller
 {
-    GameDocumentManager::GameDocumentManager()
+    GameDocumentManager::GameDocumentManager(Ptr<LocalizationManager> localizationManager)
+        : _localizationManager(localizationManager)
     {
+        _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(GameDocumentManager::FillDictionary));
+
         NewDocument();
     }
     //--------------------------------------------------------------------------
@@ -35,8 +39,14 @@ namespace Storyteller
 
         if (success)
         {
+            _localizationManager->RemoveMessagesDomain(_document->GetDomainName());
+
             _document.swap(newDocument);
             _proxy.reset();
+
+            _localizationManager->AddMessagesPath(Filesystem::ToU8String(_document->GetTranslationsPath()));
+            _localizationManager->AddMessagesDomain(_document->GetDomainName());
+            FillDictionary();
 
             return true;
         }
@@ -119,4 +129,17 @@ namespace Storyteller
 
         return true;
     }
+    //--------------------------------------------------------------------------
+
+    void GameDocumentManager::FillDictionary() const
+    {
+        _localizationManager->Translate(_document->GetDomainName(), _document->GetGameName());
+
+        const auto objects = _document->GetObjects<TextObject>();
+        for (const auto& object : objects)
+        {
+            _localizationManager->Translate(_document->GetDomainName(), object->GetText());
+        }
+    }
+    //--------------------------------------------------------------------------
 }

@@ -14,7 +14,7 @@ namespace Storyteller
     EditorUiCompositor::EditorUiCompositor(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
         : _window(window)
         , _localizationManager(localizationManager)
-        , _gameDocumentManager(new GameDocumentManager())
+        , _gameDocumentManager(new GameDocumentManager(localizationManager))
         , _lookupDict(nullptr)
     {
         FillDictionary();
@@ -353,12 +353,15 @@ namespace Storyteller
 
         const auto document = _gameDocumentManager->GetDocument();
 
+        const auto& nameTitle = _lookupDict->Get("Name");
+        const auto& translationsDomainTitle = _lookupDict->Get("Translation domain");
+        const auto inputWidth = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(translationsDomainTitle.c_str()).x - ImGui::GetStyle().ItemSpacing.x;
+
         {
-            const auto& title = _lookupDict->Get("Name");
-            UiUtils::ItemWidthGuard guard(ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(title.c_str()).x - ImGui::GetStyle().ItemSpacing.x);
+            UiUtils::ItemWidthGuard guard(inputWidth);
             auto gameName = document->GetGameName();
             const auto oldGameName = gameName;
-            if (ImGui::InputText(title.c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
+            if (ImGui::InputText(nameTitle.c_str(), &gameName, ImGuiInputTextFlags_EnterReturnsTrue))
             {
                 if (oldGameName != gameName)
                 {
@@ -374,9 +377,30 @@ namespace Storyteller
                 }
             }
 
-            auto gameNameTranslation = _localizationManager->Translate(gameName, gameName);
+            auto gameNameTranslation = _localizationManager->Translation(document->GetDomainName(), gameName);
             UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
             ImGui::InputText("###GameNameTranslation", &gameNameTranslation, ImGuiInputTextFlags_ReadOnly);
+        }
+
+        {
+            UiUtils::ItemWidthGuard guard(inputWidth);
+            auto gameDomainName = document->GetDomainName();
+            const auto oldGameDomainName = gameDomainName;
+            if (ImGui::InputText(translationsDomainTitle.c_str(), &gameDomainName, ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                if (oldGameDomainName != gameDomainName)
+                {
+                    if (gameDomainName.empty())
+                    {
+                        _popups.warningMessage = true;
+                        _popups.warningMessageText = _lookupDict->Get("Game domain name cannot be empty!");
+                    }
+                    else
+                    {
+                        document->SetDomainName(gameDomainName);
+                    }
+                }
+            }
         }
 
         if (ImGui::Button(_lookupDict->Get("Create translations file").c_str()))
@@ -655,7 +679,7 @@ namespace Storyteller
 
         ImGui::SeparatorText(_lookupDict->Get("Translation").c_str());
 
-        auto sourceTextTranslation = selectedTextObject ? _localizationManager->TranslationOr(_gameDocumentManager->GetDocument()->GetGameName(), selectedTextObject->GetText(), "") : std::string();
+        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), selectedTextObject->GetText()) : std::string();
         UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_ReadOnly);
     }
@@ -827,7 +851,7 @@ namespace Storyteller
                 }
 
                 ImGui::TableNextColumn();
-                ImGui::Text(_localizationManager->Translate(_gameDocumentManager->GetDocument()->GetGameName(), actionObject->GetText()).c_str());
+                ImGui::Text(_localizationManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), actionObject->GetText()).c_str());
             }
 
             ImGui::EndTable();
@@ -1218,6 +1242,7 @@ namespace Storyteller
         _lookupDict->Add("Quit", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit"));
         _lookupDict->Add("Log", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log"));
         _lookupDict->Add("Name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name"));
+        _lookupDict->Add("Translation domain", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation domain"));
         _lookupDict->Add("Actions", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Actions"));
         _lookupDict->Add("Find object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find object"));
         _lookupDict->Add("New document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New document"));
@@ -1236,6 +1261,7 @@ namespace Storyteller
         _lookupDict->Add("Untitled document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document"));
         _lookupDict->Add("Game document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document"));
         _lookupDict->Add("Game name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game name cannot be empty!"));
+        _lookupDict->Add("Game domain name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game domain name cannot be empty!"));
         _lookupDict->Add("Create translations file", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file"));
         _lookupDict->Add("Save translations", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save translations"));
         _lookupDict->Add("Objects management", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management"));

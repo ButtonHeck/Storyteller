@@ -18,6 +18,7 @@ namespace Storyteller
 
         Ptr<LocalizationLookupDictionary> AddLookupDictionary(const std::string& domain);
         Ptr<LocalizationLookupDictionary> GetLookupDictionary(const std::string& domain) const;
+        void RemoveLookupDictionary(const std::string& domain);
 
         void Add(const std::string& domain, const std::string& source, const std::string& translation);
         void Add(const std::string& domain, const std::string& source, const std::string& context, const std::string& translation);

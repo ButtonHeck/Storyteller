@@ -19,7 +19,11 @@ namespace Storyteller
         std::string GetGameName() const;
         void SetGameName(const std::string& gameName);
 
+        std::string GetDomainName() const;
+        void SetDomainName(const std::string& domainName);
+
         std::filesystem::path GetPath() const;
+        std::filesystem::path GetTranslationsPath() const;
         std::string GetPathString() const;
         void SetPath(const std::filesystem::path& path);
         void SetPathString(const std::string& path);
@@ -47,6 +51,7 @@ namespace Storyteller
 
     private:
         std::string _gameName;
+        std::string _domainName;
         std::filesystem::path _path;
         bool _dirty;
         std::vector<Ptr<BasicObject>> _objects;
@@ -55,7 +60,7 @@ namespace Storyteller
     //--------------------------------------------------------------------------
 
     template<>
-    inline std::vector<Ptr<QuestObject>> Storyteller::GameDocument::GetObjects() const
+    inline std::vector<Ptr<QuestObject>> GameDocument::GetObjects() const
     {
         const auto basicObjects = GetObjects(ObjectType::QuestObjectType);
         std::vector<Ptr<QuestObject>> result;
@@ -73,7 +78,7 @@ namespace Storyteller
     //--------------------------------------------------------------------------
 
     template<>
-    inline std::vector<Ptr<ActionObject>> Storyteller::GameDocument::GetObjects() const
+    inline std::vector<Ptr<ActionObject>> GameDocument::GetObjects() const
     {
         const auto basicObjects = GetObjects(ObjectType::ActionObjectType);
         std::vector<Ptr<ActionObject>> result;
@@ -89,4 +94,21 @@ namespace Storyteller
         return result;
     }
     //--------------------------------------------------------------------------
+
+    template<>
+    inline std::vector<Ptr<TextObject>> GameDocument::GetObjects() const
+    {
+        const auto basicObjects = GetObjects();
+        std::vector<Ptr<TextObject>> result;
+        std::for_each(basicObjects.cbegin(), basicObjects.cend(), [&](const Ptr<BasicObject>& object) {
+            const auto textObject = std::dynamic_pointer_cast<TextObject>(object);
+            if (textObject)
+            {
+                result.push_back(textObject);
+            }
+            }
+        );
+
+        return result;
+    }
 }

@@ -11,6 +11,7 @@ namespace Storyteller
 
     GameDocument::GameDocument(const std::filesystem::path& path)
         : _gameName("Untitled")
+        , _domainName("Untitled")
         , _path(path)
         , _dirty(false)
         , _entryPointUuid(UUID::InvalidUuid)
@@ -27,11 +28,27 @@ namespace Storyteller
 
     void GameDocument::SetGameName(const std::string& gameName)
     {
-        STRTLR_CORE_LOG_INFO("GameDocument: set name '{}'", gameName);
-
         if (_gameName != gameName)
         {
+            STRTLR_CORE_LOG_INFO("GameDocument: set name '{}'", gameName);
             _gameName = gameName;
+            SetDirty(true);
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    std::string GameDocument::GetDomainName() const
+    {
+        return _domainName;
+    }
+    //--------------------------------------------------------------------------
+
+    void GameDocument::SetDomainName(const std::string& domainName)
+    {
+        if (_domainName != domainName)
+        {
+            STRTLR_CORE_LOG_INFO("GameDocument: set domain name '{}'", domainName);
+            _domainName = domainName;
             SetDirty(true);
         }
     }
@@ -40,6 +57,13 @@ namespace Storyteller
     std::filesystem::path GameDocument::GetPath() const
     {
         return _path;
+    }
+    //--------------------------------------------------------------------------
+
+    std::filesystem::path GameDocument::GetTranslationsPath() const
+    {
+        auto translationsPath = _path;
+        return translationsPath.parent_path().append("locale");
     }
     //--------------------------------------------------------------------------
 

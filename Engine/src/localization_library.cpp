@@ -39,6 +39,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void LocalizationLibrary::RemoveLookupDictionary(const std::string& domain)
+    {
+        _lookupDictionaries.erase(domain);
+    }
+    //--------------------------------------------------------------------------
+
     void LocalizationLibrary::Add(const std::string& domain, const std::string& source, const std::string& translation)
     {
         if (_lookupDictionaries.contains(domain))

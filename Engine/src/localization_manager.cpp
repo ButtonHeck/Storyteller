@@ -69,6 +69,12 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
+    void LocalizationManager::RemoveMessagesDomain(const std::string& domain)
+    {
+        _library->RemoveLookupDictionary(domain);
+    }
+    //--------------------------------------------------------------------------
+
     Ptr<LocalizationLookupDictionary> LocalizationManager::GetLookupDictionary(const std::string& domain) const
     {
         return _library->GetLookupDictionary(domain);

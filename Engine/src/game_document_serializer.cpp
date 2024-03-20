@@ -11,6 +11,7 @@
 namespace Storyteller
 {
 #define JSON_KEY_GAME_NAME "GameName"
+#define JSON_KEY_GAME_DOMAIN_NAME "GameDomainName"
 #define JSON_KEY_ENTRY_POINT_UUID "EntryPointUuid"
 #define JSON_KEY_OBJECTS "Objects"
 #define JSON_KEY_UUID "UUID"
@@ -89,6 +90,8 @@ namespace Storyteller
 
         ok &= writer.SaveString(JSON_KEY_GAME_NAME, _document->GetGameName().c_str());
 
+        ok &= writer.SaveString(JSON_KEY_GAME_DOMAIN_NAME, _document->GetDomainName().c_str());
+
         const auto entryPoint = _document->GetEntryPoint();
         ok &= writer.SaveUInt64(JSON_KEY_ENTRY_POINT_UUID, entryPoint ? entryPoint->GetUuid() : UUID::InvalidUuid);
 
@@ -158,6 +161,7 @@ namespace Storyteller
         }
 
         _document->SetGameName(reader.GetString(JSON_KEY_GAME_NAME, "Untitled"));
+        _document->SetDomainName(reader.GetString(JSON_KEY_GAME_DOMAIN_NAME, "Untitled"));
         _document->SetEntryPoint(reader.GetUInt64(JSON_KEY_ENTRY_POINT_UUID, UUID::InvalidUuid));
         const auto objectsArraySize = reader.StartArray(JSON_KEY_OBJECTS);
 
