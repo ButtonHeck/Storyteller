@@ -1024,6 +1024,8 @@ namespace Storyteller
                 if (ImGui::Button(_lookupDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
                 {
                     _gameDocumentManager->NewDocument();
+                    _state.questObjectFilter = true;
+                    _state.actionObjectFilter = true;
                     _popups.newDocument = false;
                     ImGui::CloseCurrentPopup();
                 }
@@ -1042,6 +1044,8 @@ namespace Storyteller
         else
         {
             _gameDocumentManager->NewDocument();
+            _state.questObjectFilter = true;
+            _state.actionObjectFilter = true;
             _popups.newDocument = false;
         }
     }
@@ -1209,6 +1213,9 @@ namespace Storyteller
         if (success)
         {
             _recentList.push_front(filename);
+
+            _state.questObjectFilter = true;
+            _state.actionObjectFilter = true;
         }
         else
         {
