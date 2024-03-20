@@ -4,11 +4,6 @@
 
 namespace Storyteller
 {
-    GameDocument::GameDocument(const std::string& pathString)
-        : GameDocument(std::filesystem::path(pathString))
-    {}
-    //--------------------------------------------------------------------------
-
     GameDocument::GameDocument(const std::filesystem::path& path)
         : _gameName("Untitled")
         , _domainName("Untitled")
@@ -67,25 +62,11 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    std::string GameDocument::GetPathString() const
-    {
-        return Filesystem::ToString(_path);
-    }
-    //--------------------------------------------------------------------------
-
     void GameDocument::SetPath(const std::filesystem::path& path)
     {
         STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", Filesystem::ToU8String(path));
 
         _path = path;
-    }
-    //--------------------------------------------------------------------------
-
-    void GameDocument::SetPathString(const std::string& path)
-    {
-        STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", path);
-
-        _path = std::filesystem::path(path);
     }
     //--------------------------------------------------------------------------
 

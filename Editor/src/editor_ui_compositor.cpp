@@ -1180,7 +1180,7 @@ namespace Storyteller
 
     void EditorUiCompositor::SaveDocument()
     {
-        if (!_gameDocumentManager->GetDocument()->GetPathString().empty())
+        if (!_gameDocumentManager->GetDocument()->GetPath().empty())
         {
             _gameDocumentManager->Save();
         }

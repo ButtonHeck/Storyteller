@@ -13,7 +13,6 @@ namespace Storyteller
     class GameDocument
     {
     public:
-        explicit GameDocument(const std::string& pathString = "");
         explicit GameDocument(const std::filesystem::path& path = "");
 
         std::string GetGameName() const;
@@ -24,9 +23,7 @@ namespace Storyteller
 
         std::filesystem::path GetPath() const;
         std::filesystem::path GetTranslationsPath() const;
-        std::string GetPathString() const;
         void SetPath(const std::filesystem::path& path);
-        void SetPathString(const std::string& path);
 
         bool IsDirty() const;
         void SetDirty(bool dirty);
