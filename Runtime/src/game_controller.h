@@ -1,16 +1,16 @@
 #pragma once
 
-#include "pointers.h"
-#include "game_document.h"
 #include "console_manager.h"
-#include "localization_manager.h"
+#include "Storyteller/pointers.h"
+#include "Storyteller/game_document_manager.h"
+#include "Storyteller/localization_manager.h"
 
 namespace Storyteller
 {
     class GameController
     {
     public:
-        GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager);
+        GameController(const Ptr<GameDocumentManager> gameDocumentManager, const Ptr<LocalizationManager> localizationManager);
 
         void Launch();
 
@@ -25,7 +25,7 @@ namespace Storyteller
 
     private:
         Ptr<ConsoleManager> const _consoleManager;
-        Ptr<GameDocument> const _gameDocument;
+        Ptr<GameDocumentManager> const _gameDocumentManager;
         Ptr<LocalizationManager> const _localizationManager;
         const std::string _gameName;
         const std::string _gameNameTranslated;

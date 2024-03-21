@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-18 08:53+0300\n"
+"POT-Creation-Date: 2024-03-21 17:29+0300\n"
 "PO-Revision-Date: 2024-03-18 08:53+0300\n"
 "Last-Translator: U-DESKTOP-002D5DN\\sound <sound@desktop-002d5dn>\n"
 "Language-Team: English\n"
@@ -17,50 +17,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/application.cpp:21 ../src/entities.cpp:12
+#: ../src/application.cpp:22 ../src/entities.cpp:12
 msgid "Quest object"
 msgstr "Quest object"
 
-#: ../src/application.cpp:22 ../src/entities.cpp:16
+#: ../src/application.cpp:23 ../src/entities.cpp:16
 msgid "Action object"
 msgstr "Action object"
-
-#: ../src/console_manager.cpp:52
-msgid "Made with Storyteller engine"
-msgstr "Made with Storyteller engine"
-
-#: ../src/console_manager.cpp:96
-msgid "Enter action: "
-msgstr "Enter action: "
-
-#: ../src/console_manager.cpp:104
-msgid "Error: "
-msgstr "Error: "
-
-#: ../src/console_manager.cpp:112
-msgid "Critical error: "
-msgstr "Critical error: "
-
-#: ../src/console_manager.cpp:123
-msgid "Game is over!"
-msgstr "Game is over!"
-
-#: ../src/console_manager.cpp:129
-msgid "Press any key..."
-msgstr "Press any key..."
-
-#: ../src/game_controller.cpp:76
-msgid "Game data is incorrect (object is null), required: "
-msgstr "Game data is incorrect (object is null), required: "
-
-#: ../src/game_controller.cpp:85
-msgid "Game data is incorrect (object is not of correct type), required: "
-msgstr "Game data is incorrect (object is not of correct type), required: "
-
-#: ../src/game_controller.cpp:124
-msgid "No action found, try again"
-msgstr "No action found, try again"
-
-#: ../src/game_controller.cpp:130
-msgid "Cannot recognize action number, try again"
-msgstr "Cannot recognize action number, try again"

@@ -1,22 +1,22 @@
 #include "game_controller.h"
-#include "log.h"
+#include "Storyteller/log.h"
 
 namespace Storyteller
 {
-    GameController::GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager)
+    GameController::GameController(const Ptr<GameDocumentManager> gameDocumentManager, const Ptr<LocalizationManager> localizationManager)
         : _consoleManager(new ConsoleManager(localizationManager))
-        , _gameDocument(gameDocument)
+        , _gameDocumentManager(gameDocumentManager)
         , _localizationManager(localizationManager)
-        , _gameName(_gameDocument->GetGameName())
+        , _gameName(_gameDocumentManager->GetDocument()->GetGameName())
         , _gameNameTranslated(_localizationManager->Translate(_gameName, _gameName))
     {
-        STRTLR_CORE_LOG_INFO("GameController: create, game name '{}'", _gameName);
+        STRTLR_CLIENT_LOG_INFO("GameController: create, game name '{}'", _gameName);
     }
     //--------------------------------------------------------------------------
 
     void GameController::Launch()
     {
-        STRTLR_CORE_LOG_INFO("GameController: launched...");
+        STRTLR_CLIENT_LOG_INFO("GameController: launched...");
 
         const QuestObject* currentQuestObject = nullptr;
 
@@ -30,9 +30,9 @@ namespace Storyteller
 
     bool GameController::MainLoop(const QuestObject* currentQuestObject)
     {
-        STRTLR_CORE_LOG_INFO("GameController: main loop started...");
+        STRTLR_CLIENT_LOG_INFO("GameController: main loop started...");
 
-        auto currentObject = _gameDocument->GetEntryPoint();
+        auto currentObject = _gameDocumentManager->GetDocument()->GetEntryPoint();
         auto finalReached = false;
 
         while (!finalReached)
@@ -57,7 +57,7 @@ namespace Storyteller
 
     void GameController::End(const QuestObject* currentQuestObject)
     {
-        STRTLR_CORE_LOG_INFO("GameController: ending...");
+        STRTLR_CLIENT_LOG_INFO("GameController: ending...");
 
         NewFrame(currentQuestObject);
         
@@ -71,18 +71,18 @@ namespace Storyteller
         if (!object)
         {
             const auto typeString = ObjectTypeToString(type);
-            STRTLR_CORE_LOG_CRITICAL("GameController: Game data is incorrect (object is null), required: '{}'", typeString);
+            STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object is null), required: '{}'", typeString);
 
-            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Game data is incorrect (object is null), required: ").append(typeString));
+            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: ").append(typeString));
             return false;
         }
 
         if (object->GetObjectType() != type)
         {
             const auto typeString = ObjectTypeToString(type);
-            STRTLR_CORE_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", object->GetUuid(), typeString);
+            STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", object->GetUuid(), typeString);
 
-            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Game data is incorrect (object is not of correct type), required: ").append(typeString));
+            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: ").append(typeString));
             return false;
         }
 
@@ -106,28 +106,30 @@ namespace Storyteller
 
             try
             {
-                actionIndex = std::stoi(input) - 1;
-                if (actionIndex >= 0 && actionIndex < questActions.size())
+                actionIndex = std::stoi(input);
+                if (actionIndex >= 1 && actionIndex <= questActions.size())
                 {
-                    currentObject = _gameDocument->GetObject(questActions.at(actionIndex));
-                    if (!CheckObject(currentObject, ObjectType::QuestObjectType))
+                    currentObject = _gameDocumentManager->GetDocument()->GetObject(questActions.at(actionIndex - 1));
+                    if (!CheckObject(currentObject, ObjectType::ActionObjectType))
                     {
                         return false;
                     }
 
+                    auto tt = dynamic_cast<ActionObject*>(currentObject.get());
+                    currentObject = _gameDocumentManager->GetDocument()->GetObject(tt->GetTargetUuid());
                     currentQuestObject = dynamic_cast<QuestObject*>(currentObject.get());
                     finalReached = currentQuestObject->IsFinal();
                 }
                 else
                 {
-                    STRTLR_CORE_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionIndex, questActions.size());
-                    _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "No action found, try again"));
+                    STRTLR_CLIENT_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionIndex, questActions.size());
+                    _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again"));
                 }
             }
             catch (const std::exception&)
             {
-                STRTLR_CORE_LOG_CRITICAL("GameController: cannot recognize action number, input is '{}'", input);
-                _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Cannot recognize action number, try again"));
+                STRTLR_CLIENT_LOG_CRITICAL("GameController: cannot recognize action number, input is '{}'", input);
+                _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again"));
             }
         }
 
@@ -142,7 +144,7 @@ namespace Storyteller
 
         for (auto i = 0; i < questActions.size(); i++)
         {
-            const auto object = _gameDocument->GetObject(questActions.at(i));
+            const auto object = _gameDocumentManager->GetDocument()->GetObject(questActions.at(i));
             if (!CheckObject(object, ObjectType::ActionObjectType))
             {
                 return false;
@@ -160,7 +162,7 @@ namespace Storyteller
 
     void GameController::NewFrame(const QuestObject* currentQuestObject) const
     {
-        STRTLR_CORE_LOG_INFO("GameController: new frame, current uuid is '{}'", currentQuestObject->GetUuid());
+        STRTLR_CLIENT_LOG_INFO("GameController: new frame, current uuid is '{}'", currentQuestObject->GetUuid());
 
         _consoleManager->StartNewFrame(_gameNameTranslated);
         _consoleManager->PrintMessage(_localizationManager->Translate(_gameName, currentQuestObject->GetText()));

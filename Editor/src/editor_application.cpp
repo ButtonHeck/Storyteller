@@ -1,7 +1,6 @@
 #include "editor_application.h"
 #include "Storyteller/entry_point.h"
 #include "Storyteller/storyteller.h"
-#include "Storyteller/utils.h"
 
 namespace Storyteller
 {

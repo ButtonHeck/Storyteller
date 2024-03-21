@@ -2,12 +2,10 @@
 
 #include "Storyteller/platform.h"
 #include "Storyteller/application.h"
-#include "Storyteller/console_manager.h"
 #include "Storyteller/dialogs.h"
 #include "Storyteller/entities.h"
 #include "Storyteller/event.h"
 #include "Storyteller/filesystem.h"
-#include "Storyteller/game_controller.h"
 #include "Storyteller/game_document.h"
 #include "Storyteller/game_document_manager.h"
 #include "Storyteller/game_document_serializer.h"

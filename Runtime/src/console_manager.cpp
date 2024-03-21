@@ -1,5 +1,5 @@
 #include "console_manager.h"
-#include "log.h"
+#include "Storyteller/log.h"
 
 #include <iostream>
 #include <conio.h>
@@ -13,7 +13,7 @@ namespace Storyteller
         : _localizationManager(localizationManager)
         , _separator(separator)
     {
-        STRTLR_CORE_LOG_DEBUG("ConsoleManager: created, separator is '{}'", separator);
+        STRTLR_CLIENT_LOG_DEBUG("ConsoleManager: created, separator is '{}'", separator);
     }
     //--------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ namespace Storyteller
 
     void ConsoleManager::StartNewFrame(const std::string& gameNameTranslated) const
     {
-        STRTLR_CORE_LOG_INFO("ConsoleManager: new frame");
+        STRTLR_CLIENT_LOG_INFO("ConsoleManager: new frame");
 
         ClearConsole();
         PrintSeparator();
@@ -49,7 +49,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintMadeByString() const
     {
-        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Made with Storyteller engine") << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Made with Storyteller engine") << std::endl;
     }
     //--------------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintMessage(const std::string& message) const
     {
-        STRTLR_CORE_LOG_INFO("ConsoleManager: message '{}'", message);
+        STRTLR_CLIENT_LOG_INFO("ConsoleManager: message '{}'", message);
 
         std::cout << message << std::endl;
     }
@@ -93,23 +93,23 @@ namespace Storyteller
 
     void ConsoleManager::PrintInputHint() const
     {
-        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Enter action: ");
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Enter action: ");
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::PrintErrorHint(const std::string& details) const
     {
-        STRTLR_CORE_LOG_ERROR("ConsoleManager: error '{}'", details);
+        STRTLR_CLIENT_LOG_ERROR("ConsoleManager: error '{}'", details);
 
-        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Error: ") << details << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Error: ") << details << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::PrintCriticalHint(const std::string& details, bool waitForKeyboardHit) const
     {
-        STRTLR_CORE_LOG_CRITICAL("ConsoleManager: critical error '{}'", details);
+        STRTLR_CLIENT_LOG_CRITICAL("ConsoleManager: critical error '{}'", details);
 
-        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Critical error: ") << details << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Critical error: ") << details << std::endl;
 
         if (waitForKeyboardHit)
         {
@@ -120,13 +120,13 @@ namespace Storyteller
 
     void ConsoleManager::PrintEndHint() const
     {
-        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Game is over!") << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game is over!") << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::WaitForKeyboardHit() const
     {
-        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Press any key...") << std::endl;
+        std::cout << _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Press any key...") << std::endl;
         while (!_kbhit()) {}
     }
     //--------------------------------------------------------------------------

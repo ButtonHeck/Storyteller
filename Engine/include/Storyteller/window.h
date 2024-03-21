@@ -12,7 +12,7 @@ namespace Storyteller
     class Window
     {
     public:
-        static Window* CreateWindow();
+        static Window* StrtlrCreateWindow();
 
     public:
         using EventCallbackFn = std::function<void(Event&)>;
