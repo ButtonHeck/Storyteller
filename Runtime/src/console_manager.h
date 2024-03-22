@@ -30,6 +30,9 @@ namespace Storyteller
         std::string ReadInput() const;
 
     private:
+        void FillDictionary() const;
+
+    private:
         Ptr<LocalizationManager> const _localizationManager;
         char _separator;
     };

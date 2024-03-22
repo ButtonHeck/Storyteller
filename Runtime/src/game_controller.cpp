@@ -1,5 +1,6 @@
 #include "game_controller.h"
 #include "Storyteller/log.h"
+#include "Storyteller/utils.h"
 
 namespace Storyteller
 {
@@ -9,6 +10,9 @@ namespace Storyteller
         , _localizationManager(localizationManager)
     {
         STRTLR_CLIENT_LOG_INFO("GameController: create, game name '{}'", _gameDocument->GetGameName());
+
+        FillDictionary();
+        _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(GameController::FillDictionary));
     }
     //--------------------------------------------------------------------------
 
@@ -70,7 +74,7 @@ namespace Storyteller
             const auto typeString = ObjectTypeToString(type);
             STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object is null), required: '{}'", typeString);
 
-            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: ").append(typeString));
+            _consoleManager->PrintCriticalHint(LocalizationTranslator::Format(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: {1}"), typeString));
             return false;
         }
 
@@ -79,7 +83,7 @@ namespace Storyteller
             const auto typeString = ObjectTypeToString(type);
             STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", objectUuid, typeString);
 
-            _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: ").append(typeString));
+            _consoleManager->PrintCriticalHint(LocalizationTranslator::Format(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: {1}"), typeString));
             return false;
         }
 
@@ -120,13 +124,13 @@ namespace Storyteller
                 else
                 {
                     STRTLR_CLIENT_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionNumber, questActions.size());
-                    _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again"));
+                    _consoleManager->PrintErrorHint(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again"));
                 }
             }
             catch (const std::exception&)
             {
                 STRTLR_CLIENT_LOG_CRITICAL("GameController: cannot recognize action number, input is '{}'", input);
-                _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again"));
+                _consoleManager->PrintErrorHint(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again"));
             }
         }
 
@@ -166,6 +170,15 @@ namespace Storyteller
 
         _consoleManager->StartNewFrame(_localizationManager->Translation(_gameDocument->GetDomainName(), _gameDocument->GetGameName()));
         _consoleManager->PrintMessage(_localizationManager->Translation(_gameDocument->GetDomainName(), textObject->GetText()));
+    }
+    //--------------------------------------------------------------------------
+
+    void GameController::FillDictionary() const
+    {
+        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: {1}");
+        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: {1}");
+        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again");
+        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again");
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------

@@ -24,6 +24,9 @@ namespace Storyteller
         void NewFrame(UUID& currentQuestObject) const;
 
     private:
+        void FillDictionary() const;
+
+    private:
         Ptr<ConsoleManager> const _consoleManager;
         Ptr<GameDocument> const _gameDocument;
         Ptr<LocalizationManager> const _localizationManager;
