@@ -34,6 +34,7 @@ namespace Storyteller
         }
 
         _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_RUNTIME);
+        _localizationManager->SetLocale(LocalizationManager::LocaleRuUTF8Keyword);
 
         _manager.reset(new GameDocumentManager(_localizationManager));
         _manager->OpenDocument(std::filesystem::path(u8"C:\\workspace\\Storyteller\\build\\MyGame\\MyGame.json"));

@@ -1,11 +1,11 @@
 #include "console_manager.h"
 #include "Storyteller/log.h"
 #include "Storyteller/utils.h"
+#include "Storyteller/platform.h"
 
 #include <iostream>
+#if defined STRTLR_PLATFORM_WINDOWS
 #include <conio.h>
-#ifdef _WIN32
-#include <Windows.h>
 #endif
 
 namespace Storyteller
@@ -18,6 +18,10 @@ namespace Storyteller
 
         FillDictionary();
         _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(ConsoleManager::FillDictionary));
+
+#if defined STRTLR_PLATFORM_WINDOWS
+        SetConsoleOutputCP(CP_UTF8);
+#endif
     }
     //--------------------------------------------------------------------------
 
@@ -43,9 +47,9 @@ namespace Storyteller
 
     void ConsoleManager::ClearConsole() const
     {
-#if defined _WIN32
+#if defined STRTLR_PLATFORM_WINDOWS
         system("cls");
-#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+#elif defined STRTLR_PLATFORM_LINUX
         std::cout << "\x1B[2J\x1B[H";
 #endif
     }
@@ -61,11 +65,11 @@ namespace Storyteller
     {
         int width;
 
-#if defined _WIN32
+#if defined STRTLR_PLATFORM_WINDOWS
         CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
         GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &consoleInfo);
         width = consoleInfo.srWindow.Right - consoleInfo.srWindow.Left + 1;
-#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+#elif defined STRTLR_PLATFORM_LINUX
         width = 30;
 #endif
 
