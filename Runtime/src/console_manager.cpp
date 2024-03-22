@@ -4,9 +4,6 @@
 #include "Storyteller/platform.h"
 
 #include <iostream>
-#if defined STRTLR_PLATFORM_WINDOWS
-#include <conio.h>
-#endif
 
 namespace Storyteller
 {
@@ -48,7 +45,15 @@ namespace Storyteller
     void ConsoleManager::ClearConsole() const
     {
 #if defined STRTLR_PLATFORM_WINDOWS
-        system("cls");
+        HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        COORD coord(0, 0);
+        DWORD count;
+        CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+
+        GetConsoleScreenBufferInfo(hStdOut, &consoleInfo);
+        FillConsoleOutputCharacter(hStdOut, ' ', consoleInfo.dwSize.X * consoleInfo.dwSize.Y, coord, &count);
+        SetConsoleCursorPosition(hStdOut, coord);
+
 #elif defined STRTLR_PLATFORM_LINUX
         std::cout << "\x1B[2J\x1B[H";
 #endif
@@ -69,6 +74,7 @@ namespace Storyteller
         CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
         GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &consoleInfo);
         width = consoleInfo.srWindow.Right - consoleInfo.srWindow.Left + 1;
+
 #elif defined STRTLR_PLATFORM_LINUX
         width = 30;
 #endif
@@ -135,7 +141,7 @@ namespace Storyteller
     void ConsoleManager::WaitForKeyboardHit() const
     {
         std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Press any key...") << std::endl;
-        while (!_kbhit()) {}
+        while (!Utils::KbHit()) {}
     }
     //--------------------------------------------------------------------------
 
