@@ -18,8 +18,8 @@ namespace Storyteller
         bool MainLoop(UUID& currentUuid);
         void End(UUID& currentUuid);
 
-        bool CheckObject(UUID objectUuid, ObjectType type) const;
-        bool ProcessActions(UUID& currentObject, UUID& currentQuestObject, bool& finalReached);
+        bool CheckObject(const UUID& objectUuid, ObjectType type) const;
+        bool ProcessActions(UUID& currentUuid, bool& finalReached);
         bool PrintActions(const std::vector<UUID>& questActions) const;
         void NewFrame(UUID& currentQuestObject) const;
 
@@ -27,8 +27,6 @@ namespace Storyteller
         Ptr<ConsoleManager> const _consoleManager;
         Ptr<GameDocument> const _gameDocument;
         Ptr<LocalizationManager> const _localizationManager;
-        const std::string _gameName;
-        const std::string _gameNameTranslated;
     };
     //--------------------------------------------------------------------------
 }

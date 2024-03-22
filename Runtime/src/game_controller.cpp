@@ -7,10 +7,8 @@ namespace Storyteller
         : _consoleManager(new ConsoleManager(localizationManager))
         , _gameDocument(gameDocument)
         , _localizationManager(localizationManager)
-        , _gameName(_gameDocument->GetGameName())
-        , _gameNameTranslated(_localizationManager->Translate(_gameName, _gameName))
     {
-        STRTLR_CLIENT_LOG_INFO("GameController: create, game name '{}'", _gameName);
+        STRTLR_CLIENT_LOG_INFO("GameController: create, game name '{}'", _gameDocument->GetGameName());
     }
     //--------------------------------------------------------------------------
 
@@ -18,7 +16,7 @@ namespace Storyteller
     {
         STRTLR_CLIENT_LOG_INFO("GameController: launched...");
 
-        auto currentUuid = UUID::InvalidUuid;
+        auto currentUuid = _gameDocument->GetEntryPoint()->GetUuid();
 
         const auto noErrors = MainLoop(currentUuid);
         if (noErrors)
@@ -32,20 +30,18 @@ namespace Storyteller
     {
         STRTLR_CLIENT_LOG_INFO("GameController: main loop started...");
 
-        auto currentObjectUuid = _gameDocument->GetEntryPoint()->GetUuid();
         auto finalReached = false;
 
         while (!finalReached)
         {
-            if (!CheckObject(currentObjectUuid, ObjectType::QuestObjectType))
+            if (!CheckObject(currentUuid, ObjectType::QuestObjectType))
             {
                 return false;
             }
 
-            currentUuid = currentObjectUuid;
             NewFrame(currentUuid);
 
-            if (!ProcessActions(currentObjectUuid, currentUuid, finalReached))
+            if (!ProcessActions(currentUuid, finalReached))
             {
                 return false;
             }
@@ -55,18 +51,18 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void GameController::End(UUID& currentQuestObject)
+    void GameController::End(UUID& currentUuid)
     {
         STRTLR_CLIENT_LOG_INFO("GameController: ending...");
 
-        NewFrame(currentQuestObject);
+        NewFrame(currentUuid);
         
         _consoleManager->PrintEndHint();
         _consoleManager->WaitForKeyboardHit();
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::CheckObject(UUID objectUuid, ObjectType type) const
+    bool GameController::CheckObject(const UUID& objectUuid, ObjectType type) const
     {
         const auto object = _gameDocument->GetObject(objectUuid);
         if (!object)
@@ -81,7 +77,7 @@ namespace Storyteller
         if (object->GetObjectType() != type)
         {
             const auto typeString = ObjectTypeToString(type);
-            STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", object->GetUuid(), typeString);
+            STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", objectUuid, typeString);
 
             _consoleManager->PrintCriticalHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: ").append(typeString));
             return false;
@@ -91,40 +87,39 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::ProcessActions(UUID& currentObject, UUID& currentQuestObject, bool& finalReached)
+    bool GameController::ProcessActions(UUID& currentUuid, bool& finalReached)
     {
-        const auto qo = dynamic_cast<QuestObject*>(_gameDocument->GetObject(currentQuestObject).get());
-        const auto& questActions = qo->GetActions();
+        const auto questObject = dynamic_cast<QuestObject*>(_gameDocument->GetObject(currentUuid).get());
+        const auto& questActions = questObject->GetActions();
         if (!PrintActions(questActions))
         {
             return false;
         }
 
-        int actionIndex = 0;
-        while (!actionIndex || (actionIndex >= questActions.size()))
+        int actionNumber = 0;
+        while (!actionNumber || (actionNumber > questActions.size()))
         {
             _consoleManager->PrintInputHint();
             const auto input = _consoleManager->ReadInput();
 
             try
             {
-                actionIndex = std::stoi(input);
-                if (actionIndex >= 1 && actionIndex <= questActions.size())
+                actionNumber = std::stoi(input);
+                if (actionNumber >= 1 && actionNumber <= questActions.size())
                 {
-                    currentObject = questActions.at(actionIndex - 1);
-                    if (!CheckObject(currentObject, ObjectType::ActionObjectType))
+                    const auto& chosenActionUuid = questActions.at(actionNumber - 1);
+                    if (!CheckObject(chosenActionUuid, ObjectType::ActionObjectType))
                     {
                         return false;
                     }
 
-                    auto tt = dynamic_cast<ActionObject*>(_gameDocument->GetObject(currentObject).get());
-                    currentObject = tt->GetTargetUuid();
-                    currentQuestObject = currentObject;
-                    finalReached = (dynamic_cast<QuestObject*>(_gameDocument->GetObject(currentQuestObject).get()))->IsFinal();
+                    const auto chosenActionObject = dynamic_cast<ActionObject*>(_gameDocument->GetObject(chosenActionUuid).get());
+                    currentUuid = chosenActionObject->GetTargetUuid();
+                    finalReached = (dynamic_cast<QuestObject*>(_gameDocument->GetObject(currentUuid).get()))->IsFinal();
                 }
                 else
                 {
-                    STRTLR_CLIENT_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionIndex, questActions.size());
+                    STRTLR_CLIENT_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionNumber, questActions.size());
                     _consoleManager->PrintErrorHint(_localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again"));
                 }
             }
@@ -153,7 +148,7 @@ namespace Storyteller
             }
 
             const auto actionObject = dynamic_cast<ActionObject*>(object.get());
-            actionTexts.emplace_back(_localizationManager->Translate(_gameName, actionObject->GetText()));
+            actionTexts.emplace_back(_localizationManager->Translation(_gameDocument->GetDomainName(), actionObject->GetText()));
         }
 
         _consoleManager->PrintActions(actionTexts);
@@ -169,8 +164,8 @@ namespace Storyteller
         auto object = _gameDocument->GetObject(objectUuid);
         const auto textObject = dynamic_cast<TextObject*>(object.get());
 
-        _consoleManager->StartNewFrame(_gameNameTranslated);
-        _consoleManager->PrintMessage(_localizationManager->Translate(_gameName, textObject->GetText()));
+        _consoleManager->StartNewFrame(_localizationManager->Translation(_gameDocument->GetDomainName(), _gameDocument->GetGameName()));
+        _consoleManager->PrintMessage(_localizationManager->Translation(_gameDocument->GetDomainName(), textObject->GetText()));
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
