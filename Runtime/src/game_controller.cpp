@@ -3,11 +3,11 @@
 
 namespace Storyteller
 {
-    GameController::GameController(const Ptr<GameDocumentManager> gameDocumentManager, const Ptr<LocalizationManager> localizationManager)
+    GameController::GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager)
         : _consoleManager(new ConsoleManager(localizationManager))
-        , _gameDocumentManager(gameDocumentManager)
+        , _gameDocument(gameDocument)
         , _localizationManager(localizationManager)
-        , _gameName(_gameDocumentManager->GetDocument()->GetGameName())
+        , _gameName(_gameDocument->GetGameName())
         , _gameNameTranslated(_localizationManager->Translate(_gameName, _gameName))
     {
         STRTLR_CLIENT_LOG_INFO("GameController: create, game name '{}'", _gameName);
@@ -18,34 +18,34 @@ namespace Storyteller
     {
         STRTLR_CLIENT_LOG_INFO("GameController: launched...");
 
-        const QuestObject* currentQuestObject = nullptr;
+        auto currentUuid = UUID::InvalidUuid;
 
-        const auto noErrors = MainLoop(currentQuestObject);
+        const auto noErrors = MainLoop(currentUuid);
         if (noErrors)
         {
-            End(currentQuestObject);
+            End(currentUuid);
         }
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::MainLoop(const QuestObject* currentQuestObject)
+    bool GameController::MainLoop(UUID& currentUuid)
     {
         STRTLR_CLIENT_LOG_INFO("GameController: main loop started...");
 
-        auto currentObject = _gameDocumentManager->GetDocument()->GetEntryPoint();
+        auto currentObjectUuid = _gameDocument->GetEntryPoint()->GetUuid();
         auto finalReached = false;
 
         while (!finalReached)
         {
-            if (!CheckObject(currentObject, ObjectType::QuestObjectType))
+            if (!CheckObject(currentObjectUuid, ObjectType::QuestObjectType))
             {
                 return false;
             }
 
-            currentQuestObject = dynamic_cast<QuestObject*>(currentObject.get());
-            NewFrame(currentQuestObject);
+            currentUuid = currentObjectUuid;
+            NewFrame(currentUuid);
 
-            if (!ProcessActions(currentObject, currentQuestObject, finalReached))
+            if (!ProcessActions(currentObjectUuid, currentUuid, finalReached))
             {
                 return false;
             }
@@ -55,7 +55,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void GameController::End(const QuestObject* currentQuestObject)
+    void GameController::End(UUID& currentQuestObject)
     {
         STRTLR_CLIENT_LOG_INFO("GameController: ending...");
 
@@ -66,8 +66,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::CheckObject(const Ptr<BasicObject> object, ObjectType type) const
+    bool GameController::CheckObject(UUID objectUuid, ObjectType type) const
     {
+        const auto object = _gameDocument->GetObject(objectUuid);
         if (!object)
         {
             const auto typeString = ObjectTypeToString(type);
@@ -90,9 +91,10 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameController::ProcessActions(Ptr<BasicObject> currentObject, const QuestObject* currentQuestObject, bool& finalReached)
+    bool GameController::ProcessActions(UUID& currentObject, UUID& currentQuestObject, bool& finalReached)
     {
-        const auto& questActions = currentQuestObject->GetActions();
+        const auto qo = dynamic_cast<QuestObject*>(_gameDocument->GetObject(currentQuestObject).get());
+        const auto& questActions = qo->GetActions();
         if (!PrintActions(questActions))
         {
             return false;
@@ -109,16 +111,16 @@ namespace Storyteller
                 actionIndex = std::stoi(input);
                 if (actionIndex >= 1 && actionIndex <= questActions.size())
                 {
-                    currentObject = _gameDocumentManager->GetDocument()->GetObject(questActions.at(actionIndex - 1));
+                    currentObject = questActions.at(actionIndex - 1);
                     if (!CheckObject(currentObject, ObjectType::ActionObjectType))
                     {
                         return false;
                     }
 
-                    auto tt = dynamic_cast<ActionObject*>(currentObject.get());
-                    currentObject = _gameDocumentManager->GetDocument()->GetObject(tt->GetTargetUuid());
-                    currentQuestObject = dynamic_cast<QuestObject*>(currentObject.get());
-                    finalReached = currentQuestObject->IsFinal();
+                    auto tt = dynamic_cast<ActionObject*>(_gameDocument->GetObject(currentObject).get());
+                    currentObject = tt->GetTargetUuid();
+                    currentQuestObject = currentObject;
+                    finalReached = (dynamic_cast<QuestObject*>(_gameDocument->GetObject(currentQuestObject).get()))->IsFinal();
                 }
                 else
                 {
@@ -144,8 +146,8 @@ namespace Storyteller
 
         for (auto i = 0; i < questActions.size(); i++)
         {
-            const auto object = _gameDocumentManager->GetDocument()->GetObject(questActions.at(i));
-            if (!CheckObject(object, ObjectType::ActionObjectType))
+            const auto object = _gameDocument->GetObject(questActions.at(i));
+            if (!CheckObject(questActions.at(i), ObjectType::ActionObjectType))
             {
                 return false;
             }
@@ -160,12 +162,15 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void GameController::NewFrame(const QuestObject* currentQuestObject) const
+    void GameController::NewFrame(UUID& objectUuid) const
     {
-        STRTLR_CLIENT_LOG_INFO("GameController: new frame, current uuid is '{}'", currentQuestObject->GetUuid());
+        STRTLR_CLIENT_LOG_INFO("GameController: new frame, current uuid is '{}'", objectUuid);
+
+        auto object = _gameDocument->GetObject(objectUuid);
+        const auto textObject = dynamic_cast<TextObject*>(object.get());
 
         _consoleManager->StartNewFrame(_gameNameTranslated);
-        _consoleManager->PrintMessage(_localizationManager->Translate(_gameName, currentQuestObject->GetText()));
+        _consoleManager->PrintMessage(_localizationManager->Translate(_gameName, textObject->GetText()));
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------

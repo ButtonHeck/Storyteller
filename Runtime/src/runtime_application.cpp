@@ -38,7 +38,7 @@ namespace Storyteller
         _manager.reset(new GameDocumentManager(_localizationManager));
         _manager->OpenDocument(std::filesystem::path(u8"C:\\workspace\\Storyteller\\build\\MyGame\\MyGame.json"));
 
-        _gameController.reset(new GameController(_manager, _localizationManager));
+        _gameController.reset(new GameController(_manager->GetDocument(), _localizationManager));
 
         return true;
     }
