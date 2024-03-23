@@ -3,7 +3,7 @@
 
 namespace Storyteller
 {
-    EditorUiImpl* EditorUiImpl::CreateImpl(Ptr<Window> window)
+    EditorUiImpl* EditorUiImpl::CreateImpl(const Ptr<Window> window)
     {
 #if defined(STRTLR_WINDOW_BACKEND_GLFW) && defined(STRTLR_GRAPHICS_BACKEND_OPENGL)
         return new EditorUiImplOpenglGLFW(window);
@@ -14,7 +14,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    EditorUiImpl::EditorUiImpl(Ptr<Window> window)
+    EditorUiImpl::EditorUiImpl(const Ptr<Window> window)
         : _window(window)
     {}
     //--------------------------------------------------------------------------

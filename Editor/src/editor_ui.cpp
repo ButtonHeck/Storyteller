@@ -6,10 +6,10 @@
 
 namespace Storyteller
 {
-    EditorUi::EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
+    EditorUi::EditorUi(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager)
         : _window(window)
         , _uiImpl(EditorUiImpl::CreateImpl(_window))
-        , _compositor(new EditorUiCompositor(_window, localizationManager))
+        , _compositor(CreatePtr<EditorUiCompositor>(_window, localizationManager))
     {}
     //--------------------------------------------------------------------------
 
@@ -202,7 +202,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::SaveSettings(Ptr<Settings> settings) const
+    void EditorUi::SaveSettings(const Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUi");
         _compositor->SaveSettings(settings);
@@ -210,7 +210,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUi::LoadSettings(Ptr<Settings> settings)
+    void EditorUi::LoadSettings(const Ptr<Settings> settings)
     {
         settings->StartLoadGroup("EditorUi");
         _compositor->LoadSettings(settings);
@@ -230,7 +230,7 @@ namespace Storyteller
         // TODO: extract to separate font class
         auto& io = ImGui::GetIO();
         const auto fontSize = 18;
-        io.Fonts->AddFontFromFileTTF(std::string(STRTLR_EDITOR_FONT_DIR).append("/OpenSans-Regular.ttf").c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+        io.Fonts->AddFontFromFileTTF(Utils::Concatenate(STRTLR_EDITOR_FONT_DIR, "/OpenSans-Regular.ttf").c_str(), fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
     }
     //--------------------------------------------------------------------------
 
@@ -244,7 +244,7 @@ namespace Storyteller
         iconsConfig.PixelSnapH = true;
         iconsConfig.GlyphOffset = ImVec2(0.0f, 0.0f);
         static const ImWchar iconsRanges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-        io.Fonts->AddFontFromFileTTF(std::string(STRTLR_EDITOR_FONT_DIR).append("/forkawesome-webfont.ttf").c_str(), fontSize, &iconsConfig, iconsRanges);
+        io.Fonts->AddFontFromFileTTF(Utils::Concatenate(STRTLR_EDITOR_FONT_DIR, "/forkawesome-webfont.ttf").c_str(), fontSize, &iconsConfig, iconsRanges);
     }
     //--------------------------------------------------------------------------
 }

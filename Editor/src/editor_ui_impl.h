@@ -8,10 +8,10 @@ namespace Storyteller
     class EditorUiImpl
     {
     public:
-        static EditorUiImpl* CreateImpl(Ptr<Window> window);
+        static EditorUiImpl* CreateImpl(const Ptr<Window> window);
 
     public:
-        explicit EditorUiImpl(Ptr<Window> window);
+        explicit EditorUiImpl(const Ptr<Window> window);
 
         virtual void Initialize() = 0;
         virtual void NewFrame() = 0;
@@ -19,7 +19,7 @@ namespace Storyteller
         virtual void Shutdown() = 0;
 
     protected:
-        Ptr<Window> _window;
+        const Ptr<Window> _window;
     };
     //--------------------------------------------------------------------------
 }

@@ -14,7 +14,7 @@ namespace Storyteller
     class EditorUi
     {
     public:
-        EditorUi(Ptr<Window> window, Ptr<LocalizationManager> localizationManager);
+        EditorUi(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager);
 
         bool Initialize();
 
@@ -35,8 +35,8 @@ namespace Storyteller
         bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event);
         bool OnKeyPressEvent(KeyPressEvent& event);
 
-        void SaveSettings(Ptr<Settings> settings) const;
-        void LoadSettings(Ptr<Settings> settings);
+        void SaveSettings(const Ptr<Settings> settings) const;
+        void LoadSettings(const Ptr<Settings> settings);
 
         void Shutdown();
 
@@ -45,9 +45,9 @@ namespace Storyteller
         void AddIconsFont();
 
     private:
-        Ptr<Window> _window;
-        Ptr<EditorUiImpl> _uiImpl;
-        Ptr<EditorUiCompositor> _compositor;
+        const Ptr<Window> _window;
+        const Ptr<EditorUiImpl> _uiImpl;
+        const Ptr<EditorUiCompositor> _compositor;
     };
     //--------------------------------------------------------------------------
 }

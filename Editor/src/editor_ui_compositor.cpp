@@ -11,10 +11,10 @@
 
 namespace Storyteller
 {
-    EditorUiCompositor::EditorUiCompositor(Ptr<Window> window, Ptr<LocalizationManager> localizationManager)
+    EditorUiCompositor::EditorUiCompositor(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager)
         : _window(window)
         , _localizationManager(localizationManager)
-        , _gameDocumentManager(new GameDocumentManager(localizationManager))
+        , _gameDocumentManager(CreatePtr<GameDocumentManager>(localizationManager))
         , _lookupDict(nullptr)
     {
         FillDictionary();
@@ -102,7 +102,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::SaveSettings(Ptr<Settings> settings) const
+    void EditorUiCompositor::SaveSettings(const Ptr<Settings> settings) const
     {
         settings->StartSaveGroup("EditorUiCompositor");
         settings->SaveBool("Log", _state.logPanel);
@@ -118,7 +118,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void EditorUiCompositor::LoadSettings(Ptr<Settings> settings)
+    void EditorUiCompositor::LoadSettings(const Ptr<Settings> settings)
     {
         settings->StartLoadGroup("EditorUiCompositor");
         _state.logPanel = settings->GetBool("Log", true);

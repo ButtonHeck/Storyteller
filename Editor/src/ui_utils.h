@@ -4,7 +4,6 @@
 
 #include <variant>
 #include <initializer_list>
-#include <utility>
 #include <string>
 
 namespace Storyteller
@@ -37,7 +36,7 @@ namespace Storyteller
             ~StyleColorGuard();
 
         private:
-            std::initializer_list<std::pair<ImGuiCol_, ImVec4>> _colors;
+            const std::initializer_list<std::pair<ImGuiCol_, ImVec4>> _colors;
         };
         //--------------------------------------------------------------------------
 
@@ -48,7 +47,7 @@ namespace Storyteller
             ~StyleVarGuard();
 
         private:
-            std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>> _variables;
+            const std::initializer_list<std::pair<ImGuiStyleVar_, std::variant<float, ImVec2>>> _variables;
         };
         //--------------------------------------------------------------------------
 
@@ -71,7 +70,7 @@ namespace Storyteller
         };
         //--------------------------------------------------------------------------
 
-        void SetItemTooltip(const std::string& text);
+        void SetItemTooltip(const std::string& text, ImGuiHoveredFlags_ flags = ImGuiHoveredFlags_AllowWhenDisabled);
         //--------------------------------------------------------------------------
     }
 }

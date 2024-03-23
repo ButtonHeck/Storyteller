@@ -15,15 +15,15 @@ namespace Storyteller
     class EditorUiCompositor
     {
     public:
-        EditorUiCompositor(Ptr<Window> window, Ptr<LocalizationManager> localizationManager);
+        EditorUiCompositor(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager);
 
         void Compose();
 
         bool OnKeyPressEvent(KeyPressEvent& event);
         bool OnWindowCloseEvent(WindowCloseEvent& event);
 
-        void SaveSettings(Ptr<Settings> settings) const;
-        void LoadSettings(Ptr<Settings> settings);
+        void SaveSettings(const Ptr<Settings> settings) const;
+        void LoadSettings(const Ptr<Settings> settings);
 
     private:
         struct UiComponentsState
@@ -98,9 +98,9 @@ namespace Storyteller
         void FillDictionary();
 
     private:
-        Ptr<Window> _window;
-        Ptr<LocalizationManager> _localizationManager;
-        Ptr<GameDocumentManager> _gameDocumentManager;
+        const Ptr<Window> _window;
+        const Ptr<LocalizationManager> _localizationManager;
+        const Ptr<GameDocumentManager> _gameDocumentManager;
         UiComponentsState _state;
         UiPopupsState _popups;
         std::list<std::string> _recentList;

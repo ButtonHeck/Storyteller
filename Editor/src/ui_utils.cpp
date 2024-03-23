@@ -115,9 +115,9 @@ namespace Storyteller
         //--------------------------------------------------------------------------
 
 
-        void SetItemTooltip(const std::string& text)
+        void SetItemTooltip(const std::string& text, ImGuiHoveredFlags_ flags)
         {
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            if (ImGui::IsItemHovered(flags))
             {
                 ImGui::SetTooltip(text.c_str());
             }

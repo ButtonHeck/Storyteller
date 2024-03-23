@@ -8,7 +8,7 @@ namespace Storyteller
     class EditorUiImplOpenglGLFW : public EditorUiImpl
     {
     public:
-        explicit EditorUiImplOpenglGLFW(Ptr<Window> window);
+        explicit EditorUiImplOpenglGLFW(const Ptr<Window> window);
 
         void Initialize() override;
         void NewFrame() override;
