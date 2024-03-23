@@ -62,17 +62,20 @@ namespace Storyteller
 
     void BasicObject::SetName(const std::string& name)
     {
-        STRTLR_CORE_LOG_DEBUG("BasicObject: ({}) set name '{}'", _uuid, name);
-
-        _name = name;
-        if (_changeCallback)
+        if (_name != name)
         {
-            _changeCallback();
+            STRTLR_CORE_LOG_DEBUG("BasicObject: ({}) set name '{}'", _uuid, name);
+
+            _name = name;
+            if (_changeCallback)
+            {
+                _changeCallback();
+            }
         }
     }
     //--------------------------------------------------------------------------
 
-    void BasicObject::SetChangeCallback(std::function<void()> changeCallback)
+    void BasicObject::SetChangeCallback(const std::function<void()>& changeCallback)
     {
         _changeCallback = changeCallback;
     }
@@ -96,12 +99,15 @@ namespace Storyteller
 
     void TextObject::SetText(const std::string& text)
     {
-        STRTLR_CORE_LOG_DEBUG("TextObject: ({}) set text '{}'", _uuid, text);
-
-        _text = text;
-        if (_changeCallback)
+        if (_text != text)
         {
-            _changeCallback();
+            STRTLR_CORE_LOG_DEBUG("TextObject: ({}) set text '{}'", _uuid, text);
+
+            _text = text;
+            if (_changeCallback)
+            {
+                _changeCallback();
+            }
         }
     }
     //--------------------------------------------------------------------------
@@ -136,16 +142,12 @@ namespace Storyteller
 
     bool QuestObject::IsConsistent() const
     {
-        if (_actions.empty())
+        if (!TextObject::IsConsistent())
         {
-            return !_final
-                ? false
-                : TextObject::IsConsistent();
+            return false;
         }
 
-        return _final
-            ? false
-            : TextObject::IsConsistent();
+        return !_actions.empty() ^ _final;
     }
     //--------------------------------------------------------------------------
 
@@ -248,12 +250,15 @@ namespace Storyteller
 
     void QuestObject::SetFinal(bool isFinal)
     {
-        STRTLR_CORE_LOG_DEBUG("QuestObject: ({}) set final '{}'", _uuid, isFinal);
-
-        _final = isFinal;
-        if (_changeCallback)
+        if (_final != isFinal)
         {
-            _changeCallback();
+            STRTLR_CORE_LOG_DEBUG("QuestObject: ({}) set final '{}'", _uuid, isFinal);
+
+            _final = isFinal;
+            if (_changeCallback)
+            {
+                _changeCallback();
+            }
         }
     }
     //--------------------------------------------------------------------------
@@ -288,9 +293,7 @@ namespace Storyteller
 
     bool ActionObject::IsConsistent() const
     {
-        return _targetUuid == UUID::InvalidUuid
-            ? false
-            : TextObject::IsConsistent();
+        return _targetUuid != UUID::InvalidUuid && TextObject::IsConsistent();
     }
     //--------------------------------------------------------------------------
 
@@ -302,16 +305,14 @@ namespace Storyteller
 
     void ActionObject::SetTargetUuid(const UUID& targetUuid)
     {
-        if (_targetUuid == targetUuid)
+        if (_targetUuid != targetUuid)
         {
-            return;
-        }
-
-        STRTLR_CORE_LOG_DEBUG("ActionObject: ({}) set target '{}'", _uuid, targetUuid);
-        _targetUuid = targetUuid;
-        if (_changeCallback)
-        {
-            _changeCallback();
+            STRTLR_CORE_LOG_DEBUG("ActionObject: ({}) set target '{}'", _uuid, targetUuid);
+            _targetUuid = targetUuid;
+            if (_changeCallback)
+            {
+                _changeCallback();
+            }
         }
     }
     //--------------------------------------------------------------------------

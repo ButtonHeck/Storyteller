@@ -43,8 +43,8 @@ namespace Storyteller
         }
 
     private:
-        unsigned int _width;
-        unsigned int _height;
+        const unsigned int _width;
+        const unsigned int _height;
     };
     //--------------------------------------------------------------------------
 
@@ -74,8 +74,8 @@ namespace Storyteller
         }
 
     private:
-        unsigned int _x;
-        unsigned int _y;
+        const unsigned int _x;
+        const unsigned int _y;
     };
     //--------------------------------------------------------------------------
 
@@ -93,7 +93,7 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(WindowFocusEventType)
 
-        WindowFocusEvent(int focused)
+        explicit WindowFocusEvent(int focused)
             : _focused(focused)
         {}
 
@@ -108,7 +108,7 @@ namespace Storyteller
         }
 
     private:
-        int _focused;
+        const int _focused;
     };
     //--------------------------------------------------------------------------
 
@@ -117,7 +117,7 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(WindowIconifyEventType)
 
-        WindowIconifyEvent(int iconified)
+        explicit WindowIconifyEvent(int iconified)
             : _iconified(iconified)
         {}
 
@@ -132,7 +132,7 @@ namespace Storyteller
         }
 
     private:
-        int _iconified;
+        const int _iconified;
     };
     //--------------------------------------------------------------------------
 
@@ -162,8 +162,8 @@ namespace Storyteller
         }
 
     private:
-        unsigned int _width;
-        unsigned int _height;
+        const unsigned int _width;
+        const unsigned int _height;
     };
     //--------------------------------------------------------------------------
 

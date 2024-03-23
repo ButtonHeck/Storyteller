@@ -12,10 +12,13 @@ namespace Storyteller
 
     void LocalizationLibrary::SetLocale(const std::string& localeString)
     {
-        _currentLocaleString = localeString;
-        for (auto& dict : _lookupDictionaries)
+        if (_currentLocaleString != localeString)
         {
-            dict.second->SetLocale(localeString);
+            _currentLocaleString = localeString;
+            for (auto& dictionary : _lookupDictionaries)
+            {
+                dictionary.second->SetLocale(localeString);
+            }
         }
     }
     //--------------------------------------------------------------------------

@@ -24,11 +24,11 @@ namespace Storyteller
             Sorter() = default;
             Sorter(bool ascending, SortValue sortValue);
 
-            bool operator()(Ptr<BasicObject> a, Ptr<BasicObject> b) const;
+            bool operator()(const Ptr<BasicObject>& a, const Ptr<BasicObject>& b) const;
 
-            SortValue sortValue;
-            bool ascending;
-            bool active;
+            SortValue sortValue = Type;
+            bool ascending = false;
+            bool active = false;
         };
 
         struct Filter
@@ -42,9 +42,10 @@ namespace Storyteller
             bool active;
         };
 
-        explicit GameDocumentSortFilterProxyView(Ptr<GameDocument> document);
+    public:
+        explicit GameDocumentSortFilterProxyView(const Ptr<GameDocument> document);
 
-        Ptr<GameDocument> GetSourceDocument() const;
+        const Ptr<GameDocument> GetSourceDocument() const;
 
         bool AddObject(ObjectType type, const UUID& uuid = UUID());
         bool AddObject(const Ptr<BasicObject>& object);
@@ -79,7 +80,7 @@ namespace Storyteller
         void DoFilter();
 
     private:
-        Ptr<GameDocument> const _document;
+        const Ptr<GameDocument> _document;
         std::vector<Ptr<BasicObject>> _cache;
         UUID _selectedUuid;
         Sorter _sorter;

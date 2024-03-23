@@ -95,7 +95,7 @@ namespace Storyteller
     template<>
     inline std::vector<Ptr<TextObject>> GameDocument::GetObjects() const
     {
-        const auto basicObjects = GetObjects();
+        const auto& basicObjects = GetObjects();
         std::vector<Ptr<TextObject>> result;
         std::for_each(basicObjects.cbegin(), basicObjects.cend(), [&](const Ptr<BasicObject>& object) {
             const auto textObject = std::dynamic_pointer_cast<TextObject>(object);
@@ -108,4 +108,5 @@ namespace Storyteller
 
         return result;
     }
+    //--------------------------------------------------------------------------
 }

@@ -65,8 +65,8 @@ namespace Storyteller
 
     private:
         const std::string _filename;
-        Ptr<JsonReader> _reader;
-        Ptr<JsonWriter> _writer;
+        const Ptr<JsonReader> _reader;
+        const Ptr<JsonWriter> _writer;
     };
     //--------------------------------------------------------------------------
 }

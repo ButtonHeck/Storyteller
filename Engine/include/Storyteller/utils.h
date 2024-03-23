@@ -16,10 +16,10 @@ namespace Storyteller
         //--------------------------------------------------------------------------
 
         template<typename... Ts>
-        std::ostringstream& ToSStream(std::ostringstream& ss, Ts&&... args)
+        std::ostringstream& ToSStream(std::ostringstream& oss, Ts&&... args)
         {
-            (ss << ... << std::forward<Ts>(args));
-            return ss;
+            (oss << ... << std::forward<Ts>(args));
+            return oss;
         }
         //--------------------------------------------------------------------------
 

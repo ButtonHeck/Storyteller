@@ -1,6 +1,5 @@
 #include "game_document_manager.h"
 #include "game_document_serializer.h"
-#include "localization_manager.h"
 #include "filesystem.h"
 #include "log.h"
 #include "utils.h"
@@ -9,7 +8,7 @@
 
 namespace Storyteller
 {
-    GameDocumentManager::GameDocumentManager(Ptr<LocalizationManager> localizationManager)
+    GameDocumentManager::GameDocumentManager(const Ptr<LocalizationManager> localizationManager)
         : _localizationManager(localizationManager)
     {
         _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(GameDocumentManager::FillDictionary));
@@ -20,14 +19,8 @@ namespace Storyteller
 
     void GameDocumentManager::NewDocument()
     {
-        _document.reset(new GameDocument(std::string()));
+        _document.reset(new GameDocument());
         _proxy.reset();
-    }
-    //--------------------------------------------------------------------------
-
-    bool GameDocumentManager::OpenDocument(const std::string& pathString)
-    {
-        return OpenDocument(std::filesystem::path(pathString));
     }
     //--------------------------------------------------------------------------
 
@@ -62,14 +55,14 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameDocumentManager::Save()
+    bool GameDocumentManager::Save() const
     {
         GameDocumentSerializer serializer(_document);
         return serializer.Save();
     }
     //--------------------------------------------------------------------------
 
-    bool GameDocumentManager::Save(const std::filesystem::path& path)
+    bool GameDocumentManager::Save(const std::filesystem::path& path) const
     {
         GameDocumentSerializer serializer(_document);
         return serializer.Save(path);
@@ -113,9 +106,9 @@ namespace Storyteller
         }
 
         const auto gameName = _document->GetGameName();
-        const auto documentObjects = _document->GetObjects();
+        const auto& documentObjects = _document->GetObjects();
 
-        std::ostringstream ss;
+        std::ostringstream oss;
         const auto openBracket = '(';
         const auto closeBracket = ')';
         const auto quote = '\"';
@@ -123,18 +116,18 @@ namespace Storyteller
         const auto semicolon = ';';
         const auto newLine = '\n';
 
-        Utils::ToSStream(ss, "Game name", newLine);
-        Utils::ToSStream(ss, LocalizationManager::TranslateKeyword, openBracket, quote, gameName, quote, closeBracket, semicolon, newLine);
+        Utils::ToSStream(oss, "Game name", newLine);
+        Utils::ToSStream(oss, LocalizationManager::TranslateKeyword, openBracket, quote, gameName, quote, closeBracket, semicolon, newLine);
         for (auto i = 0; i < documentObjects.size(); i++)
         {
-            const auto object = documentObjects.at(i);
+            const auto& object = documentObjects.at(i);
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
 
-            Utils::ToSStream(ss, object->GetName(), newLine);
-            Utils::ToSStream(ss, LocalizationManager::TranslateKeyword, openBracket, quote, textObject->GetText(), quote, closeBracket, semicolon, newLine);
+            Utils::ToSStream(oss, object->GetName(), newLine);
+            Utils::ToSStream(oss, LocalizationManager::TranslateKeyword, openBracket, quote, textObject->GetText(), quote, closeBracket, semicolon, newLine);
         }
 
-        outputStream << ss.str();
+        outputStream << oss.str();
         outputStream.close();
 
         return true;

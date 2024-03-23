@@ -10,18 +10,18 @@ namespace Storyteller
     class GameDocumentSerializer
     {
     public:
-        explicit GameDocumentSerializer(Ptr<GameDocument> document);
+        explicit GameDocumentSerializer(const Ptr<GameDocument> document);
 
         bool Load(const std::filesystem::path& path);
         bool Save();
         bool Save(const std::filesystem::path& path);
 
     private:
-        bool Serialize(const std::filesystem::path& path);
+        bool Serialize(const std::filesystem::path& path) const;
         bool Deserialize(const std::filesystem::path& path);
 
     private:
-        Ptr<GameDocument> _document;
+        const Ptr<GameDocument> _document;
     };
     //--------------------------------------------------------------------------
 }

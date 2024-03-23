@@ -1,4 +1,3 @@
-#include "platform.h"
 #include "game_document_serializer.h"
 #include "log.h"
 #include "entities.h"
@@ -22,7 +21,7 @@ namespace Storyteller
 #define JSON_KEY_TARGET "Target"
 #define JSON_KEY_FINAL "Final"
 
-    GameDocumentSerializer::GameDocumentSerializer(Ptr<GameDocument> document)
+    GameDocumentSerializer::GameDocumentSerializer(const Ptr<GameDocument> document)
         : _document(document)
     {}
     //--------------------------------------------------------------------------
@@ -81,36 +80,36 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool GameDocumentSerializer::Serialize(const std::filesystem::path& path)
+    bool GameDocumentSerializer::Serialize(const std::filesystem::path& path) const
     {
         JsonWriter writer(path);
         auto ok = true;
 
         ok &= writer.Start();
 
-        ok &= writer.SaveString(JSON_KEY_GAME_NAME, _document->GetGameName().c_str());
+        ok &= writer.SaveString(JSON_KEY_GAME_NAME, _document->GetGameName());
 
-        ok &= writer.SaveString(JSON_KEY_GAME_DOMAIN_NAME, _document->GetDomainName().c_str());
+        ok &= writer.SaveString(JSON_KEY_GAME_DOMAIN_NAME, _document->GetDomainName());
 
         const auto entryPoint = _document->GetEntryPoint();
         ok &= writer.SaveUInt64(JSON_KEY_ENTRY_POINT_UUID, entryPoint ? entryPoint->GetUuid() : UUID::InvalidUuid);
 
         ok &= writer.StartArray(JSON_KEY_OBJECTS);
-        const auto objects = _document->GetObjects();
+        const auto& objects = _document->GetObjects();
 
         for (auto i = 0; i < objects.size(); i++)
         {
-            const auto object = objects.at(i);
+            const auto& object = objects.at(i);
             ok &= writer.StartObject();
 
             ok &= writer.SaveUInt64(JSON_KEY_UUID, object->GetUuid());
-            ok &= writer.SaveString(JSON_KEY_NAME, object->GetName().c_str());
+            ok &= writer.SaveString(JSON_KEY_NAME, object->GetName());
 
             const auto objectType = object->GetObjectType();
-            ok &= writer.SaveString(JSON_KEY_OBJECT_TYPE, ObjectTypeToString(objectType).c_str());
+            ok &= writer.SaveString(JSON_KEY_OBJECT_TYPE, ObjectTypeToString(objectType));
 
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
-            ok &= writer.SaveString(JSON_KEY_TEXT, textObject->GetText().c_str());
+            ok &= writer.SaveString(JSON_KEY_TEXT, textObject->GetText());
 
             switch (objectType)
             {
@@ -162,7 +161,7 @@ namespace Storyteller
 
         _document->SetGameName(reader.GetString(JSON_KEY_GAME_NAME, "Untitled"));
         _document->SetDomainName(reader.GetString(JSON_KEY_GAME_DOMAIN_NAME, "Untitled"));
-        _document->SetEntryPoint(reader.GetUInt64(JSON_KEY_ENTRY_POINT_UUID, UUID::InvalidUuid));
+        _document->SetEntryPoint(UUID(reader.GetUInt64(JSON_KEY_ENTRY_POINT_UUID, UUID::InvalidUuid)));
         const auto objectsArraySize = reader.StartArray(JSON_KEY_OBJECTS);
 
         for (auto i = 0; i < objectsArraySize; i++)

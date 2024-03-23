@@ -3,7 +3,7 @@
 
 namespace Storyteller
 {
-    Window* Window::StrtlrCreateWindow()
+    Window* Window::Create()
     {
 #ifdef STRTLR_WINDOW_BACKEND_GLFW
         return new WindowGlfw();

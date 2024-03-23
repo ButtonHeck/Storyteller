@@ -14,7 +14,7 @@ namespace Storyteller
             return false;
         }
 
-        _window.reset(Window::StrtlrCreateWindow());
+        _window.reset(Window::Create());
         if (!_window || !_window->Initialize())
         {
             return false;

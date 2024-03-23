@@ -26,13 +26,13 @@ namespace Storyteller
 		{
 			pfd::open_file opener(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, pfd::opt::multiselect);
 
+			auto paths = std::vector<std::string>();
 			const auto files = opener.result();
 			if (files.empty())
 			{
-				return std::vector<std::string>();
+				return paths;
 			}
 
-			std::vector<std::string> paths;
 			for (const auto& path : files)
 			{
 				paths.push_back(Filesystem::ToString(Utils::FromStrBytesToWStrBytes(path)));
@@ -46,13 +46,13 @@ namespace Storyteller
 		{
 			pfd::open_file opener(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), {}, pfd::opt::force_path);
 
-			const auto dir = opener.result();
-			if (dir.empty())
+			const auto directories = opener.result();
+			if (directories.empty())
 			{
 				return std::string();
 			}
 
-			return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(dir.front()));
+			return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(directories.front()));
 		}
 		//--------------------------------------------------------------------------
 

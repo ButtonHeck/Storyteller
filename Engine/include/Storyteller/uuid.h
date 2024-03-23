@@ -10,7 +10,7 @@ namespace Storyteller
         static UUID InvalidUuid;
 
         UUID();
-        UUID(uint64_t uuid);
+        explicit UUID(uint64_t uuid);
 
         operator uint64_t() const;
 

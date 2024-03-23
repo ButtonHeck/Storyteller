@@ -31,7 +31,7 @@ namespace Storyteller
         const std::string& GetName() const;
         void SetName(const std::string& name);
 
-        void SetChangeCallback(std::function<void()> changeCallback);
+        void SetChangeCallback(const std::function<void()>& changeCallback);
 
         virtual ObjectType GetObjectType() const = 0;
         virtual bool IsConsistent() const = 0;
@@ -76,6 +76,7 @@ namespace Storyteller
         bool MoveActionDown(const UUID& actionUuid);
         bool ContainsAction(const UUID& actionUuid) const;
         int IndexOfAction(const UUID& actionUuid) const;
+
         void SetFinal(bool isFinal);
         bool IsFinal() const;
 

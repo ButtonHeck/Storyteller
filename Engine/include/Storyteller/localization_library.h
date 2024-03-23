@@ -26,8 +26,7 @@ namespace Storyteller
         const std::string& Get(const std::string& domain, const std::string& source, const std::string& context);
 
     private:
-        typedef std::string DomainName;
-        std::unordered_map<DomainName, Ptr<LocalizationLookupDictionary>> _lookupDictionaries;
+        std::unordered_map<std::string, Ptr<LocalizationLookupDictionary>> _lookupDictionaries;
         std::string _currentLocaleString;
     };
     //--------------------------------------------------------------------------

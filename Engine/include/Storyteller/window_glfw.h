@@ -4,8 +4,6 @@
 #include "settings.h"
 #include "pointers.h"
 
-#include <functional>
-
 struct GLFWwindow;
 
 namespace Storyteller
@@ -36,8 +34,8 @@ namespace Storyteller
         void* GetImplPointer() const override;
         void SetEventCallback(const EventCallbackFn& callback) override;
 
-        void SaveSettings(Ptr<Settings> settings) const override;
-        void LoadSettings(Ptr<Settings> settings) override;
+        void SaveSettings(const Ptr<Settings> settings) const override;
+        void LoadSettings(const Ptr<Settings> settings) override;
 
     private:
         constexpr static auto _DefaultWidth = 1920;

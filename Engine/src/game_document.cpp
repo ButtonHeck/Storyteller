@@ -1,6 +1,7 @@
 #include "game_document.h"
 #include "log.h"
 #include "filesystem.h"
+#include "utils.h"
 
 namespace Storyteller
 {
@@ -64,9 +65,11 @@ namespace Storyteller
 
     void GameDocument::SetPath(const std::filesystem::path& path)
     {
-        STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", Filesystem::ToU8String(path));
-
-        _path = path;
+        if (_path != path)
+        {
+            STRTLR_CORE_LOG_INFO("GameDocument: set path '{}'", Filesystem::ToU8String(path));
+            _path = path;
+        }
     }
     //--------------------------------------------------------------------------
 
@@ -98,11 +101,11 @@ namespace Storyteller
         {
             const auto questObjects = GetObjects<QuestObject>();
             auto nameIndex = 1;
-            auto name = std::string(ObjectTypeToString(ObjectType::QuestObjectType).append(std::to_string(nameIndex)));
+            auto name = Utils::Concatenate(ObjectTypeToString(ObjectType::QuestObjectType), nameIndex);
             while (std::find_if(questObjects.cbegin(), questObjects.cend(), [&](const Ptr<QuestObject> obj) { return obj->GetName() == name; }) != questObjects.cend())
             {
                 ++nameIndex;
-                name = std::string(ObjectTypeToString(ObjectType::QuestObjectType).append(std::to_string(nameIndex)));
+                name = Utils::Concatenate(ObjectTypeToString(ObjectType::QuestObjectType), nameIndex);
             }
 
             auto newObject = CreatePtr<QuestObject>(uuid, [this]() { SetDirty(true); });
@@ -117,11 +120,11 @@ namespace Storyteller
         {
             const auto actionObjects = GetObjects<ActionObject>();
             auto nameIndex = 1;
-            auto name = std::string(ObjectTypeToString(ObjectType::ActionObjectType).append(std::to_string(nameIndex)));
+            auto name = Utils::Concatenate(ObjectTypeToString(ObjectType::ActionObjectType), nameIndex);
             while (std::find_if(actionObjects.cbegin(), actionObjects.cend(), [&](const Ptr<ActionObject> obj) { return obj->GetName() == name; }) != actionObjects.cend())
             {
                 ++nameIndex;
-                name = std::string(ObjectTypeToString(ObjectType::ActionObjectType).append(std::to_string(nameIndex)));
+                name = Utils::Concatenate(ObjectTypeToString(ObjectType::ActionObjectType), nameIndex);
             }
 
             auto newObject = CreatePtr<ActionObject>(uuid, [this]() { SetDirty(true); });
@@ -219,10 +222,12 @@ namespace Storyteller
 
     void GameDocument::SetEntryPoint(const UUID& uuid)
     {
-        STRTLR_CORE_LOG_INFO("GameDocument: set entry point ({})", uuid);
-
-        _entryPointUuid = uuid;
-        SetDirty(true);
+        if (_entryPointUuid != uuid)
+        {
+            STRTLR_CORE_LOG_INFO("GameDocument: set entry point ({})", uuid);
+            _entryPointUuid = uuid;
+            SetDirty(true);
+        }
     }
     //--------------------------------------------------------------------------
 

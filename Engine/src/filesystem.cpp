@@ -41,16 +41,7 @@ namespace Storyteller
             return false;
         }
 
-        auto tempPath = path;
-        while (!std::filesystem::exists(tempPath.parent_path()))
-        {
-            if (!std::filesystem::create_directory(tempPath.parent_path()))
-            {
-                return false;
-            }
-
-            tempPath = tempPath.parent_path();
-        }
+        std::filesystem::create_directories(path.parent_path());
 
         return true;
     }

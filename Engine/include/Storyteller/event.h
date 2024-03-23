@@ -75,7 +75,7 @@ namespace Storyteller
     class EventDispatcher
     {
     public:
-        EventDispatcher(Event& event)
+        explicit EventDispatcher(Event& event)
             : _event(event)
         {}
 

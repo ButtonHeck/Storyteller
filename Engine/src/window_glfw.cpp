@@ -193,7 +193,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::SaveSettings(Ptr<Settings> settings) const
+    void WindowGlfw::SaveSettings(const Ptr<Settings> settings) const
     {
         int width;
         int height;
@@ -213,7 +213,7 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    void WindowGlfw::LoadSettings(Ptr<Settings> settings)
+    void WindowGlfw::LoadSettings(const Ptr<Settings> settings)
     {
         settings->StartLoadGroup("Window");
         const auto width = settings->GetUInt("Width", _DefaultWidth);

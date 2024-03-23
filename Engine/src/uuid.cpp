@@ -22,8 +22,7 @@ namespace Storyteller
 
     UUID::UUID(uint64_t uuid)
         : _uuid(uuid)
-    {
-    }
+    {}
     //--------------------------------------------------------------------------
 
     UUID::operator uint64_t() const

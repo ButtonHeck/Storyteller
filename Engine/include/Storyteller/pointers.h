@@ -12,6 +12,7 @@ namespace Storyteller
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+    //--------------------------------------------------------------------------
 
     template<typename T>
     using UPtr = std::unique_ptr<T>;
@@ -21,4 +22,5 @@ namespace Storyteller
     {
         return std::make_unique<T>(std::forward<Args>(args)...);
     }
+    //--------------------------------------------------------------------------
 }

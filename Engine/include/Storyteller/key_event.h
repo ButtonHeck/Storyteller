@@ -19,12 +19,12 @@ namespace Storyteller
         }
 
     protected:
-        KeyEvent(const KeyCode keyCode)
+        explicit KeyEvent(const KeyCode keyCode)
             : _keyCode(keyCode)
         {}
 
     protected:
-        KeyCode _keyCode;
+        const KeyCode _keyCode;
     };
     //--------------------------------------------------------------------------
 
@@ -55,8 +55,8 @@ namespace Storyteller
         }
 
     private:
-        int _mods;
-        bool _repeat;
+        const int _mods;
+        const bool _repeat;
     };
     //--------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(KeyReleaseEventType)
 
-        KeyReleaseEvent(const KeyCode keyCode)
+        explicit KeyReleaseEvent(const KeyCode keyCode)
             : KeyEvent(keyCode)
         {}
 
@@ -81,7 +81,7 @@ namespace Storyteller
     {
         EVENT_CLASS_TYPE(KeyCharEventType)
 
-        KeyCharEvent(const KeyCode keyCode)
+        explicit KeyCharEvent(const KeyCode keyCode)
             : KeyEvent(keyCode)
         {}
 

@@ -36,8 +36,8 @@ namespace Storyteller
         }
 
     private:
-        float _x;
-        float _y;
+        const float _x;
+        const float _y;
     };
     //--------------------------------------------------------------------------
 
@@ -72,8 +72,8 @@ namespace Storyteller
         }
 
     private:
-        float _xOffset;
-        float _yOffset;
+        const float _xOffset;
+        const float _yOffset;
     };
     //--------------------------------------------------------------------------
 
@@ -102,8 +102,8 @@ namespace Storyteller
         {}
 
     protected:
-        MouseCode _button;
-        int _mods;
+        const MouseCode _button;
+        const int _mods;
     };
     //--------------------------------------------------------------------------
 
