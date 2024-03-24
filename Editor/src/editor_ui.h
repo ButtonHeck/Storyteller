@@ -4,7 +4,7 @@
 #include "editor_ui_impl.h"
 #include "Storyteller/settings.h"
 #include "Storyteller/window.h"
-#include "Storyteller/localization_manager.h"
+#include "Storyteller/i18n_manager.h"
 #include "Storyteller/pointers.h"
 #include "Storyteller/window_event.h"
 #include "Storyteller/key_event.h"

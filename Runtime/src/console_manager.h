@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Storyteller/pointers.h"
-#include "Storyteller/localization_manager.h"
+#include "Storyteller/i18n_manager.h"
 
 #include <string>
 #include <vector>

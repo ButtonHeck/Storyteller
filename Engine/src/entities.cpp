@@ -1,6 +1,6 @@
 #include "entities.h"
 #include "log.h"
-#include "localization_manager.h"
+#include "i18n_manager.h"
 
 namespace Storyteller
 {

@@ -3,7 +3,7 @@
 #include "console_manager.h"
 #include "Storyteller/pointers.h"
 #include "Storyteller/game_document.h"
-#include "Storyteller/localization_manager.h"
+#include "Storyteller/i18n_manager.h"
 
 namespace Storyteller
 {

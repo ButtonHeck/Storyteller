@@ -2,7 +2,7 @@
 
 #include "Storyteller/window.h"
 #include "Storyteller/game_document_manager.h"
-#include "Storyteller/localization_manager.h"
+#include "Storyteller/i18n_manager.h"
 #include "Storyteller/settings.h"
 #include "Storyteller/pointers.h"
 #include "Storyteller/key_event.h"

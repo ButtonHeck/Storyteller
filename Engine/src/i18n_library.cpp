@@ -1,5 +1,5 @@
-#include "localization_library.h"
-#include "localization_lookup_dictionary.h"
+#include "i18n_library.h"
+#include "i18n_lookup_dictionary.h"
 
 namespace Storyteller
 {

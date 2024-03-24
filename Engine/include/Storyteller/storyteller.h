@@ -13,7 +13,7 @@
 #include "Storyteller/image.h"
 #include "Storyteller/key_codes.h"
 #include "Storyteller/key_event.h"
-#include "Storyteller/localization_manager.h"
+#include "Storyteller/i18n_manager.h"
 #include "Storyteller/log.h"
 #include "Storyteller/mouse_codes.h"
 #include "Storyteller/mouse_event.h"

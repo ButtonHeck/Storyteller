@@ -1,5 +1,5 @@
-#include "localization_manager.h"
-#include "localization_library.h"
+#include "i18n_manager.h"
+#include "i18n_library.h"
 #include "log.h"
 
 #include <iostream>

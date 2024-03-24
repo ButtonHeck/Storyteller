@@ -1,6 +1,6 @@
 #pragma once
 
-#include "localization_manager.h"
+#include "i18n_manager.h"
 #include "settings.h"
 #include "pointers.h"
 #include "event.h"

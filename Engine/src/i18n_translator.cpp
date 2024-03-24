@@ -1,4 +1,4 @@
-#include "localization_translator.h"
+#include "i18n_translator.h"
 
 namespace Storyteller::I18N::Translator
 {

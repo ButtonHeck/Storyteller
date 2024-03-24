@@ -3,7 +3,7 @@
 #include "pointers.h"
 #include "game_document.h"
 #include "game_document_sort_filter_proxy_view.h"
-#include "localization_manager.h"
+#include "i18n_manager.h"
 
 namespace Storyteller
 {

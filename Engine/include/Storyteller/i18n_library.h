@@ -1,6 +1,6 @@
 #pragma once
 
-#include "localization_base.h"
+#include "i18n_base.h"
 #include "pointers.h"
 
 #include <unordered_map>

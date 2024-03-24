@@ -1,4 +1,4 @@
-#include "localization_lookup_dictionary.h"
+#include "i18n_lookup_dictionary.h"
 
 namespace Storyteller
 {
