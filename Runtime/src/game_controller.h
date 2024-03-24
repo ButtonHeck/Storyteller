@@ -27,9 +27,9 @@ namespace Storyteller
         void FillDictionary() const;
 
     private:
-        Ptr<ConsoleManager> const _consoleManager;
-        Ptr<GameDocument> const _gameDocument;
-        Ptr<LocalizationManager> const _localizationManager;
+        const Ptr<ConsoleManager> _consoleManager;
+        const Ptr<GameDocument> _gameDocument;
+        const Ptr<LocalizationManager> _localizationManager;
     };
     //--------------------------------------------------------------------------
 }

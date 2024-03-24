@@ -33,7 +33,7 @@ namespace Storyteller
         void FillDictionary() const;
 
     private:
-        Ptr<LocalizationManager> const _localizationManager;
+        const Ptr<LocalizationManager> _localizationManager;
         char _separator;
     };
     //--------------------------------------------------------------------------

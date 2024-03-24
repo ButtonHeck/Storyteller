@@ -5,7 +5,7 @@
 namespace Storyteller
 {
     GameController::GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager)
-        : _consoleManager(new ConsoleManager(localizationManager))
+        : _consoleManager(CreatePtr<ConsoleManager>(localizationManager))
         , _gameDocument(gameDocument)
         , _localizationManager(localizationManager)
     {
