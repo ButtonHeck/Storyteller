@@ -16,18 +16,18 @@ namespace Storyteller
         bool Initialize() override;
 
     protected:
-        virtual bool OnWindowMoveEvent(WindowMoveEvent& event) = 0;
-        virtual bool OnWindowCloseEvent(WindowCloseEvent& event) = 0;
-        virtual bool OnWindowResizeEvent(WindowResizeEvent& event) = 0;
-        virtual bool OnWindowFocusEvent(WindowFocusEvent& event) = 0;
-        virtual bool OnWindowIconifyEvent(WindowIconifyEvent& event) = 0;
-        virtual bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event) = 0;
-        virtual bool OnWindowFramebufferResizeEvent(WindowFramebufferResizeEvent& event) = 0;
+        virtual bool OnWindowMoveEvent(WindowMoveEvent& event) { return true; };
+        virtual bool OnWindowCloseEvent(WindowCloseEvent& event) { return true; };
+        virtual bool OnWindowResizeEvent(WindowResizeEvent& event) { return true; };
+        virtual bool OnWindowFocusEvent(WindowFocusEvent& event) { return true; };
+        virtual bool OnWindowIconifyEvent(WindowIconifyEvent& event) { return true; };
+        virtual bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event) { return true; };
+        virtual bool OnWindowFramebufferResizeEvent(WindowFramebufferResizeEvent& event) { return true; };
 
-        virtual bool OnMouseMoveEvent(MouseMoveEvent& event) = 0;
-        virtual bool OnMouseScrollEvent(MouseScrollEvent& event) = 0;
-        virtual bool OnMouseButtonPressEvent(MouseButtonPressEvent& event) = 0;
-        virtual bool OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& event) = 0;
+        virtual bool OnMouseMoveEvent(MouseMoveEvent& event) { return true; };
+        virtual bool OnMouseScrollEvent(MouseScrollEvent& event) { return true; };
+        virtual bool OnMouseButtonPressEvent(MouseButtonPressEvent& event) { return true; };
+        virtual bool OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& event) { return true; };
 
     protected:
         Ptr<Window> _window;

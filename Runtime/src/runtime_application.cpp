@@ -16,10 +16,6 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    RuntimeApplication::~RuntimeApplication()
-    {}
-    //--------------------------------------------------------------------------
-
     std::string RuntimeApplication::GetApplicationName() const
     {
         return "Storyteller runtime";
@@ -48,34 +44,6 @@ namespace Storyteller
     void RuntimeApplication::Run()
     {
         _gameController->Launch();
-    }
-    //--------------------------------------------------------------------------
-
-    void RuntimeApplication::OnEvent(Event& event)
-    {
-        EventDispatcher dispatcher(event);
-
-        dispatcher.Dispatch<KeyPressEvent>(STRTLR_BIND(RuntimeApplication::OnKeyPressEvent));
-        dispatcher.Dispatch<KeyReleaseEvent>(STRTLR_BIND(RuntimeApplication::OnKeyReleaseEvent));
-        dispatcher.Dispatch<KeyCharEvent>(STRTLR_BIND(RuntimeApplication::OnKeyCharEvent));
-    }
-    //--------------------------------------------------------------------------
-
-    bool RuntimeApplication::OnKeyPressEvent(KeyPressEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool RuntimeApplication::OnKeyReleaseEvent(KeyReleaseEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool RuntimeApplication::OnKeyCharEvent(KeyCharEvent& event)
-    {
-        return true;
     }
     //--------------------------------------------------------------------------
 }

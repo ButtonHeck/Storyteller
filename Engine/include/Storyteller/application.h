@@ -21,11 +21,11 @@ namespace Storyteller
         virtual void Run() = 0;
 
     protected:
-        virtual void OnEvent(Event& event) = 0;
+        virtual void OnEvent(Event& event) {};
 
-        virtual bool OnKeyPressEvent(KeyPressEvent& event) = 0;
-        virtual bool OnKeyReleaseEvent(KeyReleaseEvent& event) = 0;
-        virtual bool OnKeyCharEvent(KeyCharEvent& event) = 0;
+        virtual bool OnKeyPressEvent(KeyPressEvent& event) { return true; };
+        virtual bool OnKeyReleaseEvent(KeyReleaseEvent& event) { return true; };
+        virtual bool OnKeyCharEvent(KeyCharEvent& event) { return true; };
 
     protected:
         Ptr<LocalizationManager> _localizationManager;

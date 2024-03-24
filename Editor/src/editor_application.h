@@ -20,22 +20,11 @@ namespace Storyteller
 
     protected:
         void OnEvent(Event& event) override;
-        bool OnWindowMoveEvent(WindowMoveEvent& event) override;
+        
         bool OnWindowCloseEvent(WindowCloseEvent& event) override;
-        bool OnWindowResizeEvent(WindowResizeEvent& event) override;
-        bool OnWindowFocusEvent(WindowFocusEvent& event) override;
-        bool OnWindowIconifyEvent(WindowIconifyEvent& event) override;
         bool OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event) override;
-        bool OnWindowFramebufferResizeEvent(WindowFramebufferResizeEvent& event) override;
-
-        bool OnMouseMoveEvent(MouseMoveEvent& event) override;
-        bool OnMouseScrollEvent(MouseScrollEvent& event) override;
-        bool OnMouseButtonPressEvent(MouseButtonPressEvent& event) override;
-        bool OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& event) override;
 
         bool OnKeyPressEvent(KeyPressEvent& event) override;
-        bool OnKeyReleaseEvent(KeyReleaseEvent& event) override;
-        bool OnKeyCharEvent(KeyCharEvent& event) override;
 
     private:
         void SaveSettings() const;

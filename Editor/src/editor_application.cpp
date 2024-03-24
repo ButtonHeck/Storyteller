@@ -71,28 +71,10 @@ namespace Storyteller
     {
         EventDispatcher dispatcher(event);
 
-        dispatcher.Dispatch<WindowMoveEvent>(STRTLR_BIND(EditorApplication::OnWindowMoveEvent));
         dispatcher.Dispatch<WindowCloseEvent>(STRTLR_BIND(EditorApplication::OnWindowCloseEvent));
-        dispatcher.Dispatch<WindowResizeEvent>(STRTLR_BIND(EditorApplication::OnWindowResizeEvent));
-        dispatcher.Dispatch<WindowFocusEvent>(STRTLR_BIND(EditorApplication::OnWindowFocusEvent));
-        dispatcher.Dispatch<WindowIconifyEvent>(STRTLR_BIND(EditorApplication::OnWindowIconifyEvent));
         dispatcher.Dispatch<WindowFramebufferRefreshEvent>(STRTLR_BIND(EditorApplication::OnWindowFramebufferRefreshEvent));
-        dispatcher.Dispatch<WindowFramebufferResizeEvent>(STRTLR_BIND(EditorApplication::OnWindowFramebufferResizeEvent));
-
-        dispatcher.Dispatch<MouseMoveEvent>(STRTLR_BIND(EditorApplication::OnMouseMoveEvent));
-        dispatcher.Dispatch<MouseScrollEvent>(STRTLR_BIND(EditorApplication::OnMouseScrollEvent));
-        dispatcher.Dispatch<MouseButtonPressEvent>(STRTLR_BIND(EditorApplication::OnMouseButtonPressEvent));
-        dispatcher.Dispatch<MouseButtonReleaseEvent>(STRTLR_BIND(EditorApplication::OnMouseButtonReleaseEvent));
 
         dispatcher.Dispatch<KeyPressEvent>(STRTLR_BIND(EditorApplication::OnKeyPressEvent));
-        dispatcher.Dispatch<KeyReleaseEvent>(STRTLR_BIND(EditorApplication::OnKeyReleaseEvent));
-        dispatcher.Dispatch<KeyCharEvent>(STRTLR_BIND(EditorApplication::OnKeyCharEvent));
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnWindowMoveEvent(WindowMoveEvent& event)
-    {
-        return true;
     }
     //--------------------------------------------------------------------------
 
@@ -102,75 +84,15 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool EditorApplication::OnWindowResizeEvent(WindowResizeEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnWindowFocusEvent(WindowFocusEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnWindowIconifyEvent(WindowIconifyEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
     bool EditorApplication::OnWindowFramebufferRefreshEvent(WindowFramebufferRefreshEvent& event)
     {
         return _ui->OnWindowFramebufferRefreshEvent(event);
     }
     //--------------------------------------------------------------------------
 
-    bool EditorApplication::OnWindowFramebufferResizeEvent(WindowFramebufferResizeEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnMouseMoveEvent(MouseMoveEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnMouseScrollEvent(MouseScrollEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnMouseButtonPressEvent(MouseButtonPressEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
     bool EditorApplication::OnKeyPressEvent(KeyPressEvent& event)
     {
         return _ui->OnKeyPressEvent(event);
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnKeyReleaseEvent(KeyReleaseEvent& event)
-    {
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
-    bool EditorApplication::OnKeyCharEvent(KeyCharEvent& event)
-    {
-        return true;
     }
     //--------------------------------------------------------------------------
 
