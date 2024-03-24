@@ -14,7 +14,7 @@ namespace Storyteller
     class EditorUi
     {
     public:
-        EditorUi(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager);
+        EditorUi(const Ptr<Window> window, const Ptr<I18N::Manager> i18nManager);
 
         bool Initialize();
 

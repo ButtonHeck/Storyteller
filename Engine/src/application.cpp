@@ -5,7 +5,7 @@
 namespace Storyteller
 {
     Application::Application()
-        : _localizationManager(nullptr)
+        : _i18nManager(nullptr)
         , _settings(nullptr)
     {}
     //--------------------------------------------------------------------------
@@ -15,12 +15,12 @@ namespace Storyteller
         Filesystem::Initialize();
         Log::Initialize();
 
-        _localizationManager.reset(new LocalizationManager(LocalizationManager::LocaleEnUTF8Keyword));
-        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_ENGINE);
+        _i18nManager.reset(new I18N::Manager(I18N::LocaleEnUTF8Keyword));
+        _i18nManager->AddMessagesDomain(STRTLR_TR_DOMAIN_ENGINE);
 
-        _localizationManager->AddLocaleChangedCallback([this]() {
-            _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Quest object");
-            _localizationManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Action object");
+        _i18nManager->AddLocaleChangedCallback([this]() {
+            _i18nManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Quest object");
+            _i18nManager->Translate(STRTLR_TR_DOMAIN_ENGINE, "Action object");
         });
 
         _settings.reset(new Settings(GetApplicationName()));

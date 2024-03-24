@@ -2,45 +2,48 @@
 
 namespace Storyteller
 {
-    LocalizationLookupDictionary::LocalizationLookupDictionary(const std::string& domain, const std::string& defaultLocale)
-        : _domain(domain)
-        , _currentLocaleString(defaultLocale)
-    {}
-    //--------------------------------------------------------------------------
-
-    const std::string& LocalizationLookupDictionary::GetDomain() const
+    namespace I18N
     {
-        return _domain;
-    }
-    //--------------------------------------------------------------------------
+        LookupDictionary::LookupDictionary(const DomainStr& domain, const LocaleStr& defaultLocale)
+            : _domain(domain)
+            , _currentLocaleString(defaultLocale)
+        {}
+        //--------------------------------------------------------------------------
 
-    void LocalizationLookupDictionary::SetLocale(const std::string& locale)
-    {
-        _currentLocaleString = locale;
-    }
-    //--------------------------------------------------------------------------
+        const DomainStr& LookupDictionary::GetDomain() const
+        {
+            return _domain;
+        }
+        //--------------------------------------------------------------------------
 
-    void LocalizationLookupDictionary::Add(const std::string& source, const std::string& translation)
-    {
-        _translations[_currentLocaleString].insert(std::make_pair(source, translation));
-    }
-    //--------------------------------------------------------------------------
+        void LookupDictionary::SetLocale(const LocaleStr& locale)
+        {
+            _currentLocaleString = locale;
+        }
+        //--------------------------------------------------------------------------
 
-    void LocalizationLookupDictionary::Add(const std::string& source, const std::string& context, const std::string& translation)
-    {
-        _translationsWithContext[_currentLocaleString].insert(std::make_pair(ContextedSource(source, context), translation));
-    }
-    //--------------------------------------------------------------------------
+        void LookupDictionary::Add(const SourceStr& source, const TranslationStr& translation)
+        {
+            _translations[_currentLocaleString].insert(std::make_pair(source, translation));
+        }
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationLookupDictionary::Get(const std::string& source)
-    {
-        return _translations[_currentLocaleString][source];
-    }
-    //--------------------------------------------------------------------------
+        void LookupDictionary::Add(const SourceStr& source, const ContextStr& context, const TranslationStr& translation)
+        {
+            _translationsWithContext[_currentLocaleString].insert(std::make_pair(ContextedSource(source, context), translation));
+        }
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationLookupDictionary::Get(const std::string& source, const std::string& context)
-    {
-        return _translationsWithContext[_currentLocaleString][{source, context}];
+        const TranslationStr& LookupDictionary::Get(const SourceStr& source)
+        {
+            return _translations[_currentLocaleString][source];
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& LookupDictionary::Get(const SourceStr& source, const ContextStr& context)
+        {
+            return _translationsWithContext[_currentLocaleString][{source, context}];
+        }
+        //--------------------------------------------------------------------------
     }
-    //--------------------------------------------------------------------------
 }

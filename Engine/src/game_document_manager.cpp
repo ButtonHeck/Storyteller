@@ -8,10 +8,10 @@
 
 namespace Storyteller
 {
-    GameDocumentManager::GameDocumentManager(const Ptr<LocalizationManager> localizationManager)
-        : _localizationManager(localizationManager)
+    GameDocumentManager::GameDocumentManager(const Ptr<I18N::Manager> i18nManager)
+        : _i18nManager(i18nManager)
     {
-        _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(GameDocumentManager::FillDictionary));
+        _i18nManager->AddLocaleChangedCallback(STRTLR_BIND(GameDocumentManager::FillDictionary));
 
         NewDocument();
     }
@@ -32,13 +32,13 @@ namespace Storyteller
 
         if (success)
         {
-            _localizationManager->RemoveMessagesDomain(_document->GetDomainName());
+            _i18nManager->RemoveMessagesDomain(_document->GetDomainName());
 
             _document.swap(newDocument);
             _proxy.reset();
 
-            _localizationManager->AddMessagesPath(Filesystem::ToU8String(_document->GetTranslationsPath()));
-            _localizationManager->AddMessagesDomain(_document->GetDomainName());
+            _i18nManager->AddMessagesPath(Filesystem::ToU8String(_document->GetTranslationsPath()));
+            _i18nManager->AddMessagesDomain(_document->GetDomainName());
             FillDictionary();
 
             return true;
@@ -117,14 +117,14 @@ namespace Storyteller
         const auto newLine = '\n';
 
         Utils::ToSStream(oss, "Game name", newLine);
-        Utils::ToSStream(oss, LocalizationManager::TranslateKeyword, openBracket, quote, gameName, quote, closeBracket, semicolon, newLine);
+        Utils::ToSStream(oss, I18N::TranslateKeyword, openBracket, quote, gameName, quote, closeBracket, semicolon, newLine);
         for (auto i = 0; i < documentObjects.size(); i++)
         {
             const auto& object = documentObjects.at(i);
             const auto textObject = dynamic_cast<const TextObject*>(object.get());
 
             Utils::ToSStream(oss, object->GetName(), newLine);
-            Utils::ToSStream(oss, LocalizationManager::TranslateKeyword, openBracket, quote, textObject->GetText(), quote, closeBracket, semicolon, newLine);
+            Utils::ToSStream(oss, I18N::TranslateKeyword, openBracket, quote, textObject->GetText(), quote, closeBracket, semicolon, newLine);
         }
 
         outputStream << oss.str();
@@ -136,12 +136,12 @@ namespace Storyteller
 
     void GameDocumentManager::FillDictionary() const
     {
-        _localizationManager->Translate(_document->GetDomainName(), _document->GetGameName());
+        _i18nManager->Translate(_document->GetDomainName(), _document->GetGameName());
 
         const auto objects = _document->GetObjects<TextObject>();
         for (const auto& object : objects)
         {
-            _localizationManager->Translate(_document->GetDomainName(), object->GetText());
+            _i18nManager->Translate(_document->GetDomainName(), object->GetText());
         }
     }
     //--------------------------------------------------------------------------

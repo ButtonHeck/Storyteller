@@ -1,61 +1,38 @@
 #pragma once
 
-#include <string>
+#include "localization_base.h"
+
 #include <unordered_map>
 
 namespace Storyteller
 {
-    class LocalizationLookupDictionary
+    namespace I18N
     {
-    public:
-        explicit LocalizationLookupDictionary(const std::string& domain, const std::string& defaultLocale = "");
-
-        const std::string& GetDomain() const;
-        void SetLocale(const std::string& locale);
-
-        void Add(const std::string& source, const std::string& translation);
-        void Add(const std::string& source, const std::string& context, const std::string& translation);
-        const std::string& Get(const std::string& source);
-        const std::string& Get(const std::string& source, const std::string& context);
-
-    private:
-        typedef std::string LocaleName;
-        typedef std::string SourceString;
-        typedef std::string ContextString;
-        typedef std::string TranslationString;
-
-        struct ContextedSource
+        class LookupDictionary
         {
-            SourceString source;
-            ContextString context;
+        public:
+            explicit LookupDictionary(const DomainStr& domain, const LocaleStr& defaultLocale = "");
 
-            bool operator==(const ContextedSource& other) const
-            {
-                return source == other.source && context == other.context;
-            }
+            const DomainStr& GetDomain() const;
+            void SetLocale(const LocaleStr& locale);
+
+            void Add(const SourceStr& source, const TranslationStr& translation);
+            void Add(const SourceStr& source, const ContextStr& context, const TranslationStr& translation);
+            const TranslationStr& Get(const SourceStr& source);
+            const TranslationStr& Get(const SourceStr& source, const ContextStr& context);
+
+        private:
+            typedef std::unordered_map<SourceStr, TranslationStr> Translations;
+            typedef std::unordered_map<ContextedSource, TranslationStr, ContextedSourceHash> ContextedTranslations;
+            typedef std::unordered_map<LocaleStr, Translations> LocalizedTranslations;
+            typedef std::unordered_map<LocaleStr, ContextedTranslations> LocalizedContextedTranslations;
+
+        private:
+            const DomainStr _domain;
+            LocaleStr _currentLocaleString;
+            LocalizedTranslations _translations;
+            LocalizedContextedTranslations _translationsWithContext;
         };
-
-        struct ContextedSourceHash
-        {
-            std::size_t operator()(const ContextedSource& p) const
-            {
-                const auto hs = std::hash<SourceString>{}(p.source);
-                const auto hc = std::hash<ContextString>{}(p.context);
-
-                return hs ^ hc;
-            }
-        };
-
-        typedef std::unordered_map<SourceString, TranslationString> Translations;
-        typedef std::unordered_map<ContextedSource, TranslationString, ContextedSourceHash> ContextedTranslations;
-        typedef std::unordered_map<LocaleName, Translations> LocalizedTranslations;
-        typedef std::unordered_map<LocaleName, ContextedTranslations> LocalizedContextedTranslations;
-
-    private:
-        const std::string _domain;
-        LocaleName _currentLocaleString;
-        LocalizedTranslations _translations;
-        LocalizedContextedTranslations _translationsWithContext;
-    };
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+    }
 }

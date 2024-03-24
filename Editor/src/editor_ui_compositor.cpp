@@ -11,14 +11,14 @@
 
 namespace Storyteller
 {
-    EditorUiCompositor::EditorUiCompositor(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager)
+    EditorUiCompositor::EditorUiCompositor(const Ptr<Window> window, const Ptr<I18N::Manager> i18nManager)
         : _window(window)
-        , _localizationManager(localizationManager)
-        , _gameDocumentManager(CreatePtr<GameDocumentManager>(localizationManager))
+        , _i18nManager(i18nManager)
+        , _gameDocumentManager(CreatePtr<GameDocumentManager>(i18nManager))
         , _lookupDict(nullptr)
     {
         FillDictionary();
-        _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(EditorUiCompositor::FillDictionary));
+        _i18nManager->AddLocaleChangedCallback(STRTLR_BIND(EditorUiCompositor::FillDictionary));
     }
     //--------------------------------------------------------------------------
 
@@ -107,7 +107,7 @@ namespace Storyteller
         settings->StartSaveGroup("EditorUiCompositor");
         settings->SaveBool("Log", _state.logPanel);
         settings->SaveBool("LogAutoscroll", _state.logAutoscroll);
-        settings->SaveString("Language", _localizationManager->GetLocale());
+        settings->SaveString("Language", _i18nManager->GetLocale());
         settings->StartSaveArray("RecentDocuments");
         for (const auto& recent : _recentList)
         {
@@ -123,7 +123,7 @@ namespace Storyteller
         settings->StartLoadGroup("EditorUiCompositor");
         _state.logPanel = settings->GetBool("Log", true);
         _state.logAutoscroll = settings->GetBool("LogAutoscroll", false);
-        _localizationManager->SetLocale(settings->GetString("Language", LocalizationManager::LocaleEnUTF8Keyword));
+        _i18nManager->SetLocale(settings->GetString("Language", I18N::LocaleEnUTF8Keyword));
         const auto recentSize = settings->StartLoadArray("RecentDocuments");
         for (auto i = 0; i < recentSize; i++)
         {
@@ -311,14 +311,14 @@ namespace Storyteller
     {
         if (ImGui::BeginMenu(_lookupDict->Get("Language").c_str()))
         {
-            if (ImGui::MenuItem(LocalizationManager::LocaleEnName))
+            if (ImGui::MenuItem(I18N::LocaleEnName))
             {
-                _localizationManager->SetLocale(LocalizationManager::LocaleEnUTF8Keyword);
+                _i18nManager->SetLocale(I18N::LocaleEnUTF8Keyword);
             }
 
-            if (ImGui::MenuItem(LocalizationManager::LocaleRuName))
+            if (ImGui::MenuItem(I18N::LocaleRuName))
             {
-                _localizationManager->SetLocale(LocalizationManager::LocaleRuUTF8Keyword);
+                _i18nManager->SetLocale(I18N::LocaleRuUTF8Keyword);
             }
 
             ImGui::EndMenu();
@@ -377,7 +377,7 @@ namespace Storyteller
                 }
             }
 
-            auto gameNameTranslation = _localizationManager->Translation(document->GetDomainName(), gameName);
+            auto gameNameTranslation = _i18nManager->Translation(document->GetDomainName(), gameName);
             UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
             ImGui::InputText("###GameNameTranslation", &gameNameTranslation, ImGuiInputTextFlags_ReadOnly);
         }
@@ -442,8 +442,8 @@ namespace Storyteller
             if (ImGui::BeginPopup("AddObjectPopup"))
             {
                 std::string typeItems[] = {
-                    _localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)),
-                    _localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType))
+                    _i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::QuestObjectType)),
+                    _i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(ObjectType::ActionObjectType))
                 };
 
                 for (auto typeIndex = 0; typeIndex < 2; typeIndex++)
@@ -478,7 +478,7 @@ namespace Storyteller
     {
         const auto proxy = _gameDocumentManager->GetProxy();
 
-        if (ImGui::Checkbox(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(objectType)).c_str(), &filterState))
+        if (ImGui::Checkbox(_i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(objectType)).c_str(), &filterState))
         {
             if (filterState)
             {
@@ -504,7 +504,7 @@ namespace Storyteller
         });
 
         const auto objectsCount = proxy->GetObjects().size();
-        const auto summaryText = LocalizationTranslator::Format(_localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "total {1} object", "total {1} objects", objectsCount), objectsCount);
+        const auto summaryText = I18N::Translator::Format(_i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "total {1} object", "total {1} objects", objectsCount), objectsCount);
         const auto tableOuterSize = ImVec2(0.0f, ImGui::GetContentRegionAvail().y - ImGui::CalcTextSize(summaryText.c_str()).y - ImGui::GetStyle().ItemSpacing.y);
         if (ImGui::BeginTable(_lookupDict->Get("Objects").c_str(), 4, objectsTableFlags, tableOuterSize))
         {
@@ -581,7 +581,7 @@ namespace Storyteller
                     UiUtils::StyleColorGuard guard({ {ImGuiCol_Text, consistent ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 0.5f, 0.5f, 1.0f)}});
 
                     ImGui::TableNextColumn();
-                    ImGui::Selectable(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
+                    ImGui::Selectable(_i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(object->GetObjectType())).c_str(), &selected, ImGuiSelectableFlags_SpanAllColumns);
 
                     if (ImGui::IsItemClicked(0))
                     {
@@ -679,7 +679,7 @@ namespace Storyteller
 
         ImGui::SeparatorText(_lookupDict->Get("Translation").c_str());
 
-        auto sourceTextTranslation = selectedTextObject ? _localizationManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), selectedTextObject->GetText()) : std::string();
+        auto sourceTextTranslation = selectedTextObject ? _i18nManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), selectedTextObject->GetText()) : std::string();
         UiUtils::StyleColorGuard colorGuard({ {ImGuiCol_FrameBg, ImColor(0, 0, 0, 0)} });
         ImGui::InputTextMultiline(std::string("##Translation").append(uuidString).c_str(), &sourceTextTranslation, ImVec2(-FLT_MIN, textPanelHeight), ImGuiInputTextFlags_ReadOnly);
     }
@@ -689,7 +689,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+        ImGui::SeparatorText(_i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedUuid = selectedObject->GetUuid();
@@ -851,7 +851,7 @@ namespace Storyteller
                 }
 
                 ImGui::TableNextColumn();
-                ImGui::Text(_localizationManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), actionObject->GetText()).c_str());
+                ImGui::Text(_i18nManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), actionObject->GetText()).c_str());
             }
 
             ImGui::EndTable();
@@ -863,7 +863,7 @@ namespace Storyteller
     {
         assert(selectedObject);
 
-        ImGui::SeparatorText(_localizationManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
+        ImGui::SeparatorText(_i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
         const auto proxy = _gameDocumentManager->GetProxy();
         const auto selectedActionObject = dynamic_cast<ActionObject*>(selectedObject.get());
@@ -1242,71 +1242,71 @@ namespace Storyteller
 
     void EditorUiCompositor::FillDictionary()
     {
-        _lookupDict = _localizationManager->GetLookupDictionary(STRTLR_TR_DOMAIN_EDITOR);
+        _lookupDict = _i18nManager->GetLookupDictionary(STRTLR_TR_DOMAIN_EDITOR);
         assert(_lookupDict);
 
-        _lookupDict->Add("Open", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open"));
-        _lookupDict->Add("Quit", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit"));
-        _lookupDict->Add("Log", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log"));
-        _lookupDict->Add("Name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name"));
-        _lookupDict->Add("Translation domain", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation domain"));
-        _lookupDict->Add("Actions", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Actions"));
-        _lookupDict->Add("Find object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find object"));
-        _lookupDict->Add("New document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New document"));
-        _lookupDict->Add("Open document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open document"));
-        _lookupDict->Add("Yes", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Yes"));
-        _lookupDict->Add("No", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "No"));
-        _lookupDict->Add("Warning", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning"));
-        _lookupDict->Add("File", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File"));
-        _lookupDict->Add("View", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "View"));
-        _lookupDict->Add("New", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New"));
-        _lookupDict->Add("Open recent", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent"));
-        _lookupDict->Add("Clear", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear"));
-        _lookupDict->Add("Save", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save"));
-        _lookupDict->Add("Save as...", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as..."));
-        _lookupDict->Add("Fullscreen", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Fullscreen"));
-        _lookupDict->Add("Untitled document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document"));
-        _lookupDict->Add("Game document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document"));
-        _lookupDict->Add("Game name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game name cannot be empty!"));
-        _lookupDict->Add("Game domain name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game domain name cannot be empty!"));
-        _lookupDict->Add("Create translations file", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file"));
-        _lookupDict->Add("Save translations", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save translations"));
-        _lookupDict->Add("Objects management", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management"));
-        _lookupDict->Add("Add object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add object"));
-        _lookupDict->Add("Visibility filters", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Visibility filters"));
-        _lookupDict->Add("Objects", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects"));
-        _lookupDict->Add("Type", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type"));
-        _lookupDict->Add("UUID", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID"));
-        _lookupDict->Add("Delete object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Delete object"));
-        _lookupDict->Add("Properties", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties"));
-        _lookupDict->Add("Object name cannot be empty!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name cannot be empty!"));
-        _lookupDict->Add("Object name already exists!", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name already exists!"));
-        _lookupDict->Add("Source text", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text"));
-        _lookupDict->Add("Translation", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation"));
-        _lookupDict->Add("Entry point", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point"));
-        _lookupDict->Add("Final", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final"));
-        _lookupDict->Add("Add action to object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action to object"));
-        _lookupDict->Add("Action name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name"));
-        _lookupDict->Add("Move action up", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Move action up"));
-        _lookupDict->Add("Move action down", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Move action down"));
-        _lookupDict->Add("Objects's actions", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects's actions"));
-        _lookupDict->Add("Text", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Text"));
-        _lookupDict->Add("Remove action from object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove action from object"));
-        _lookupDict->Add("Find action object", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find action object"));
-        _lookupDict->Add("Clear target", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target"));
-        _lookupDict->Add("Set target", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target"));
-        _lookupDict->Add("Quest object name", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest object name"));
-        _lookupDict->Add("Current target name: ", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: "));
-        _lookupDict->Add("Not set or does not exist", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist"));
-        _lookupDict->Add("Scroll to end", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Scroll to end"));
-        _lookupDict->Add("Autoscroll to end", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Autoscroll to end"));
-        _lookupDict->Add("You have unsaved changes, create new document anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, create new document anyway?"));
-        _lookupDict->Add("You have unsaved changes, quit anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, quit anyway?"));
-        _lookupDict->Add("Ok", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Ok"));
-        _lookupDict->Add("You have unsaved changes, open other document anyway?", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, open other document anyway?"));
-        _lookupDict->Add("Save document", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save document"));
-        _lookupDict->Add("The selected file is missing or damaged", "Popup message", _localizationManager->TranslateCtx(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged", "Popup message"));
-        _lookupDict->Add("Language", _localizationManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Language"));
+        _lookupDict->Add("Open", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open"));
+        _lookupDict->Add("Quit", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit"));
+        _lookupDict->Add("Log", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Log"));
+        _lookupDict->Add("Name", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Name"));
+        _lookupDict->Add("Translation domain", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation domain"));
+        _lookupDict->Add("Actions", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Actions"));
+        _lookupDict->Add("Find object", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find object"));
+        _lookupDict->Add("New document", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New document"));
+        _lookupDict->Add("Open document", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open document"));
+        _lookupDict->Add("Yes", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Yes"));
+        _lookupDict->Add("No", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "No"));
+        _lookupDict->Add("Warning", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Warning"));
+        _lookupDict->Add("File", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "File"));
+        _lookupDict->Add("View", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "View"));
+        _lookupDict->Add("New", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "New"));
+        _lookupDict->Add("Open recent", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open recent"));
+        _lookupDict->Add("Clear", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear"));
+        _lookupDict->Add("Save", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save"));
+        _lookupDict->Add("Save as...", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save as..."));
+        _lookupDict->Add("Fullscreen", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Fullscreen"));
+        _lookupDict->Add("Untitled document", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Untitled document"));
+        _lookupDict->Add("Game document", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game document"));
+        _lookupDict->Add("Game name cannot be empty!", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game name cannot be empty!"));
+        _lookupDict->Add("Game domain name cannot be empty!", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Game domain name cannot be empty!"));
+        _lookupDict->Add("Create translations file", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Create translations file"));
+        _lookupDict->Add("Save translations", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save translations"));
+        _lookupDict->Add("Objects management", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects management"));
+        _lookupDict->Add("Add object", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add object"));
+        _lookupDict->Add("Visibility filters", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Visibility filters"));
+        _lookupDict->Add("Objects", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects"));
+        _lookupDict->Add("Type", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Type"));
+        _lookupDict->Add("UUID", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "UUID"));
+        _lookupDict->Add("Delete object", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Delete object"));
+        _lookupDict->Add("Properties", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Properties"));
+        _lookupDict->Add("Object name cannot be empty!", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name cannot be empty!"));
+        _lookupDict->Add("Object name already exists!", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Object name already exists!"));
+        _lookupDict->Add("Source text", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Source text"));
+        _lookupDict->Add("Translation", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Translation"));
+        _lookupDict->Add("Entry point", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Entry point"));
+        _lookupDict->Add("Final", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Final"));
+        _lookupDict->Add("Add action to object", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Add action to object"));
+        _lookupDict->Add("Action name", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Action name"));
+        _lookupDict->Add("Move action up", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Move action up"));
+        _lookupDict->Add("Move action down", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Move action down"));
+        _lookupDict->Add("Objects's actions", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Objects's actions"));
+        _lookupDict->Add("Text", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Text"));
+        _lookupDict->Add("Remove action from object", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Remove action from object"));
+        _lookupDict->Add("Find action object", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Find action object"));
+        _lookupDict->Add("Clear target", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Clear target"));
+        _lookupDict->Add("Set target", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Set target"));
+        _lookupDict->Add("Quest object name", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quest object name"));
+        _lookupDict->Add("Current target name: ", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Current target name: "));
+        _lookupDict->Add("Not set or does not exist", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Not set or does not exist"));
+        _lookupDict->Add("Scroll to end", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Scroll to end"));
+        _lookupDict->Add("Autoscroll to end", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Autoscroll to end"));
+        _lookupDict->Add("You have unsaved changes, create new document anyway?", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, create new document anyway?"));
+        _lookupDict->Add("You have unsaved changes, quit anyway?", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, quit anyway?"));
+        _lookupDict->Add("Ok", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Ok"));
+        _lookupDict->Add("You have unsaved changes, open other document anyway?", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "You have unsaved changes, open other document anyway?"));
+        _lookupDict->Add("Save document", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Save document"));
+        _lookupDict->Add("The selected file is missing or damaged", "Popup message", _i18nManager->TranslateCtx(STRTLR_TR_DOMAIN_EDITOR, "The selected file is missing or damaged", "Popup message"));
+        _lookupDict->Add("Language", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Language"));
     }
     //--------------------------------------------------------------------------
 }

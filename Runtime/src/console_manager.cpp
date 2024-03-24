@@ -7,14 +7,14 @@
 
 namespace Storyteller
 {
-    ConsoleManager::ConsoleManager(const Ptr<LocalizationManager> localizationManager, char separator)
-        : _localizationManager(localizationManager)
+    ConsoleManager::ConsoleManager(const Ptr<I18N::Manager> i18nManager, char separator)
+        : _i18nManager(i18nManager)
         , _separator(separator)
     {
         STRTLR_CLIENT_LOG_DEBUG("ConsoleManager: created, separator is '{}'", separator);
 
         FillDictionary();
-        _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(ConsoleManager::FillDictionary));
+        _i18nManager->AddLocaleChangedCallback(STRTLR_BIND(ConsoleManager::FillDictionary));
 
 #if defined STRTLR_PLATFORM_WINDOWS
         SetConsoleOutputCP(CP_UTF8);
@@ -62,7 +62,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintMadeByString() const
     {
-        std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Made with Storyteller engine") << std::endl;
+        std::cout << _i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Made with Storyteller engine") << std::endl;
     }
     //--------------------------------------------------------------------------
 
@@ -107,7 +107,7 @@ namespace Storyteller
 
     void ConsoleManager::PrintInputHint() const
     {
-        std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Enter action: ");
+        std::cout << _i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Enter action: ");
     }
     //--------------------------------------------------------------------------
 
@@ -115,7 +115,7 @@ namespace Storyteller
     {
         STRTLR_CLIENT_LOG_ERROR("ConsoleManager: error '{}'", details);
 
-        std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Error: ") << details << std::endl;
+        std::cout << _i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Error: ") << details << std::endl;
     }
     //--------------------------------------------------------------------------
 
@@ -123,7 +123,7 @@ namespace Storyteller
     {
         STRTLR_CLIENT_LOG_CRITICAL("ConsoleManager: critical error '{}'", details);
 
-        std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Critical error: ") << details << std::endl;
+        std::cout << _i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Critical error: ") << details << std::endl;
 
         if (waitForKeyboardHit)
         {
@@ -134,13 +134,13 @@ namespace Storyteller
 
     void ConsoleManager::PrintEndHint() const
     {
-        std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game is over!") << std::endl;
+        std::cout << _i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game is over!") << std::endl;
     }
     //--------------------------------------------------------------------------
 
     void ConsoleManager::WaitForKeyboardHit() const
     {
-        std::cout << _localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Press any key...") << std::endl;
+        std::cout << _i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Press any key...") << std::endl;
         while (!Utils::KbHit()) {}
     }
     //--------------------------------------------------------------------------
@@ -161,12 +161,12 @@ namespace Storyteller
 
     void ConsoleManager::FillDictionary() const
     {
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Made with Storyteller engine");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Enter action: ");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Error: ");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Critical error: ");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game is over!");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Press any key...");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Made with Storyteller engine");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Enter action: ");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Error: ");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Critical error: ");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game is over!");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Press any key...");
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------

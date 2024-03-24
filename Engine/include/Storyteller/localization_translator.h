@@ -1,28 +1,33 @@
 #pragma once
 
+#include "localization_base.h"
+
 #include <boost/locale.hpp>
 
 #include <string>
 
 namespace Storyteller
 {
-    namespace LocalizationTranslator
+    namespace I18N
     {
-        std::string Translate(const std::string& domain, const std::string& message);
-        std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count);
-        std::string TranslateCtx(const std::string& domain, const std::string& message, const std::string& context);
-        std::string TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context);
-
-        inline void TranslateDefer(const std::string& domain, const std::string& message) {};
-        inline void TranslateDefer(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count) {};
-        inline void TranslateCtxDefer(const std::string& domain, const std::string& message, const std::string& context) {};
-        inline void TranslateCtxDefer(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context) {};
-
-        template<typename... Types>
-        std::string Format(const std::string& message, Types&&... args)
+        namespace Translator
         {
-            return (boost::locale::format(message) % ... % std::forward<Types>(args)).str();
+            TranslationStr Translate(const DomainStr& domain, const SourceStr& source);
+            TranslationStr Translate(const DomainStr& domain, const SourceStr& sourceSingular, const SourceStr& sourcePlural, int count);
+            TranslationStr TranslateCtx(const DomainStr& domain, const SourceStr& source, const ContextStr& context);
+            TranslationStr TranslateCtx(const DomainStr& domain, const SourceStr& sourceSingular, const SourceStr& sourcePlural, int count, const ContextStr& context);
+
+            inline void TranslateDefer(const DomainStr& domain, const SourceStr& source) {};
+            inline void TranslateDefer(const DomainStr& domain, const SourceStr& sourceSingular, const SourceStr& sourcePlural, int count) {};
+            inline void TranslateCtxDefer(const DomainStr& domain, const SourceStr& source, const ContextStr& context) {};
+            inline void TranslateCtxDefer(const DomainStr& domain, const SourceStr& sourceSingular, const SourceStr& sourcePlural, int count, const ContextStr& context) {};
+
+            template<typename... Types>
+            std::string Format(const SourceStr& source, Types&&... args)
+            {
+                return (boost::locale::format(source) % ... % std::forward<Types>(args)).str();
+            }
         }
-    };
+    }
     //--------------------------------------------------------------------------
 }

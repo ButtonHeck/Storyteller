@@ -29,13 +29,13 @@ namespace Storyteller
             return false;
         }
 
-        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_RUNTIME);
-        _localizationManager->SetLocale(LocalizationManager::LocaleRuUTF8Keyword);
+        _i18nManager->AddMessagesDomain(STRTLR_TR_DOMAIN_RUNTIME);
+        _i18nManager->SetLocale(I18N::LocaleRuUTF8Keyword);
 
-        _manager.reset(new GameDocumentManager(_localizationManager));
+        _manager.reset(new GameDocumentManager(_i18nManager));
         _manager->OpenDocument(std::filesystem::path(u8"C:\\workspace\\Storyteller\\build\\MyGame\\MyGame.json"));
 
-        _gameController.reset(new GameController(_manager->GetDocument(), _localizationManager));
+        _gameController.reset(new GameController(_manager->GetDocument(), _i18nManager));
 
         return true;
     }

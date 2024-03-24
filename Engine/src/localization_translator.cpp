@@ -1,28 +1,28 @@
 #include "localization_translator.h"
 
-namespace Storyteller::LocalizationTranslator
+namespace Storyteller::I18N::Translator
 {
-    std::string Translate(const std::string& domain, const std::string& message)
+    TranslationStr Translate(const DomainStr& domain, const SourceStr& source)
     {
-        return boost::locale::translate(message).str(domain);
+        return boost::locale::translate(source).str(domain);
     }
     //--------------------------------------------------------------------------
 
-    std::string Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count)
+    TranslationStr Translate(const DomainStr& domain, const SourceStr& sourceSingular, const SourceStr& sourcePlural, int count)
     {
-        return boost::locale::translate(messageSingular, messagePlural, count).str(domain);
+        return boost::locale::translate(sourceSingular, sourcePlural, count).str(domain);
     }
     //--------------------------------------------------------------------------
 
-    std::string TranslateCtx(const std::string& domain, const std::string& message, const std::string& context)
+    TranslationStr TranslateCtx(const DomainStr& domain, const SourceStr& source, const ContextStr& context)
     {
-        return boost::locale::translate(context, message).str(domain);
+        return boost::locale::translate(context, source).str(domain);
     }
     //--------------------------------------------------------------------------
 
-    std::string TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context)
+    TranslationStr TranslateCtx(const DomainStr& domain, const SourceStr& sourceSingular, const SourceStr& sourcePlural, int count, const ContextStr& context)
     {
-        return boost::locale::translate(context, messageSingular, messagePlural, count).str(domain);
+        return boost::locale::translate(context, sourceSingular, sourcePlural, count).str(domain);
     }
     //--------------------------------------------------------------------------
 }

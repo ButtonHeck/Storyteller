@@ -1,33 +1,36 @@
 #pragma once
 
+#include "localization_base.h"
 #include "pointers.h"
 
-#include <string>
 #include <unordered_map>
 
 namespace Storyteller
 {
-    class LocalizationLookupDictionary;
-
-    class LocalizationLibrary
+    namespace I18N
     {
-    public:
-        explicit LocalizationLibrary(const std::string& defaultLocale = "");
+        class LookupDictionary;
 
-        void SetLocale(const std::string& localeString);
+        class Library
+        {
+        public:
+            explicit Library(const LocaleStr& defaultLocale = "");
 
-        Ptr<LocalizationLookupDictionary> AddLookupDictionary(const std::string& domain);
-        Ptr<LocalizationLookupDictionary> GetLookupDictionary(const std::string& domain) const;
-        void RemoveLookupDictionary(const std::string& domain);
+            void SetLocale(const LocaleStr& localeString);
 
-        void Add(const std::string& domain, const std::string& source, const std::string& translation);
-        void Add(const std::string& domain, const std::string& source, const std::string& context, const std::string& translation);
-        const std::string& Get(const std::string& domain, const std::string& source);
-        const std::string& Get(const std::string& domain, const std::string& source, const std::string& context);
+            Ptr<LookupDictionary> AddLookupDictionary(const DomainStr& domain);
+            Ptr<LookupDictionary> GetLookupDictionary(const DomainStr& domain) const;
+            void RemoveLookupDictionary(const DomainStr& domain);
 
-    private:
-        std::unordered_map<std::string, Ptr<LocalizationLookupDictionary>> _lookupDictionaries;
-        std::string _currentLocaleString;
-    };
-    //--------------------------------------------------------------------------
+            void Add(const DomainStr& domain, const SourceStr& source, const TranslationStr& translation);
+            void Add(const DomainStr& domain, const SourceStr& source, const ContextStr& context, const TranslationStr& translation);
+            const TranslationStr& Get(const DomainStr& domain, const SourceStr& source);
+            const TranslationStr& Get(const DomainStr& domain, const SourceStr& source, const ContextStr& context);
+
+        private:
+            std::unordered_map<DomainStr, Ptr<LookupDictionary>> _lookupDictionaries;
+            LocaleStr _currentLocale;
+        };
+        //--------------------------------------------------------------------------
+    }
 }

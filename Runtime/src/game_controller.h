@@ -10,7 +10,7 @@ namespace Storyteller
     class GameController
     {
     public:
-        GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager);
+        GameController(const Ptr<GameDocument> gameDocument, const Ptr<I18N::Manager> i18nManager);
 
         void Launch();
 
@@ -29,7 +29,7 @@ namespace Storyteller
     private:
         const Ptr<ConsoleManager> _consoleManager;
         const Ptr<GameDocument> _gameDocument;
-        const Ptr<LocalizationManager> _localizationManager;
+        const Ptr<I18N::Manager> _i18nManager;
     };
     //--------------------------------------------------------------------------
 }

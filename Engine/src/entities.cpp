@@ -9,11 +9,11 @@ namespace Storyteller
         switch (type)
         {
         case ObjectType::QuestObjectType:
-            LocalizationManager::TranslateDefer(STRTLR_TR_DOMAIN_ENGINE, "Quest object");
+            I18N::Manager::TranslateDefer(STRTLR_TR_DOMAIN_ENGINE, "Quest object");
             return "Quest object";
 
         case ObjectType::ActionObjectType:
-            LocalizationManager::TranslateDefer(STRTLR_TR_DOMAIN_ENGINE, "Action object");
+            I18N::Manager::TranslateDefer(STRTLR_TR_DOMAIN_ENGINE, "Action object");
             return "Action object";
 
         default:

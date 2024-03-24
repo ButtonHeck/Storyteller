@@ -3,88 +3,91 @@
 
 namespace Storyteller
 {
-    static const std::string noTranslation = std::string("");
-
-    LocalizationLibrary::LocalizationLibrary(const std::string& defaultLocale)
-        : _currentLocaleString(defaultLocale)
-    {}
-    //--------------------------------------------------------------------------
-
-    void LocalizationLibrary::SetLocale(const std::string& localeString)
+    namespace I18N
     {
-        if (_currentLocaleString != localeString)
+        static const TranslationStr noTranslation = TranslationStr("");
+
+        Library::Library(const LocaleStr& defaultLocale)
+            : _currentLocale(defaultLocale)
+        {}
+        //--------------------------------------------------------------------------
+
+        void Library::SetLocale(const LocaleStr& localeString)
         {
-            _currentLocaleString = localeString;
-            for (auto& dictionary : _lookupDictionaries)
+            if (_currentLocale != localeString)
             {
-                dictionary.second->SetLocale(localeString);
+                _currentLocale = localeString;
+                for (auto& dictionary : _lookupDictionaries)
+                {
+                    dictionary.second->SetLocale(localeString);
+                }
             }
         }
-    }
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
 
-    Ptr<LocalizationLookupDictionary> LocalizationLibrary::AddLookupDictionary(const std::string& domain)
-    {
-        auto dictionary = CreatePtr<LocalizationLookupDictionary>(domain, _currentLocaleString);
-        _lookupDictionaries.insert(std::make_pair(domain, dictionary));
-        return dictionary;
-    }
-    //--------------------------------------------------------------------------
-
-    Ptr<LocalizationLookupDictionary> LocalizationLibrary::GetLookupDictionary(const std::string& domain) const
-    {
-        if (_lookupDictionaries.contains(domain))
+        Ptr<LookupDictionary> Library::AddLookupDictionary(const DomainStr& domain)
         {
-            return _lookupDictionaries.at(domain);
+            auto dictionary = CreatePtr<LookupDictionary>(domain, _currentLocale);
+            _lookupDictionaries.insert(std::make_pair(domain, dictionary));
+            return dictionary;
         }
+        //--------------------------------------------------------------------------
 
-        return nullptr;
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationLibrary::RemoveLookupDictionary(const std::string& domain)
-    {
-        _lookupDictionaries.erase(domain);
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationLibrary::Add(const std::string& domain, const std::string& source, const std::string& translation)
-    {
-        if (_lookupDictionaries.contains(domain))
+        Ptr<LookupDictionary> Library::GetLookupDictionary(const DomainStr& domain) const
         {
-            _lookupDictionaries.at(domain)->Add(source, translation);
-        }
-    }
-    //--------------------------------------------------------------------------
+            if (_lookupDictionaries.contains(domain))
+            {
+                return _lookupDictionaries.at(domain);
+            }
 
-    void LocalizationLibrary::Add(const std::string& domain, const std::string& source, const std::string& context, const std::string& translation)
-    {
-        if (_lookupDictionaries.contains(domain))
+            return nullptr;
+        }
+        //--------------------------------------------------------------------------
+
+        void Library::RemoveLookupDictionary(const DomainStr& domain)
         {
-            _lookupDictionaries.at(domain)->Add(source, context, translation);
+            _lookupDictionaries.erase(domain);
         }
-    }
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationLibrary::Get(const std::string& domain, const std::string& source)
-    {
-        if (_lookupDictionaries.contains(domain))
+        void Library::Add(const DomainStr& domain, const SourceStr& source, const TranslationStr& translation)
         {
-            return _lookupDictionaries.at(domain)->Get(source);
+            if (_lookupDictionaries.contains(domain))
+            {
+                _lookupDictionaries.at(domain)->Add(source, translation);
+            }
         }
+        //--------------------------------------------------------------------------
 
-        return noTranslation;
-    }
-    //--------------------------------------------------------------------------
-
-    const std::string& LocalizationLibrary::Get(const std::string& domain, const std::string& source, const std::string& context)
-    {
-        if (_lookupDictionaries.contains(domain))
+        void Library::Add(const DomainStr& domain, const SourceStr& source, const ContextStr& context, const TranslationStr& translation)
         {
-            return _lookupDictionaries.at(domain)->Get(source, context);
+            if (_lookupDictionaries.contains(domain))
+            {
+                _lookupDictionaries.at(domain)->Add(source, context, translation);
+            }
         }
-        
-        return noTranslation;
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Library::Get(const DomainStr& domain, const SourceStr& source)
+        {
+            if (_lookupDictionaries.contains(domain))
+            {
+                return _lookupDictionaries.at(domain)->Get(source);
+            }
+
+            return noTranslation;
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Library::Get(const DomainStr& domain, const SourceStr& source, const ContextStr& context)
+        {
+            if (_lookupDictionaries.contains(domain))
+            {
+                return _lookupDictionaries.at(domain)->Get(source, context);
+            }
+
+            return noTranslation;
+        }
+        //--------------------------------------------------------------------------
     }
-    //--------------------------------------------------------------------------
 }

@@ -10,7 +10,7 @@ namespace Storyteller
     class GameDocumentManager
     {
     public:
-        explicit GameDocumentManager(const Ptr<LocalizationManager> localizationManager);
+        explicit GameDocumentManager(const Ptr<I18N::Manager> i18nManager);
 
         void NewDocument();
         bool OpenDocument(const std::filesystem::path& path);
@@ -28,7 +28,7 @@ namespace Storyteller
         void FillDictionary() const;
 
     private:
-        const Ptr<LocalizationManager> _localizationManager;
+        const Ptr<I18N::Manager> _i18nManager;
         Ptr<GameDocument> _document;
         Ptr<GameDocumentSortFilterProxyView> _proxy;
     };

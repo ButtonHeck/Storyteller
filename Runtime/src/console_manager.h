@@ -11,7 +11,7 @@ namespace Storyteller
     class ConsoleManager
     {
     public:
-        explicit ConsoleManager(const Ptr<LocalizationManager> localizationManager, char separator = '*');
+        explicit ConsoleManager(const Ptr<I18N::Manager> i18nManager, char separator = '*');
 
         void SetSeparator(char separator);
 
@@ -33,7 +33,7 @@ namespace Storyteller
         void FillDictionary() const;
 
     private:
-        const Ptr<LocalizationManager> _localizationManager;
+        const Ptr<I18N::Manager> _i18nManager;
         char _separator;
     };
     //--------------------------------------------------------------------------

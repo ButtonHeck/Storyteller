@@ -35,9 +35,9 @@ namespace Storyteller
             return false;
         }
 
-        _localizationManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
+        _i18nManager->AddMessagesDomain(STRTLR_TR_DOMAIN_EDITOR);
 
-        _ui.reset(new EditorUi(_window, _localizationManager));
+        _ui.reset(new EditorUi(_window, _i18nManager));
         if (!_ui || !_ui->Initialize())
         {
             return false;

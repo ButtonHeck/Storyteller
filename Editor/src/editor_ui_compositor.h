@@ -15,7 +15,7 @@ namespace Storyteller
     class EditorUiCompositor
     {
     public:
-        EditorUiCompositor(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager);
+        EditorUiCompositor(const Ptr<Window> window, const Ptr<I18N::Manager> i18nManager);
 
         void Compose();
 
@@ -99,12 +99,12 @@ namespace Storyteller
 
     private:
         const Ptr<Window> _window;
-        const Ptr<LocalizationManager> _localizationManager;
+        const Ptr<I18N::Manager> _i18nManager;
         const Ptr<GameDocumentManager> _gameDocumentManager;
         UiComponentsState _state;
         UiPopupsState _popups;
         std::list<std::string> _recentList;
-        Ptr<LocalizationLookupDictionary> _lookupDict;
+        Ptr<I18N::LookupDictionary> _lookupDict;
     };
     //--------------------------------------------------------------------------
 }

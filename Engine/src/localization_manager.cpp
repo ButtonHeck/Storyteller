@@ -6,161 +6,164 @@
 
 namespace Storyteller
 {
-    LocalizationManager::LocalizationManager(const std::string& defaultLocale, const std::string& defaultPath)
-        : _localeGenerator()
-        , _library(CreatePtr<LocalizationLibrary>(""))
-        , _currentLocaleString("")
+    namespace I18N
     {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: create, default path '{}'", defaultPath);
-
-        if (!defaultLocale.empty())
+        Manager::Manager(const LocaleStr& defaultLocale, const std::string& defaultPath)
+            : _localeGenerator()
+            , _library(CreatePtr<Library>(""))
+            , _currentLocale("")
         {
-            SetLocale(defaultLocale);
-        }
+            STRTLR_CORE_LOG_INFO("I18NManager: create, default path '{}'", defaultPath);
 
-        if (!defaultPath.empty())
+            if (!defaultLocale.empty())
+            {
+                SetLocale(defaultLocale);
+            }
+
+            if (!defaultPath.empty())
+            {
+                _localeGenerator.add_messages_path(defaultPath);
+            }
+        }
+        //--------------------------------------------------------------------------
+
+        void Manager::SetLocale(const LocaleStr& localeString)
         {
-            _localeGenerator.add_messages_path(defaultPath);
+            STRTLR_CORE_LOG_INFO("I18NManager: set locale '{}'", localeString);
+
+            _currentLocale = localeString;
+            _library->SetLocale(localeString);
+
+            ImbueLocale();
+            NotifyLocaleListeners();
         }
-    }
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
 
-    void LocalizationManager::SetLocale(const std::string& localeString)
-    {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: set locale '{}'", localeString);
-
-        _currentLocaleString = localeString;
-        _library->SetLocale(localeString);
-
-        ImbueLocale();
-        NotifyLocaleListeners();
-    }
-    //--------------------------------------------------------------------------
-
-    const std::string& LocalizationManager::GetLocale() const
-    {
-        return _currentLocaleString;
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationManager::ImbueLocale() const
-    {
-        std::locale::global(_localeGenerator(_currentLocaleString));
-        std::cout.imbue(std::locale());
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationManager::AddMessagesPath(const std::string& path)
-    {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: add messages path '{}'", path);
-
-        _localeGenerator.add_messages_path(path);
-    }
-    //--------------------------------------------------------------------------
-
-    Ptr<LocalizationLookupDictionary> LocalizationManager::AddMessagesDomain(const std::string& domain)
-    {
-        STRTLR_CORE_LOG_INFO("LocalizationManager: add messages domain '{}'", domain);
-
-        _localeGenerator.add_messages_domain(domain);
-        ImbueLocale();
-        
-        return _library->AddLookupDictionary(domain);
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationManager::RemoveMessagesDomain(const std::string& domain)
-    {
-        _library->RemoveLookupDictionary(domain);
-    }
-    //--------------------------------------------------------------------------
-
-    Ptr<LocalizationLookupDictionary> LocalizationManager::GetLookupDictionary(const std::string& domain) const
-    {
-        return _library->GetLookupDictionary(domain);
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationManager::AddLocaleChangedCallback(const LocaleChangeCallback& callback)
-    {
-        _localeChangedCallbacks.push_back(callback);
-    }
-    //--------------------------------------------------------------------------
-
-    void LocalizationManager::NotifyLocaleListeners() const
-    {
-        for (const auto& callback : _localeChangedCallbacks)
+        const LocaleStr& Manager::GetLocale() const
         {
-            callback();
+            return _currentLocale;
         }
-    }
-    //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
 
-    std::string LocalizationManager::Translate(const std::string& domain, const std::string& message)
-    {
-        const auto translation = LocalizationTranslator::Translate(domain, message);
-        _library->Add(domain, message, translation);
-        return translation;
-    }
-    //--------------------------------------------------------------------------
+        void Manager::ImbueLocale() const
+        {
+            std::locale::global(_localeGenerator(_currentLocale));
+            std::cout.imbue(std::locale());
+        }
+        //--------------------------------------------------------------------------
 
-    std::string LocalizationManager::Translate(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count)
-    {
-        return LocalizationTranslator::Translate(domain, messageSingular, messagePlural, count);
-    }
-    //--------------------------------------------------------------------------
+        void Manager::AddMessagesPath(const std::string& path)
+        {
+            STRTLR_CORE_LOG_INFO("I18NManager: add messages path '{}'", path);
 
-    std::string LocalizationManager::TranslateCtx(const std::string& domain, const std::string& message, const std::string& context)
-    {
-        const auto translation = LocalizationTranslator::TranslateCtx(domain, message, context);
-        _library->Add(domain, message, context, translation);
-        return translation;
-    }
-    //--------------------------------------------------------------------------
+            _localeGenerator.add_messages_path(path);
+        }
+        //--------------------------------------------------------------------------
 
-    std::string LocalizationManager::TranslateCtx(const std::string& domain, const std::string& messageSingular, const std::string& messagePlural, int count, const std::string& context)
-    {
-        return LocalizationTranslator::TranslateCtx(domain, messageSingular, messagePlural, count, context);
-    }
-    //--------------------------------------------------------------------------
+        Ptr<LookupDictionary> Manager::AddMessagesDomain(const DomainStr& domain)
+        {
+            STRTLR_CORE_LOG_INFO("I18NManager: add messages domain '{}'", domain);
 
-    const std::string& LocalizationManager::Translation(const std::string& domain, const std::string& message)
-    {
-        return _library->Get(domain, message);
-    }
-    //--------------------------------------------------------------------------
+            _localeGenerator.add_messages_domain(domain);
+            ImbueLocale();
 
-    const std::string& LocalizationManager::Translation(const std::string& domain, const std::string& message, const std::string& context)
-    {
-        return _library->Get(domain, message, context);
-    }
-    //--------------------------------------------------------------------------
+            return _library->AddLookupDictionary(domain);
+        }
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationManager::TranslationOr(const std::string& domain, const std::string& message, const std::string& defaultString)
-    {
-        const auto& translation = Translation(domain, message);
-        return translation.empty() ? defaultString : translation;
-    }
-    //--------------------------------------------------------------------------
+        void Manager::RemoveMessagesDomain(const DomainStr& domain)
+        {
+            _library->RemoveLookupDictionary(domain);
+        }
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationManager::TranslationOr(const std::string& domain, const std::string& message, const std::string& context, const std::string& defaultString)
-    {
-        const auto& translation = Translation(domain, message, context);
-        return translation.empty() ? defaultString : translation;
-    }
-    //--------------------------------------------------------------------------
+        Ptr<LookupDictionary> Manager::GetLookupDictionary(const DomainStr& domain) const
+        {
+            return _library->GetLookupDictionary(domain);
+        }
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationManager::TranslationOrSource(const std::string& domain, const std::string& message)
-    {
-        const auto& translation = Translation(domain, message);
-        return translation.empty() ? message : translation;
-    }
-    //--------------------------------------------------------------------------
+        void Manager::AddLocaleChangedCallback(const LocaleChangeCallback& callback)
+        {
+            _localeChangedCallbacks.push_back(callback);
+        }
+        //--------------------------------------------------------------------------
 
-    const std::string& LocalizationManager::TranslationOrSource(const std::string& domain, const std::string& message, const std::string& context)
-    {
-        const auto& translation = Translation(domain, message, context);
-        return translation.empty() ? message : translation;
+        void Manager::NotifyLocaleListeners() const
+        {
+            for (const auto& callback : _localeChangedCallbacks)
+            {
+                callback();
+            }
+        }
+        //--------------------------------------------------------------------------
+
+        TranslationStr Manager::Translate(const DomainStr& domain, const SourceStr& message)
+        {
+            const auto translation = Translator::Translate(domain, message);
+            _library->Add(domain, message, translation);
+            return translation;
+        }
+        //--------------------------------------------------------------------------
+
+        TranslationStr Manager::Translate(const DomainStr& domain, const SourceStr& messageSingular, const SourceStr& messagePlural, int count)
+        {
+            return Translator::Translate(domain, messageSingular, messagePlural, count);
+        }
+        //--------------------------------------------------------------------------
+
+        TranslationStr Manager::TranslateCtx(const DomainStr& domain, const SourceStr& message, const ContextStr& context)
+        {
+            const auto translation = Translator::TranslateCtx(domain, message, context);
+            _library->Add(domain, message, context, translation);
+            return translation;
+        }
+        //--------------------------------------------------------------------------
+
+        TranslationStr Manager::TranslateCtx(const DomainStr& domain, const SourceStr& messageSingular, const SourceStr& messagePlural, int count, const ContextStr& context)
+        {
+            return Translator::TranslateCtx(domain, messageSingular, messagePlural, count, context);
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Manager::Translation(const DomainStr& domain, const SourceStr& message)
+        {
+            return _library->Get(domain, message);
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Manager::Translation(const DomainStr& domain, const SourceStr& message, const ContextStr& context)
+        {
+            return _library->Get(domain, message, context);
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Manager::TranslationOr(const DomainStr& domain, const SourceStr& message, const TranslationStr& defaultString)
+        {
+            const auto& translation = Translation(domain, message);
+            return translation.empty() ? defaultString : translation;
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Manager::TranslationOr(const DomainStr& domain, const SourceStr& message, const ContextStr& context, const TranslationStr& defaultString)
+        {
+            const auto& translation = Translation(domain, message, context);
+            return translation.empty() ? defaultString : translation;
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Manager::TranslationOrSource(const DomainStr& domain, const SourceStr& message)
+        {
+            const auto& translation = Translation(domain, message);
+            return translation.empty() ? message : translation;
+        }
+        //--------------------------------------------------------------------------
+
+        const TranslationStr& Manager::TranslationOrSource(const DomainStr& domain, const SourceStr& message, const ContextStr& context)
+        {
+            const auto& translation = Translation(domain, message, context);
+            return translation.empty() ? message : translation;
+        }
+        //--------------------------------------------------------------------------
     }
-    //--------------------------------------------------------------------------
 }

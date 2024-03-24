@@ -6,10 +6,10 @@
 
 namespace Storyteller
 {
-    EditorUi::EditorUi(const Ptr<Window> window, const Ptr<LocalizationManager> localizationManager)
+    EditorUi::EditorUi(const Ptr<Window> window, const Ptr<I18N::Manager> i18nManager)
         : _window(window)
         , _uiImpl(EditorUiImpl::CreateImpl(_window))
-        , _compositor(CreatePtr<EditorUiCompositor>(_window, localizationManager))
+        , _compositor(CreatePtr<EditorUiCompositor>(_window, i18nManager))
     {}
     //--------------------------------------------------------------------------
 

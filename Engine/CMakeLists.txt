@@ -17,6 +17,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_sort_filter_proxy_view.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_reader.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_writer.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/localization_base.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/localization_manager.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/localization_translator.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/localization_library.h"

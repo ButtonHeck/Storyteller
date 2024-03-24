@@ -4,15 +4,15 @@
 
 namespace Storyteller
 {
-    GameController::GameController(const Ptr<GameDocument> gameDocument, const Ptr<LocalizationManager> localizationManager)
-        : _consoleManager(CreatePtr<ConsoleManager>(localizationManager))
+    GameController::GameController(const Ptr<GameDocument> gameDocument, const Ptr<I18N::Manager> i18nManager)
+        : _consoleManager(CreatePtr<ConsoleManager>(i18nManager))
         , _gameDocument(gameDocument)
-        , _localizationManager(localizationManager)
+        , _i18nManager(i18nManager)
     {
         STRTLR_CLIENT_LOG_INFO("GameController: create, game name '{}'", _gameDocument->GetGameName());
 
         FillDictionary();
-        _localizationManager->AddLocaleChangedCallback(STRTLR_BIND(GameController::FillDictionary));
+        _i18nManager->AddLocaleChangedCallback(STRTLR_BIND(GameController::FillDictionary));
     }
     //--------------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ namespace Storyteller
             const auto typeString = ObjectTypeToString(type);
             STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object is null), required: '{}'", typeString);
 
-            _consoleManager->PrintCriticalHint(LocalizationTranslator::Format(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: {1}"), typeString));
+            _consoleManager->PrintCriticalHint(I18N::Translator::Format(_i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: {1}"), typeString));
             return false;
         }
 
@@ -83,7 +83,7 @@ namespace Storyteller
             const auto typeString = ObjectTypeToString(type);
             STRTLR_CLIENT_LOG_CRITICAL("GameController: Game data is incorrect (object '{}' is not of correct type), required: '{}'", objectUuid, typeString);
 
-            _consoleManager->PrintCriticalHint(LocalizationTranslator::Format(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: {1}"), typeString));
+            _consoleManager->PrintCriticalHint(I18N::Translator::Format(_i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: {1}"), typeString));
             return false;
         }
 
@@ -124,13 +124,13 @@ namespace Storyteller
                 else
                 {
                     STRTLR_CLIENT_LOG_ERROR("GameController: action index input error, input is '{}', number of actions is '{}'", actionNumber, questActions.size());
-                    _consoleManager->PrintErrorHint(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again"));
+                    _consoleManager->PrintErrorHint(_i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again"));
                 }
             }
             catch (const std::exception&)
             {
                 STRTLR_CLIENT_LOG_CRITICAL("GameController: cannot recognize action number, input is '{}'", input);
-                _consoleManager->PrintErrorHint(_localizationManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again"));
+                _consoleManager->PrintErrorHint(_i18nManager->Translation(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again"));
             }
         }
 
@@ -152,7 +152,7 @@ namespace Storyteller
             }
 
             const auto actionObject = dynamic_cast<ActionObject*>(object.get());
-            actionTexts.emplace_back(_localizationManager->Translation(_gameDocument->GetDomainName(), actionObject->GetText()));
+            actionTexts.emplace_back(_i18nManager->Translation(_gameDocument->GetDomainName(), actionObject->GetText()));
         }
 
         _consoleManager->PrintActions(actionTexts);
@@ -168,17 +168,17 @@ namespace Storyteller
         auto object = _gameDocument->GetObject(objectUuid);
         const auto textObject = dynamic_cast<TextObject*>(object.get());
 
-        _consoleManager->StartNewFrame(_localizationManager->Translation(_gameDocument->GetDomainName(), _gameDocument->GetGameName()));
-        _consoleManager->PrintMessage(_localizationManager->Translation(_gameDocument->GetDomainName(), textObject->GetText()));
+        _consoleManager->StartNewFrame(_i18nManager->Translation(_gameDocument->GetDomainName(), _gameDocument->GetGameName()));
+        _consoleManager->PrintMessage(_i18nManager->Translation(_gameDocument->GetDomainName(), textObject->GetText()));
     }
     //--------------------------------------------------------------------------
 
     void GameController::FillDictionary() const
     {
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: {1}");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: {1}");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again");
-        _localizationManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is null), required: {1}");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Game data is incorrect (object is not of correct type), required: {1}");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "No action found, try again");
+        _i18nManager->Translate(STRTLR_TR_DOMAIN_RUNTIME, "Cannot recognize action number, try again");
     }
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
