@@ -25,7 +25,7 @@ set(SOURCE_FILES
 set(IMGUI_IMPL_DIR "${VENDOR_DIR}/imgui/backends")
 aux_source_directory("${VENDOR_DIR}/imgui" IMGUI_SOURCE_FILES)
 
-add_executable(${PROJECT_NAME}
+add_executable(${PROJECT_NAME} WIN32
 	${SOURCE_FILES}
 	${IMGUI_SOURCE_FILES}
 	${IMGUI_IMPL_DIR}/imgui_impl_opengl3.cpp
@@ -43,6 +43,7 @@ source_group("Imgui Sources" FILES
 target_compile_definitions(${PROJECT_NAME} 
 	PRIVATE STRTLR_EDITOR_FONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts"
     PRIVATE STRTLR_TR_DOMAIN_EDITOR=\"StorytellerEditor\"
+    PRIVATE STRTLR_WINMAIN
 )
 
 target_include_directories(${PROJECT_NAME}
