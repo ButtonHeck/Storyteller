@@ -1,6 +1,6 @@
 #include "dialogs.h"
 #include "filesystem.h"
-#include "utils.h"
+#include "string_utils.h"
 
 #include <portable-file-dialogs.h>
 

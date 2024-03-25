@@ -37,9 +37,11 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/mouse_codes.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_codes.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_event.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/utils.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/string_utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/image.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/platform.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/console_utils.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/function_utils.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -63,7 +65,8 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/window_glfw.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/image.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/utils.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/string_utils.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/console_utils.cpp"
 )
 
 aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)

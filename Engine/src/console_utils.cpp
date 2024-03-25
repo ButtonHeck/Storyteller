@@ -1,9 +1,5 @@
-#include "utils.h"
+#include "console_utils.h"
 #include "platform.h"
-
-#include <locale>
-#include <codecvt>
-#include <string>
 
 #if defined STRTLR_PLATFORM_WINDOWS
 #include <conio.h>
@@ -19,20 +15,6 @@ namespace Storyteller
 {
     namespace Utils
     {
-        std::wstring FromStrBytesToWStrBytes(const std::string& strBytes)
-        {
-            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-            return converter.from_bytes(strBytes);
-        }
-        //--------------------------------------------------------------------------
-
-        std::string FromWStrBytesToStrBytes(const std::wstring& wstrBytes)
-        {
-            std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-            return converter.to_bytes(wstrBytes);
-        }
-        //--------------------------------------------------------------------------
-
         int KbHit()
         {
 #if defined STRTLR_PLATFORM_WINDOWS

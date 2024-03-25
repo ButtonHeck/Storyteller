@@ -1,7 +1,7 @@
 #pragma once
 
 #include "event.h"
-#include "utils.h"
+#include "string_utils.h"
 
 namespace Storyteller
 {

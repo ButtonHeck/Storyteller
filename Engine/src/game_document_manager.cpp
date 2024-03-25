@@ -2,7 +2,8 @@
 #include "game_document_serializer.h"
 #include "filesystem.h"
 #include "log.h"
-#include "utils.h"
+#include "function_utils.h"
+#include "string_utils.h"
 
 #include <fstream>
 

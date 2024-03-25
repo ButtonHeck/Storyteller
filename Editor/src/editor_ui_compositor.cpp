@@ -4,6 +4,7 @@
 #include "Storyteller/log.h"
 #include "Storyteller/dialogs.h"
 #include "Storyteller/filesystem.h"
+#include "Storyteller/function_utils.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>

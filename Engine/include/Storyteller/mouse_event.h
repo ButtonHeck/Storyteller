@@ -2,7 +2,7 @@
 
 #include "event.h"
 #include "mouse_codes.h"
-#include "utils.h"
+#include "string_utils.h"
 
 namespace Storyteller
 {

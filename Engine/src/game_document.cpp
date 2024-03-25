@@ -1,7 +1,7 @@
 #include "game_document.h"
 #include "log.h"
 #include "filesystem.h"
-#include "utils.h"
+#include "string_utils.h"
 
 namespace Storyteller
 {

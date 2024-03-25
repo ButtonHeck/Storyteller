@@ -1,6 +1,7 @@
 #include "console_manager.h"
 #include "Storyteller/log.h"
-#include "Storyteller/utils.h"
+#include "Storyteller/function_utils.h"
+#include "Storyteller/console_utils.h"
 #include "Storyteller/platform.h"
 
 #include <iostream>

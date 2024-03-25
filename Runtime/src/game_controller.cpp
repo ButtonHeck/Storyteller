@@ -1,6 +1,6 @@
 #include "game_controller.h"
 #include "Storyteller/log.h"
-#include "Storyteller/utils.h"
+#include "Storyteller/function_utils.h"
 
 namespace Storyteller
 {
