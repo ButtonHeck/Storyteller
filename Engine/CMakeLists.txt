@@ -42,6 +42,7 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/platform.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/console_utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/function_utils.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/config.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -67,6 +68,7 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/image.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/string_utils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/console_utils.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/config.cpp"
 )
 
 aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)

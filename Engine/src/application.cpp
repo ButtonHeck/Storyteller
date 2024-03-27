@@ -1,11 +1,13 @@
 #include "application.h"
 #include "log.h"
 #include "filesystem.h"
+#include "config.h"
 
 namespace Storyteller
 {
     Application::Application()
-        : _i18nManager(nullptr)
+        : _config(nullptr)
+        , _i18nManager(nullptr)
         , _settings(nullptr)
     {}
     //--------------------------------------------------------------------------
@@ -13,7 +15,11 @@ namespace Storyteller
     bool Application::Initialize()
     {
         Filesystem::Initialize();
-        Log::Initialize();
+
+        _config.reset(new Config());
+        _config->Load(Filesystem::GetCurrentPath().append("Storyteller.json")); //TODO: check argv or use default Storyteller.json
+
+        Log::Initialize(_config->GetLogConfig());
 
         _i18nManager.reset(new I18N::Manager(I18N::LocaleEnUTF8Keyword));
         _i18nManager->AddMessagesDomain(STRTLR_TR_DOMAIN_ENGINE);

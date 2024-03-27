@@ -8,6 +8,8 @@
 
 namespace Storyteller
 {
+    class Config;
+
     class Application
     {
     public:
@@ -28,6 +30,7 @@ namespace Storyteller
         virtual bool OnKeyCharEvent(KeyCharEvent& event) { return true; };
 
     protected:
+        Ptr<Config> _config;
         Ptr<I18N::Manager> _i18nManager;
         Ptr<Settings> _settings;
     };

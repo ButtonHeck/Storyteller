@@ -10,10 +10,17 @@
 
 namespace Storyteller
 {
+    struct LogConfig
+    {
+        std::string name = "Storyteller.log";
+        bool truncate = false;
+    };
+    //--------------------------------------------------------------------------
+
     class Log
     {
     public:
-        static void Initialize();
+        static void Initialize(const LogConfig& config);
 
         static Ptr<spdlog::logger>& CoreLogger();
         static Ptr<spdlog::logger>& ClientLogger();
