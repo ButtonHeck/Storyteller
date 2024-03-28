@@ -12,8 +12,14 @@ namespace Storyteller
 {
     struct LogConfig
     {
-        std::string name = "Storyteller.log";
+        std::string filename = "Storyteller.log";
+        bool enabled = true;
         bool truncate = false;
+        bool outputConsole = false;
+        bool outputFile = true;
+        bool outputStringBuffer = true;
+        int coreLevel = spdlog::level::trace;
+        int clientLevel = spdlog::level::trace;
     };
     //--------------------------------------------------------------------------
 
