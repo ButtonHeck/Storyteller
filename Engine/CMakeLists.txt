@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(StorytellerEngine)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t-")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t- /Zc:preprocessor")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
@@ -43,6 +43,8 @@ set(HEADER_FILES
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/console_utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/function_utils.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/config.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/macro.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/strtlr_assert.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -69,6 +71,7 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/string_utils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/console_utils.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/config.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/strtlr_assert.cpp"
 )
 
 aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)

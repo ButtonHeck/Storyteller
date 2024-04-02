@@ -27,3 +27,5 @@
 #include "Storyteller/window_application.h"
 #include "Storyteller/window_event.h"
 #include "Storyteller/window_glfw.h"
+#include "Storyteller/macro.h"
+#include "Storyteller/strtlr_assert.h"

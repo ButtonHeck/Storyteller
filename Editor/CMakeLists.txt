@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(StorytellerEditor)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t-")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t- /Zc:preprocessor")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
