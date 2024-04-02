@@ -61,7 +61,7 @@ namespace Storyteller
         spdlog::register_logger(_clientLogger);
 
         const auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        STRTLR_CORE_LOG_INFO("-------{}", std::ctime(&now));
+        STRTLR_CORE_LOG_INFO("-------{}", Utils::Concatenate(std::put_time(localtime(&now), "%F %T")));
     }
     //--------------------------------------------------------------------------
 
