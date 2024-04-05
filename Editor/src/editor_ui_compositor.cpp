@@ -5,6 +5,7 @@
 #include "Storyteller/dialogs.h"
 #include "Storyteller/filesystem.h"
 #include "Storyteller/function_utils.h"
+#include "Storyteller/strtlr_assert.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -635,7 +636,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelName(Ptr<BasicObject> selectedObject)
     {
-        assert(selectedObject);
+        STRTLR_ASSERT(selectedObject);
 
         ImGui::SeparatorText(_lookupDict->Get("Name").c_str());
 
@@ -664,7 +665,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelTexts(Ptr<BasicObject> selectedObject)
     {
-        assert(selectedObject);
+        STRTLR_ASSERT(selectedObject);
 
         ImGui::SeparatorText(_lookupDict->Get("Source text").c_str());
 
@@ -688,7 +689,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelQuestObject(Ptr<BasicObject> selectedObject)
     {
-        assert(selectedObject);
+        STRTLR_ASSERT(selectedObject);
 
         ImGui::SeparatorText(_i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
@@ -862,7 +863,7 @@ namespace Storyteller
 
     void EditorUiCompositor::ComposePropertiesPanelActionObject(Ptr<BasicObject> selectedObject)
     {
-        assert(selectedObject);
+        STRTLR_ASSERT(selectedObject);
 
         ImGui::SeparatorText(_i18nManager->TranslationOrSource(STRTLR_TR_DOMAIN_ENGINE, ObjectTypeToString(selectedObject->GetObjectType())).c_str());
 
@@ -1244,7 +1245,7 @@ namespace Storyteller
     void EditorUiCompositor::FillDictionary()
     {
         _lookupDict = _i18nManager->GetLookupDictionary(STRTLR_TR_DOMAIN_EDITOR);
-        assert(_lookupDict);
+        STRTLR_ASSERT(_lookupDict);
 
         _lookupDict->Add("Open", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Open"));
         _lookupDict->Add("Quit", _i18nManager->Translate(STRTLR_TR_DOMAIN_EDITOR, "Quit"));
