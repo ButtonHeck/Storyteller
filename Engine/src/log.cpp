@@ -7,10 +7,9 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
 #include <chrono>
-#if defined STRTLR_PLATFORM_LINUX
+#if defined STRTLR_PLATFORM_LINUX || defined STRTLR_COMPILER_MINGW
 #include <iomanip>
 #endif
-#include <iomanip> //minGW for std::put_time
 
 namespace Storyteller
 {

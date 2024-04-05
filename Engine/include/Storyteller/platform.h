@@ -11,3 +11,11 @@
 #elif define (__APPLE__)
     #define STRTLR_PLATFORM_MACOSX
 #endif
+
+#if defined (_MSC_VER)
+    #define STRTLR_COMPILER_MSVC
+#elif defined (__MINGW32__) || defined (__MINGW64__)
+    #define STRTLR_COMPILER_MINGW
+#elif defined (__GNUC__)
+    #define STRTLR_COMPILER_GCC
+#endif
