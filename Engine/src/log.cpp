@@ -1,11 +1,16 @@
 #include "log.h"
 #include "string_utils.h"
+#include "platform.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/ostream_sink.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
 #include <chrono>
+#if defined STRTLR_PLATFORM_LINUX
+#include <iomanip>
+#endif
+#include <iomanip> //minGW for std::put_time
 
 namespace Storyteller
 {

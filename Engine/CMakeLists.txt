@@ -2,49 +2,54 @@ cmake_minimum_required(VERSION 3.16)
 
 project(StorytellerEngine)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t- /Zc:preprocessor")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t- /Zc:preprocessor")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -fno-char8_t")
+endif()
+
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 set(HEADER_FILES
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/entry_point.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/entry_point.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/storyteller.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/uuid.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/entities.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_manager.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_serializer.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_sort_filter_proxy_view.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_reader.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_writer.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_base.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_manager.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_translator.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_library.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_lookup_dictionary.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/filesystem.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/log.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/application.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window_application.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/settings.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/pointers.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window_glfw.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/dialogs.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/event.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window_event.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/mouse_event.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/mouse_codes.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_codes.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_event.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/string_utils.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/image.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/platform.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/console_utils.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/function_utils.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/config.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/macro.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/strtlr_assert.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/entities.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_manager.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_serializer.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/game_document_sort_filter_proxy_view.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_reader.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/json_writer.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_base.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_manager.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_translator.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_library.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/i18n_lookup_dictionary.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/filesystem.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/log.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/application.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window_application.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/settings.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/pointers.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window_glfw.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/dialogs.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/event.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/window_event.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/mouse_event.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/mouse_codes.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_codes.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/key_event.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/string_utils.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/image.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/platform.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/console_utils.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/function_utils.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/config.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/macro.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/strtlr_assert.h"
 )
 set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid.cpp"
@@ -77,21 +82,21 @@ set(SOURCE_FILES
 aux_source_directory(${VENDOR_DIR}/stb_image STB_IMAGE_SRC)
 
 add_library(${PROJECT_NAME}
-	${HEADER_FILES}
+    ${HEADER_FILES}
     ${SOURCE_FILES}
     ${STB_IMAGE_SRC}
 )
 
 target_include_directories(${PROJECT_NAME}
-	PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include"
     PUBLIC "${VENDOR_DIR}/glfw/include"
     PUBLIC "${VENDOR_DIR}/spdlog/include"
     PUBLIC "${VENDOR_DIR}/rapidjson/include"
 
-	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller"
-	PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal"
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller"
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/Storyteller/internal"
     PRIVATE "${VENDOR_DIR}/stb_image"
-	PRIVATE "${VENDOR_DIR}/pfd"
+    PRIVATE "${VENDOR_DIR}/pfd"
 )
 
 option(STORYTELLER_USE_WINDOW_BACKEND_GLFW "Use GLFW for window management" ON)
