@@ -30,7 +30,7 @@ namespace Storyteller
 
         void LookupDictionary::Add(const SourceStr& source, const ContextStr& context, const TranslationStr& translation)
         {
-            _translationsWithContext[_currentLocaleString].insert(std::make_pair(ContextedSource(source, context), translation));
+            _translationsWithContext[_currentLocaleString].insert(std::make_pair(ContextedSource{ source, context }, translation));
         }
         //--------------------------------------------------------------------------
 

@@ -48,8 +48,13 @@ source_group("Imgui Sources" FILES
 target_compile_definitions(${PROJECT_NAME} 
     PRIVATE STRTLR_EDITOR_FONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts"
     PRIVATE STRTLR_TR_DOMAIN_EDITOR=\"StorytellerEditor\"
-    PRIVATE STRTLR_WINMAIN
 )
+
+if (WIN32)
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE STRTLR_WINMAIN
+    )
+endif()
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE "${VENDOR_DIR}/imgui"

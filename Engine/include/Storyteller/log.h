@@ -3,7 +3,9 @@
 #include "platform.h"
 #include "pointers.h"
 
+#if defined (STRTLR_COMPILER_MSVC)
 #pragma warning(disable : 4996)
+#endif
 #include <spdlog/spdlog.h>
 
 #include <sstream>

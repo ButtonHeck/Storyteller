@@ -1,4 +1,5 @@
 *.log
+*.user*
 desktop.ini
 
 # Visual Studio files and folder
