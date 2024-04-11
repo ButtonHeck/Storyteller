@@ -2,6 +2,9 @@
 #include "platform.h"
 
 #include <string>
+#if !defined STRTLR_PLATFORM_WINDOWS
+#include <cstdlib>
+#endif
 
 namespace Storyteller
 {
@@ -15,17 +18,9 @@ namespace Storyteller
             MultiByteToWideChar(CP_ACP, 0, str.c_str(), static_cast<int>(str.size()), &wide[0], length);
             return wide;
 #else
-            std::wstring wide;
-            wide.resize(str.size() + 1);
-            size_t actual;
-            mbstowcs_s(&actual, wide.data(), wide.size(), str.c_str(), _TRUNCATE);
-            if (actual > 0)
-            {
-                wide.resize(actual - 1);
-                return wide;
-            }
-
-            return std::wstring{};
+            std::wstring wide(str.length() * 4, L'\0');
+            std::mbstowcs(&wide[0], str.c_str(), str.length());
+            return std::wstring(wide.c_str());
 #endif
         }
         //--------------------------------------------------------------------------
@@ -38,12 +33,9 @@ namespace Storyteller
             WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), static_cast<int>(wstr.size()), &narrow[0], length, nullptr, nullptr);
             return narrow;
 #else
-            std::string narrow;
-            narrow.resize(wstr.size() * 2);
-            size_t actual;
-            wcstombs_s(&actual, narrow.data(), narrow.size(), wstr.c_str(), _TRUNCATE);
-            narrow.resize(actual - 1);
-            return narrow;
+            std::string narrow(wstr.length() * 4, '\0');
+            std::wcstombs(&narrow[0], wstr.c_str(), wstr.length());
+            return std::string(narrow.c_str());
 #endif
         }
         //--------------------------------------------------------------------------

@@ -15,7 +15,7 @@ namespace Storyteller
     void EditorUiImplOpenglGLFW::Initialize()
     {
         ImGui_ImplGlfw_InitForOpenGL(reinterpret_cast<GLFWwindow*>(_window->GetImplPointer()), true);
-        ImGui_ImplOpenGL3_Init("#version 450");
+        ImGui_ImplOpenGL3_Init("#version 330");
     }
     //--------------------------------------------------------------------------
 

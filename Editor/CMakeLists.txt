@@ -2,14 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(StorytellerEditor)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std:c++20 /Zc:char8_t- /Zc:preprocessor")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -fno-char8_t")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -fno-char8_t")
-endif()
-
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
@@ -45,6 +37,12 @@ source_group("Imgui Sources" FILES
     ${IMGUI_IMPL_DIR}/imgui_impl_opengl3.cpp
     ${IMGUI_IMPL_DIR}/imgui_impl_glfw.cpp
     ${VENDOR_DIR}/imgui/misc/cpp/imgui_stdlib.cpp
+)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    $<$<CXX_COMPILER_ID:GNU>:-std=c++20 -fno-char8_t>
+    $<$<CXX_COMPILER_ID:Clang>:-std=c++20 -fno-char8_t>
+    $<$<CXX_COMPILER_ID:MSVC>:-std:c++20 /Zc:char8_t- /Zc:preprocessor>
 )
 
 target_compile_definitions(${PROJECT_NAME} 
