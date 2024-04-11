@@ -23,10 +23,16 @@ namespace Storyteller
         }
         //--------------------------------------------------------------------------
 
-        std::wstring FromStrBytesToWStrBytes(const std::string& strBytes);
+        std::wstring NarrowToWide(const std::string& str);
         //--------------------------------------------------------------------------
 
-        std::string FromWStrBytesToStrBytes(const std::wstring& wstrBytes);
+        std::string WideToNarrow(const std::wstring& wstr);
+        //--------------------------------------------------------------------------
+
+        std::string NarrowToU8(const std::string& str);
+        //--------------------------------------------------------------------------
+
+        std::string U8ToNarrow(const std::string& str);
         //--------------------------------------------------------------------------
     }
 }

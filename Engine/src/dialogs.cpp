@@ -18,7 +18,7 @@ namespace Storyteller
                 return std::string();
             }
 
-            return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(files.front()));
+            return Filesystem::ToString(Utils::U8ToNarrow(files.front()));
         }
         //--------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ namespace Storyteller
 
             for (const auto& path : files)
             {
-                paths.push_back(Filesystem::ToString(Utils::FromStrBytesToWStrBytes(path)));
+                paths.push_back(Filesystem::ToString(Utils::U8ToNarrow(path)));
             }
 
             return paths;
@@ -52,7 +52,7 @@ namespace Storyteller
                 return std::string();
             }
 
-            return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(directories.front()));
+            return Filesystem::ToString(Utils::U8ToNarrow(directories.front()));
         }
         //--------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ namespace Storyteller
         {
             pfd::save_file saver(title, Filesystem::ToString(Filesystem::GetCurrentPathCRef()), filters, forceOverwrite ? pfd::opt::force_overwrite : pfd::opt::none);
 
-            return Filesystem::ToString(Utils::FromStrBytesToWStrBytes(saver.result()));
+            return Filesystem::ToString(Utils::U8ToNarrow(saver.result()));
         }
         //--------------------------------------------------------------------------
     }
