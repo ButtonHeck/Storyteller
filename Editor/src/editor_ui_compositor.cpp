@@ -591,10 +591,10 @@ namespace Storyteller
                     }
 
                     ImGui::TableNextColumn();
-                    ImGui::Text(std::to_string(object->GetUuid()).c_str());
+                    ImGui::TextUnformatted(std::to_string(object->GetUuid()).c_str());
 
                     ImGui::TableNextColumn();
-                    ImGui::Text(object->GetName().c_str());
+                    ImGui::TextUnformatted(object->GetName().c_str());
                 }
             }
 
@@ -853,7 +853,7 @@ namespace Storyteller
                 }
 
                 ImGui::TableNextColumn();
-                ImGui::Text(_i18nManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), actionObject->GetText()).c_str());
+                ImGui::TextUnformatted(_i18nManager->Translation(_gameDocumentManager->GetDocument()->GetDomainName(), actionObject->GetText()).c_str());
             }
 
             ImGui::EndTable();
@@ -919,10 +919,10 @@ namespace Storyteller
             }
         }
 
-        ImGui::Text(_lookupDict->Get("Current target name: ").c_str());
+        ImGui::TextUnformatted(_lookupDict->Get("Current target name: ").c_str());
         ImGui::SameLine();
         const auto targetObject = proxy->GetObject(selectedActionObject->GetTargetUuid());
-        ImGui::Text(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _lookupDict->Get("Not set or does not exist").c_str());
+        ImGui::TextUnformatted(targetObject ? std::string("[").append(targetObject->GetName()).append("]").c_str() : _lookupDict->Get("Not set or does not exist").c_str());
 
 
         ImGui::SameLine();
@@ -1020,7 +1020,7 @@ namespace Storyteller
 
             if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text(_lookupDict->Get("You have unsaved changes, create new document anyway?").c_str());
+                ImGui::TextUnformatted(_lookupDict->Get("You have unsaved changes, create new document anyway?").c_str());
                 ImGui::Separator();
 
                 if (ImGui::Button(_lookupDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
@@ -1065,7 +1065,7 @@ namespace Storyteller
 
             if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text(_lookupDict->Get("You have unsaved changes, quit anyway?").c_str());
+                ImGui::TextUnformatted(_lookupDict->Get("You have unsaved changes, quit anyway?").c_str());
                 ImGui::Separator();
 
                 if (ImGui::Button(_lookupDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))
@@ -1104,7 +1104,7 @@ namespace Storyteller
 
         if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::Text(_popups.warningMessageText.c_str());
+            ImGui::TextUnformatted(_popups.warningMessageText.c_str());
             ImGui::Separator();
 
             if (ImGui::Button(_lookupDict->Get("Ok").c_str(), ImVec2(ImGui::GetContentRegionAvail().x, 0)))
@@ -1131,7 +1131,7 @@ namespace Storyteller
 
             if (ImGui::BeginPopupModal(title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
-                ImGui::Text(_lookupDict->Get("You have unsaved changes, open other document anyway?").c_str());
+                ImGui::TextUnformatted(_lookupDict->Get("You have unsaved changes, open other document anyway?").c_str());
                 ImGui::Separator();
 
                 if (ImGui::Button(_lookupDict->Get("Yes").c_str(), ImVec2(ImGui::GetContentRegionAvail().x / 2, 0)))

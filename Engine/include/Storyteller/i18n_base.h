@@ -14,7 +14,7 @@ namespace Storyteller
         static constexpr auto LocaleEnUTF8Keyword = "en_EN.UTF-8";
         static constexpr auto LocaleEnName = "English";
         static constexpr auto LocaleRuUTF8Keyword = "ru_RU.UTF-8";
-        static constexpr auto LocaleRuName = u8"Русский";
+        static constexpr auto LocaleRuName = "Russian";
 
         typedef std::string LocaleStr;
         typedef std::string DomainStr;

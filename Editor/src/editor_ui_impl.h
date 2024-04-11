@@ -12,6 +12,7 @@ namespace Storyteller
 
     public:
         explicit EditorUiImpl(const Ptr<Window> window);
+        virtual ~EditorUiImpl() = default;
 
         virtual void Initialize() = 0;
         virtual void NewFrame() = 0;

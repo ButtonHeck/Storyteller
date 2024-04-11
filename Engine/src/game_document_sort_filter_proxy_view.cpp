@@ -4,8 +4,8 @@
 namespace Storyteller
 {
     GameDocumentSortFilterProxyView::Sorter::Sorter(bool ascending, SortValue sortValue)
-        : ascending(ascending)
-        , sortValue(sortValue)
+        : sortValue(sortValue)
+        , ascending(ascending)
         , active(false)
     {}
     //--------------------------------------------------------------------------
