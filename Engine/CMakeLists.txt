@@ -127,4 +127,4 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE glfw
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER Storyteller)
+set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller)

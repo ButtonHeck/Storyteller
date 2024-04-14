@@ -69,12 +69,14 @@ if(MSVC)
     target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:RELWITHDEBINFO>:/PROFILE>)
     set_property(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
     set_property(DIRECTORY ${CMAKE_BINARY_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+	set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exe/$<CONFIG>)
 endif()
 
-add_custom_target(copy_translations_to_editor
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/copy_translations_to_editor.cmake
-)
-add_dependencies(${PROJECT_NAME} copy_translations_to_editor)
+set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exe/$<CONFIG>)
+get_target_property(exeDir ${PROJECT_NAME} RUNTIME_OUTPUT_DIRECTORY)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER Storyteller)
-set_target_properties(copy_translations_to_editor PROPERTIES FOLDER Storyteller)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} "-DDEST_DIR=${exeDir}" -P "${CMAKE_SOURCE_DIR}/cmake/copy_translations_to_editor.cmake"
+)
+
+set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller)
