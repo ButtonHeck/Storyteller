@@ -73,10 +73,10 @@ if(MSVC)
 endif()
 
 set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exe/$<CONFIG>)
-get_target_property(exeDir ${PROJECT_NAME} RUNTIME_OUTPUT_DIRECTORY)
-
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} "-DDEST_DIR=${exeDir}" -P "${CMAKE_SOURCE_DIR}/cmake/copy_translations_to_editor.cmake"
-)
-
 set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller)
+
+get_target_property(exeDir ${PROJECT_NAME} RUNTIME_OUTPUT_DIRECTORY)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} "-DDEST_DIR=${exeDir}" "-DSRC_DIRS=${CMAKE_CURRENT_LIST_DIR}/locale;${CMAKE_CURRENT_LIST_DIR}/../Engine/locale" 
+	-P "${CMAKE_SOURCE_DIR}/cmake/copy_translations.cmake"
+)
