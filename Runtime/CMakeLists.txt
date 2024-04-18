@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(StorytellerRuntime CXX)
-
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(StorytellerRuntime LANGUAGES CXX)
 
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 set(SOURCE_FILES
