@@ -151,7 +151,7 @@ if(StorytellerI18N_OK)
     set_property(TARGET StorytellerEditor_pot_merge APPEND PROPERTY FOLDER Storyteller)
 
     file(GLOB_RECURSE PO_FILES ${CMAKE_CURRENT_LIST_DIR}/locale/*/StorytellerEditor.po)
-    message(TRACE " PO_FILES: ${PO_FILES}")
+    message(STATUS " PO_FILES: ${PO_FILES}")
 
     foreach(PO_FILE IN ITEMS ${PO_FILES})
         message(STATUS " Adding msgmerge for: ${PO_FILE}")
@@ -159,16 +159,48 @@ if(StorytellerI18N_OK)
             PRE_BUILD
             COMMAND
                 ${GETTEXT_MSGMERGE_EXECUTABLE} ${PO_FILE}
-                --quiet
                 ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
             COMMENT "Storyteller Editor .pot file merge: ${PO_FILE}"
         )
     endforeach()
 
 
+    # Initialization
+    add_custom_target(StorytellerEditor_po_init
+        COMMENT "Storyteller Editor .po files initialization: Done!"
+        DEPENDS ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
+    )
+    set_property(TARGET StorytellerEditor_po_init APPEND PROPERTY FOLDER Storyteller)
+
+    file(GLOB PO_LANGS LIST DIRECTORIES TRUE ${CMAKE_CURRENT_LIST_DIR}/locale/*)
+    foreach(PO_LANG_DIR IN ITEMS ${PO_LANGS})
+        if(IS_DIRECTORY ${PO_LANG_DIR})
+            string(FIND ${PO_LANG_DIR} "/" SEP_INDEX REVERSE)
+            string(SUBSTRING ${PO_LANG_DIR} ${SEP_INDEX} -1 LANG_NAME)
+            string(REPLACE "/" "" LANG_NAME ${LANG_NAME})
+            list(APPEND LANG_NAMES ${LANG_NAME})
+        endif()
+    endforeach()
+    message(STATUS " Lang names: ${LANG_NAMES}") #del
+    
+    foreach(LANG_NAME IN LISTS LANG_NAMES)
+        if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/locale/${LANG_NAME}/LC_MESSAGES/StorytellerEditor.po)
+            add_custom_command(TARGET StorytellerEditor_po_init
+                PRE_BUILD
+                COMMAND
+                    ${GETTEXT_MSGINIT_EXECUTABLE}
+                    --input=${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
+                    --output-file=${CMAKE_CURRENT_LIST_DIR}/locale/${LANG_NAME}/LC_MESSAGES/StorytellerEditor.po
+                    --locale=${LANG_NAME}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            )
+        endif()
+    endforeach()
+
+
     # Msgfmt stage
-    file(GLOB PO_LANGS LIST DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/locale/*/*)
-    message(TRACE " PO_LANGS: ${PO_LANGS}")
+    file(GLOB PO_LANGS LIST DIRECTORIES TRUE ${CMAKE_CURRENT_LIST_DIR}/locale/*/*)
+    message(STATUS " PO_LANGS: ${PO_LANGS}")
 
     add_custom_target(StorytellerEditor_po_compile
         COMMENT "Storyteller Editor .po compilation: Done!"
