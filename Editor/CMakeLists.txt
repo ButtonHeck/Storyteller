@@ -103,7 +103,7 @@ if(MSVC)
 endif()
 
 set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/exe/$<CONFIG>)
-set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller)
+set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller/Editor)
 
 get_target_property(exeDir ${PROJECT_NAME} RUNTIME_OUTPUT_DIRECTORY)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -119,7 +119,7 @@ if(StorytellerI18N_OK)
         COMMENT "Storyteller Editor .pot file update: Done!"
         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
     )
-    set_property(TARGET StorytellerEditor_pot_update APPEND PROPERTY FOLDER Storyteller)
+    set_property(TARGET StorytellerEditor_pot_update APPEND PROPERTY FOLDER Storyteller/Editor)
 
     add_custom_command(TARGET StorytellerEditor_pot_update
         PRE_BUILD
@@ -148,7 +148,7 @@ if(StorytellerI18N_OK)
         COMMENT "Storyteller Editor .pot file merge: Done!"
         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
     )
-    set_property(TARGET StorytellerEditor_pot_merge APPEND PROPERTY FOLDER Storyteller)
+    set_property(TARGET StorytellerEditor_pot_merge APPEND PROPERTY FOLDER Storyteller/Editor)
 
     file(GLOB_RECURSE PO_FILES ${CMAKE_CURRENT_LIST_DIR}/locale/*/StorytellerEditor.po)
     message(STATUS " PO_FILES: ${PO_FILES}")
@@ -170,7 +170,7 @@ if(StorytellerI18N_OK)
         COMMENT "Storyteller Editor .po files initialization: Done! LAUNCH CMAKE AGAIN!"
         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
     )
-    set_property(TARGET StorytellerEditor_po_init APPEND PROPERTY FOLDER Storyteller)
+    set_property(TARGET StorytellerEditor_po_init APPEND PROPERTY FOLDER Storyteller/Editor)
 
     file(GLOB PO_LANGS LIST DIRECTORIES TRUE ${CMAKE_CURRENT_LIST_DIR}/locale/*)
     foreach(PO_LANG_DIR IN ITEMS ${PO_LANGS})
@@ -202,7 +202,7 @@ if(StorytellerI18N_OK)
     add_custom_target(StorytellerEditor_po_compile
         COMMENT "Storyteller Editor .po compilation: Done!"
     )
-    set_property(TARGET StorytellerEditor_po_compile APPEND PROPERTY FOLDER Storyteller)
+    set_property(TARGET StorytellerEditor_po_compile APPEND PROPERTY FOLDER Storyteller/Editor)
 
     foreach(PO_LANG IN ITEMS ${PO_LANGS})
         if(IS_DIRECTORY ${PO_LANG})
