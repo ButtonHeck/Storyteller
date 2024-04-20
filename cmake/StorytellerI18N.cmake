@@ -1,3 +1,6 @@
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/en_EN/LC_MESSAGES)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/ru_RU/LC_MESSAGES)
+
 set(StorytellerI18N_OK TRUE)
 
 find_package(Gettext REQUIRED)

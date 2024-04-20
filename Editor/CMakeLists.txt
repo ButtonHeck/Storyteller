@@ -135,7 +135,7 @@ if(StorytellerI18N_OK)
 
     # Initialization
     add_custom_target(StorytellerEditor_po_init
-        COMMENT "Storyteller Editor .po files initialization: Done! LAUNCH CMAKE AGAIN!"
+        COMMENT "Storyteller Editor .po files initialization: Done! RERUN CMAKE AGAIN!"
         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
     )
     set_property(TARGET StorytellerEditor_po_init APPEND PROPERTY FOLDER Storyteller/Editor)
