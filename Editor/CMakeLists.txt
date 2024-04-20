@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 
 project(StorytellerEditor LANGUAGES CXX)
 
@@ -167,7 +167,7 @@ if(StorytellerI18N_OK)
 
     # Initialization
     add_custom_target(StorytellerEditor_po_init
-        COMMENT "Storyteller Editor .po files initialization: Done!"
+        COMMENT "Storyteller Editor .po files initialization: Done! LAUNCH CMAKE AGAIN!"
         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/locale/StorytellerEditor.pot
     )
     set_property(TARGET StorytellerEditor_po_init APPEND PROPERTY FOLDER Storyteller)
@@ -175,13 +175,10 @@ if(StorytellerI18N_OK)
     file(GLOB PO_LANGS LIST DIRECTORIES TRUE ${CMAKE_CURRENT_LIST_DIR}/locale/*)
     foreach(PO_LANG_DIR IN ITEMS ${PO_LANGS})
         if(IS_DIRECTORY ${PO_LANG_DIR})
-            string(FIND ${PO_LANG_DIR} "/" SEP_INDEX REVERSE)
-            string(SUBSTRING ${PO_LANG_DIR} ${SEP_INDEX} -1 LANG_NAME)
-            string(REPLACE "/" "" LANG_NAME ${LANG_NAME})
+            cmake_path(GET PO_LANG_DIR STEM LANG_NAME)
             list(APPEND LANG_NAMES ${LANG_NAME})
         endif()
     endforeach()
-    message(STATUS " Lang names: ${LANG_NAMES}") #del
     
     foreach(LANG_NAME IN LISTS LANG_NAMES)
         if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/locale/${LANG_NAME}/LC_MESSAGES/StorytellerEditor.po)
