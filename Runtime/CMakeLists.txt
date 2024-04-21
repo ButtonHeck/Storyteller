@@ -43,3 +43,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} "-DDEST_DIR=${exeDir}" "-DSRC_DIRS=${CMAKE_CURRENT_LIST_DIR}/locale;${CMAKE_CURRENT_LIST_DIR}/../Engine/locale" 
 	-P "${CMAKE_SOURCE_DIR}/cmake/copy_translations.cmake"
 )
+
+
+include(StorytellerI18N)
+CreateTranslationHelperTargets("StorytellerRuntime" "StorytellerRuntime" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Runtime ${SOURCE_FILES})

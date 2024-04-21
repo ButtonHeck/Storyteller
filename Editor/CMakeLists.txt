@@ -81,4 +81,4 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 
 include(StorytellerI18N)
-CreateTranslationHelperTargets("StorytellerEditor" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Editor ${SOURCE_FILES})
+CreateTranslationHelperTargets("StorytellerEditor" "StorytellerEditor" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Editor ${SOURCE_FILES})
