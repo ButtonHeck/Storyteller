@@ -19,6 +19,17 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/ui_utils.cpp"
 )
 
+if(WIN32)
+	set(STRTLR_WIN_ICO_PATH "${CMAKE_SOURCE_DIR}/Engine/assets/icons/strtlr64.ico")
+	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/win/StorytellerEditor.rc_in" "${CMAKE_CURRENT_BINARY_DIR}/StorytellerEditor.rc")
+	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/win/resource.h" "${CMAKE_CURRENT_BINARY_DIR}/resource.h" COPYONLY)
+	set(WIN_RESOURCE_FILES
+		"${CMAKE_CURRENT_BINARY_DIR}/resource.h"
+		"${CMAKE_CURRENT_BINARY_DIR}/StorytellerEditor.rc"
+	)
+	source_group("Resources" FILES ${WIN_RESOURCE_FILES})
+endif()
+
 set(IMGUI_IMPL_DIR "${VENDOR_DIR}/imgui/backends")
 aux_source_directory("${VENDOR_DIR}/imgui" IMGUI_SOURCE_FILES)
 
@@ -28,6 +39,7 @@ add_executable(${PROJECT_NAME} WIN32
     ${IMGUI_IMPL_DIR}/imgui_impl_opengl3.cpp
     ${IMGUI_IMPL_DIR}/imgui_impl_glfw.cpp
     ${VENDOR_DIR}/imgui/misc/cpp/imgui_stdlib.cpp
+	${WIN_RESOURCE_FILES}
 )
 
 source_group("Imgui Sources" FILES 
