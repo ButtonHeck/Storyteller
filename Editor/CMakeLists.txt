@@ -75,10 +75,9 @@ set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller/Editor)
 
 get_target_property(exeDir ${PROJECT_NAME} RUNTIME_OUTPUT_DIRECTORY)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} "-DDEST_DIR=${exeDir}" "-DSRC_DIRS=${CMAKE_CURRENT_LIST_DIR}/locale;${CMAKE_CURRENT_LIST_DIR}/../Engine/locale" 
+    COMMAND ${CMAKE_COMMAND}
+    "-D DEST_DIR=${exeDir}" "-D SRC_DIRS=${CMAKE_CURRENT_LIST_DIR}/locale;${CMAKE_CURRENT_LIST_DIR}/../Engine/locale" 
 	-P "${CMAKE_SOURCE_DIR}/cmake/copy_translations.cmake"
 )
 
-
-include(StorytellerI18N)
 CreateTranslationHelperTargets("StorytellerEditor" "StorytellerEditor" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Editor ${SOURCE_FILES})

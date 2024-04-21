@@ -1,6 +1,3 @@
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/en_EN/LC_MESSAGES)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/locale/ru_RU/LC_MESSAGES)
-
 set(StorytellerI18N_OK TRUE)
 
 find_package(Gettext REQUIRED)
@@ -51,6 +48,9 @@ endif()
 # [STRTLR_FOLDER] - folder to place created targets (e.g. Storyteller/Editor)
 # [STRTLR_SOURCE_FILES] - files provided to xgettext (e.g. ${SOURCE_FILES})
 function(CreateTranslationHelperTargets STRTLR_TARGET_NAME STRTLR_PO_PREFIX STRTLR_TARGET_PREFIX_DIR STRTLR_FOLDER STRTLR_SOURCE_FILES)
+	file(MAKE_DIRECTORY ${STRTLR_TARGET_PREFIX_DIR}/locale/en_EN/LC_MESSAGES)
+	file(MAKE_DIRECTORY ${STRTLR_TARGET_PREFIX_DIR}/locale/ru_RU/LC_MESSAGES)
+	
 	if(StorytellerI18N_OK)
 		# Update stage
 		add_custom_target(${STRTLR_TARGET_NAME}_pot_update

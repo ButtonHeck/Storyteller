@@ -54,6 +54,8 @@ endif()
 
 
 include(vendor/Vendor.cmake)
+include(StorytellerI18N)
+
 add_subdirectory(Engine)
 add_subdirectory(Editor)
 add_subdirectory(Runtime)

@@ -128,6 +128,5 @@ target_link_libraries(${PROJECT_NAME}
 set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY FOLDER Storyteller/Engine)
 
 
-include(StorytellerI18N)
 list(APPEND TR_SOURCES ${HEADER_FILES} ${SOURCE_FILES})
 CreateTranslationHelperTargets("StorytellerEngine" "Storyteller" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Engine ${TR_SOURCES})
