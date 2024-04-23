@@ -15,7 +15,7 @@ namespace Storyteller
 
         std::string GetApplicationName() const override;
 
-        bool Initialize() override;
+        bool Initialize(const std::string& configPath) override;
         void Run() override;
 
     protected:

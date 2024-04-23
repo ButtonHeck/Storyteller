@@ -22,9 +22,9 @@ namespace Storyteller
     }
     //--------------------------------------------------------------------------
 
-    bool RuntimeApplication::Initialize()
+    bool RuntimeApplication::Initialize(const std::string& configPath)
     {
-        if (!Application::Initialize())
+        if (!Application::Initialize(configPath))
         {
             return false;
         }
@@ -33,7 +33,7 @@ namespace Storyteller
         _i18nManager->SetLocale(I18N::LocaleRuUTF8Keyword);
 
         _manager.reset(new GameDocumentManager(_i18nManager));
-        _manager->OpenDocument(std::filesystem::path(u8"C:\\workspace\\Storyteller\\build\\MyGame\\MyGame.json"));
+        _manager->OpenDocument(std::filesystem::path(u8"C:\\workspace\\STORYTELLER\\MyGame\\MyGame.json"));
 
         _gameController.reset(new GameController(_manager->GetDocument(), _i18nManager));
 

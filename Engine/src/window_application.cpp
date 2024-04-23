@@ -7,9 +7,9 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    bool WindowApplication::Initialize()
+    bool WindowApplication::Initialize(const std::string& configPath)
     {
-        if (!Application::Initialize())
+        if (!Application::Initialize(configPath))
         {
             return false;
         }

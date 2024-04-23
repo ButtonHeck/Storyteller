@@ -19,7 +19,7 @@ namespace Storyteller
 
         virtual std::string GetApplicationName() const = 0;
 
-        virtual bool Initialize();
+        virtual bool Initialize(const std::string& configPath);
         virtual void Run() = 0;
 
     protected:

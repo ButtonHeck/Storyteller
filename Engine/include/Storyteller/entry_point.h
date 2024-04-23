@@ -2,9 +2,10 @@
 
 #include "application.h"
 #include "platform.h"
+#include "program_options.h"
 
 #if defined STRTLR_WINMAIN
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     Storyteller::Application* app = Storyteller::CreateApplication();
     if (!app)
@@ -12,7 +13,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
         return -1;
     }
 
-    app->Initialize();
+    Storyteller::ProgramOptions programOptions;
+    programOptions.ProcessCommandLine(lpCmdLine);
+
+    app->Initialize(programOptions.GetConfigPath());
     app->Run();
 
     delete app;
@@ -30,7 +34,10 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    app->Initialize();
+    Storyteller::ProgramOptions programOptions;
+    programOptions.ProcessCommandLine(argc, argv);
+
+    app->Initialize(programOptions.GetConfigPath());
     app->Run();
 
     delete app;

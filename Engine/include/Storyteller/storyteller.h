@@ -18,6 +18,7 @@
 #include "Storyteller/mouse_codes.h"
 #include "Storyteller/mouse_event.h"
 #include "Storyteller/pointers.h"
+#include "Storyteller/program_options.h"
 #include "Storyteller/settings.h"
 #include "Storyteller/string_utils.h"
 #include "Storyteller/function_utils.h"

@@ -14,7 +14,11 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK OFF)
 
-find_package(Boost REQUIRED COMPONENTS locale REQUIRED) 
+find_package(Boost REQUIRED COMPONENTS 
+	locale 
+	program_options 
+	REQUIRED
+) 
 
 function(get_all_targets result dir)
     get_property(subdirs DIRECTORY "${dir}" PROPERTY SUBDIRECTORIES)

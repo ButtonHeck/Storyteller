@@ -13,7 +13,7 @@ namespace Storyteller
     public:
         WindowApplication();
 
-        bool Initialize() override;
+        bool Initialize(const std::string& configPath) override;
 
     protected:
         virtual bool OnWindowMoveEvent(WindowMoveEvent& event) { return true; };

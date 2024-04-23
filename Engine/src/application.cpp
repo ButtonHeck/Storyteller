@@ -12,12 +12,12 @@ namespace Storyteller
     {}
     //--------------------------------------------------------------------------
 
-    bool Application::Initialize()
+    bool Application::Initialize(const std::string& configPath)
     {
         Filesystem::Initialize();
 
         _config.reset(new Config());
-        _config->Load(Filesystem::GetCurrentPath().append("Storyteller.json")); //TODO: check argv or use default Storyteller.json
+        _config->Load(configPath.empty() ? Filesystem::GetCurrentPath().append("Storyteller.json") : configPath);
 
         Log::Initialize(_config->GetLogConfig());
 
