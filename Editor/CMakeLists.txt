@@ -20,7 +20,7 @@ set(SOURCE_FILES
 )
 
 if(WIN32)
-	set(STRTLR_WIN_ICO_PATH "${CMAKE_SOURCE_DIR}/Engine/assets/icons/strtlr64.ico")
+	set(STRTLR_WIN_ICO_PATH "${CMAKE_SOURCE_DIR}/common/assets/icons/strtlr64.ico")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/win/StorytellerEditor.rc_in" "${CMAKE_CURRENT_BINARY_DIR}/StorytellerEditor.rc")
 	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/win/resource.h" "${CMAKE_CURRENT_BINARY_DIR}/resource.h" COPYONLY)
 	set(WIN_RESOURCE_FILES
@@ -91,5 +91,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     "-D DEST_DIR=${exeDir}" "-D SRC_DIRS=${CMAKE_CURRENT_LIST_DIR}/locale;${CMAKE_CURRENT_LIST_DIR}/../Engine/locale" 
 	-P "${CMAKE_SOURCE_DIR}/cmake/copy_translations.cmake"
 )
+
+file(GENERATE OUTPUT "${exeDir}/Storyteller.json" INPUT "${CMAKE_SOURCE_DIR}/common/StorytellerConfigTemplate.json")
 
 CreateTranslationHelperTargets("StorytellerEditor" "StorytellerEditor" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Editor ${SOURCE_FILES})

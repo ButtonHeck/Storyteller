@@ -119,7 +119,7 @@ if(Boost_FOUND)
 endif()
 
 target_compile_definitions(${PROJECT_NAME} 
-    PUBLIC STRTLR_ASSETS_PATH=\"${PROJECT_SOURCE_DIR}/assets\"
+    PUBLIC STRTLR_ASSETS_PATH=\"${CMAKE_SOURCE_DIR}/common/assets\"
     PUBLIC STRTLR_TR_DOMAIN_ENGINE=\"Storyteller\"
 )
 

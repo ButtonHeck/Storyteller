@@ -12,8 +12,20 @@ set(SOURCE_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/runtime_application.cpp"
 )
 
+if(WIN32)
+	set(STRTLR_WIN_ICO_PATH "${CMAKE_SOURCE_DIR}/common/assets/icons/strtlr64.ico")
+	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/win/StorytellerRuntime.rc_in" "${CMAKE_CURRENT_BINARY_DIR}/StorytellerRuntime.rc")
+	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/win/resource.h" "${CMAKE_CURRENT_BINARY_DIR}/resource.h" COPYONLY)
+	set(WIN_RESOURCE_FILES
+		"${CMAKE_CURRENT_BINARY_DIR}/resource.h"
+		"${CMAKE_CURRENT_BINARY_DIR}/StorytellerRuntime.rc"
+	)
+	source_group("Resources" FILES ${WIN_RESOURCE_FILES})
+endif()
+
 add_executable(${PROJECT_NAME}
     ${SOURCE_FILES}
+	${WIN_RESOURCE_FILES}
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
