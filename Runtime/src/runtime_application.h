@@ -18,8 +18,12 @@ namespace Storyteller
         void Run() override;
 
     private:
+        void LoadSettings();
+
+    private:
         Ptr<GameDocumentManager> _manager;
         Ptr<GameController> _gameController;
+        std::string _gameDocumentPath;
     };
     //--------------------------------------------------------------------------
 }

@@ -10,13 +10,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Storyteller::Application* app = Storyteller::CreateApplication();
     if (!app)
     {
-        return -1;
+        return 1;
     }
 
     Storyteller::ProgramOptions programOptions;
     programOptions.ProcessCommandLine(lpCmdLine);
 
-    app->Initialize(programOptions.GetConfigPath());
+    if (!app->Initialize(programOptions.GetConfigPath()))
+    {
+        delete app;
+        return 2;
+    }
+
     app->Run();
 
     delete app;
@@ -31,13 +36,18 @@ int main(int argc, char** argv)
     Storyteller::Application* app = Storyteller::CreateApplication();
     if (!app)
     {
-        return -1;
+        return 1;
     }
 
     Storyteller::ProgramOptions programOptions;
     programOptions.ProcessCommandLine(argc, argv);
 
-    app->Initialize(programOptions.GetConfigPath());
+    if (!app->Initialize(programOptions.GetConfigPath()))
+    {
+        delete app;
+        return 2;
+    }
+
     app->Run();
 
     delete app;
