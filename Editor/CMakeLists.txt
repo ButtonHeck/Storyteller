@@ -92,6 +92,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 	-P "${CMAKE_SOURCE_DIR}/cmake/copy_translations.cmake"
 )
 
+# todo: maybe implement as conditional (if not exists) post-build step
 file(GENERATE OUTPUT "${exeDir}/Storyteller.json" INPUT "${CMAKE_SOURCE_DIR}/common/StorytellerConfigTemplate.json")
 
 CreateTranslationHelperTargets("StorytellerEditor" "StorytellerEditor" ${CMAKE_CURRENT_SOURCE_DIR} Storyteller/Editor ${SOURCE_FILES})
