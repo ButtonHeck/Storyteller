@@ -1,15 +1,19 @@
 set(StorytellerI18N_OK TRUE)
 
-find_package(Gettext REQUIRED)
+find_package(Gettext)
 
 find_program(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
 find_program(GETTEXT_MSGMERGE_EXECUTABLE msgmerge)
 find_program(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
 find_program(GETTEXT_MSGINIT_EXECUTABLE msginit)
 
-if(Gettext_NOTFOUND)
+if(NOT Gettext_FOUND)
 	set(StorytellerI18N_OK FALSE)
-	message(WARNING "Gettext package not found!")
+	if(WIN32)
+		message(WARNING "Gettext package not found! Try adding vendor/gettext/win path")
+	elseif(UNIX)
+		message(WARNING "Gettext package not found! Try installing gettext")
+	endif()
 endif()
 
 if(GETTEXT_XGETTEXT_EXECUTABLE)
