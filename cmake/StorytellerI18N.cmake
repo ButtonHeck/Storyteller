@@ -58,7 +58,7 @@ function(CreateTranslationHelperTargets STRTLR_TARGET_NAME STRTLR_PO_PREFIX STRT
 	if(StorytellerI18N_OK)
 		# Update stage
 		add_custom_target(${STRTLR_TARGET_NAME}_pot_update
-			COMMENT "${STRTLR_PO_PREFIX}.pot file update: Done!"
+			COMMAND ${CMAKE_COMMAND} -E echo "${STRTLR_PO_PREFIX}.pot file update: Done!"
 			DEPENDS ${STRTLR_TARGET_PREFIX_DIR}/locale/${STRTLR_PO_PREFIX}.pot
 		)
 		set_property(TARGET ${STRTLR_TARGET_NAME}_pot_update APPEND PROPERTY FOLDER ${STRTLR_FOLDER})
@@ -81,12 +81,12 @@ function(CreateTranslationHelperTargets STRTLR_TARGET_NAME STRTLR_PO_PREFIX STRT
 				--keyword="TranslateCtxDefer:2,3,5t,5t"
 				${STRTLR_SOURCE_FILES}
 			WORKING_DIRECTORY ${STRTLR_TARGET_PREFIX_DIR}
-			COMMENT "${STRTLR_PO_PREFIX}.pot file generated: ${STRTLR_TARGET_PREFIX_DIR}/locale/${STRTLR_PO_PREFIX}.pot"
+			COMMAND ${CMAKE_COMMAND} -E echo  "${STRTLR_PO_PREFIX}.pot file generated: ${STRTLR_TARGET_PREFIX_DIR}/locale/${STRTLR_PO_PREFIX}.pot"
 		)
 		
 		# Merge stage
 		add_custom_target(${STRTLR_TARGET_NAME}_pot_merge
-			COMMENT "${STRTLR_PO_PREFIX}.pot file merge: Done!"
+			COMMAND ${CMAKE_COMMAND} -E echo  "${STRTLR_PO_PREFIX}.pot file merge: Done!"
 			DEPENDS ${STRTLR_TARGET_PREFIX_DIR}/locale/${STRTLR_PO_PREFIX}.pot
 		)
 		set_property(TARGET ${STRTLR_TARGET_NAME}_pot_merge APPEND PROPERTY FOLDER ${STRTLR_FOLDER})
@@ -101,14 +101,14 @@ function(CreateTranslationHelperTargets STRTLR_TARGET_NAME STRTLR_PO_PREFIX STRT
 				COMMAND
 					${GETTEXT_MSGMERGE_EXECUTABLE} ${PO_FILE}
 					${STRTLR_TARGET_PREFIX_DIR}/locale/${STRTLR_PO_PREFIX}.pot
-				COMMENT "${STRTLR_PO_PREFIX}.pot file merge: ${PO_FILE}"
+				COMMAND ${CMAKE_COMMAND} -E echo  "${STRTLR_PO_PREFIX}.pot file merge: ${PO_FILE}"
 			)
 		endforeach()
 		
 		
 		# Initialization
 		add_custom_target(${STRTLR_TARGET_NAME}_po_init
-			COMMENT "${STRTLR_PO_PREFIX}.po files initialization: Done! RERUN CMAKE AGAIN!"
+			COMMAND ${CMAKE_COMMAND} -E echo  "${STRTLR_PO_PREFIX}.po files initialization: Done! RERUN CMAKE AGAIN!"
 			DEPENDS ${STRTLR_TARGET_PREFIX_DIR}/locale/${STRTLR_PO_PREFIX}.pot
 		)
 		set_property(TARGET ${STRTLR_TARGET_NAME}_po_init APPEND PROPERTY FOLDER ${STRTLR_FOLDER})
@@ -141,7 +141,7 @@ function(CreateTranslationHelperTargets STRTLR_TARGET_NAME STRTLR_PO_PREFIX STRT
 		message(STATUS " ${STRTLR_TARGET_NAME} PO_LANGS: ${PO_LANGS}")
 		
 		add_custom_target(${STRTLR_TARGET_NAME}_po_compile
-			COMMENT "${STRTLR_PO_PREFIX}.po compilation: Done!"
+			COMMAND ${CMAKE_COMMAND} -E echo  "${STRTLR_PO_PREFIX}.po compilation: Done!"
 		)
 		set_property(TARGET ${STRTLR_TARGET_NAME}_po_compile APPEND PROPERTY FOLDER ${STRTLR_FOLDER})
 		
@@ -155,7 +155,7 @@ function(CreateTranslationHelperTargets STRTLR_TARGET_NAME STRTLR_PO_PREFIX STRT
 						--output-file=${STRTLR_PO_PREFIX}.mo
 						${STRTLR_PO_PREFIX}.po
 					WORKING_DIRECTORY ${PO_LANG}
-					COMMENT "${STRTLR_PO_PREFIX}.po compilation: ${PO_LANG}"
+					COMMAND ${CMAKE_COMMAND} -E echo  "${STRTLR_PO_PREFIX}.po compilation: ${PO_LANG}"
 				)
 				endif()
 		endforeach()
